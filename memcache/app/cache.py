@@ -39,7 +39,7 @@ class Cache(dict):
     
     def _remove_one_by_policy(self):
         if self.policy == 'LRU':
-                self._drop()
+            self._drop()
         else:
             super().popitem()
         
@@ -55,7 +55,7 @@ class Cache(dict):
     def __setitem__(self, key, value):
         if super().__contains__(key):
             # update the value
-            node = self.__getitem__(key)
+            node = super().__getitem__(key)
             node.value = value
         else:
             # make sure the size of cache is not larger than max_size
@@ -64,9 +64,7 @@ class Cache(dict):
             node = Node(value)
             if self.policy == 'LRU':
                 self._add(node)
-            return super().__setitem__(key, node)
-
-            
+            return super().__setitem__(key, node)     
     
     def __delitem__(self, __key) -> None:
         if self.policy == 'LRU':
