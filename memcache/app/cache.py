@@ -1,88 +1,124 @@
+import sys
+
+def small_test_for_cache():
+    memcache = Cache(max_size=100, policy='random')
+    memcache['a'] = 1
+    print(memcache['a'])
+    memcache['a'] = 2
+    print(memcache['a'])
+    print('b' in memcache)
+    memcache.clear()
+    print('a' in memcache)
+    memcache.set_max_size(5)
+    memcache.set_policy('LRU')
+    for i in range(10):
+        memcache[i] = i
+        print(f'len: {len(memcache)}')
+        print(f'bytes: {memcache.get_bytes()}')
+        for key in memcache:
+            print(f'{key}: {memcache[key]}')
+    memcache.set_max_size(2)
+
+    print(f'len: {len(memcache)}')
+    print(f'bytes: {memcache.get_bytes()}')
+    for key in memcache:
+        print(f'{key}: {memcache[key]}')
+    memcache['a'] = 100
+    print(memcache['a'])
+
 class Node:
-    def __init__(self, value):
+    def __init__(self, key, value):
+        self.key = key
         self.value = value
         self.prev = None
         self.next = None
 
 class Cache(dict):
-    def __init__(self, max_size=10000, policy = 'LRU', *args, **kwargs) -> None:
+    def __init__(self, max_size=100000, policy = 'LRU', *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.max_size = max_size
         self.policy = policy
         # implment LRU with double linked list
-        self.head = Node(0)
-        self.tail = Node(0)
-        self._connect(self.head, self.tail)
+        self.head = Node(0, 0)
+        self.tail = Node(0, 0)
+        self.bytes = 0
+        self._connect_linked_node(self.head, self.tail)
 
     # double linked list operations
     
-    def _connect(self, node1, node2):
+    def _connect_linked_node(self, node1, node2):
         node1.next = node2
         node2.prev = node1
 
-    def _remove(self, node):
-        self._connect(node.prev, node.next)
+    def _remove_linked_node(self, node):
+        self._connect_linked_node(node.prev, node.next)
 
     def _add(self, node):
         prev = self.tail.prev
-        self._connect(prev, node)
-        self._connect(node, self.tail)
+        self._connect_linked_node(prev, node)
+        self._connect_linked_node(node, self.tail)
     
-    def _drop(self):
+    def _pop_linked_node(self):
         node = self.head.next
-        self._remove(node)
+        self._remove_linked_node(node)
+        return node
 
-    def _reset(self):
-        self._connect(self.head, self.tail)
+    def _reset_linked_list(self):
+        self._connect_linked_node(self.head, self.tail)
 
     # utils
     
-    def _remove_one_by_policy(self):
+    def _cache_pop(self):
         if self.policy == 'LRU':
-            self._drop()
+            node = self._pop_linked_node()
+            super().__delitem__(node.key)
         else:
-            super().popitem()
+            _, node = super().popitem()
+        self.bytes -= sys.getsizeof(node.value)
+        return node
         
     # override dict operations
             
     def __getitem__(self, key):
         node = super().__getitem__(key)
         if self.policy == 'LRU':
-            self._remove(node)
+            self._remove_linked_node(node)
             self._add(node)
         return node.value
         
     def __setitem__(self, key, value):
         if super().__contains__(key):
-            # update the value
-            node = super().__getitem__(key)
-            node.value = value
-        else:
-            # make sure the size of cache is not larger than max_size
-            if super().__len__() == self.max_size:
-                self._remove_one_by_policy()
-            node = Node(value)
-            if self.policy == 'LRU':
-                self._add(node)
-            return super().__setitem__(key, node)     
-    
-    def __delitem__(self, __key) -> None:
+            self.__delitem__(key)
+        if super().__len__() == self.max_size:
+            self._cache_pop()
+        node = Node(key, value)
         if self.policy == 'LRU':
-            node = super().__getitem__(__key)
-            self._remove(node)    
-        return super().__delitem__(__key)
+            self._add(node)
+        self.bytes += sys.getsizeof(value)
+        return super().__setitem__(key, node)     
+    
+    def __delitem__(self, key) -> None:
+        node = super().__getitem__(key)
+        if self.policy == 'LRU':
+            self._remove_linked_node(node)
+        self.bytes -= sys.getsizeof(node.value)
+        return super().__delitem__(key)
     
     def clear(self) -> None:
-        self._reset()
+        self._reset_linked_list()
+        self.bytes = 0
         return super().clear()
     
     #configuration operations
+    
+    def get_bytes(self):
+        return self.bytes
     
     def set_policy(self, policy):
         if policy == self.policy:
             return
         elif policy == 'LRU' or policy == 'random':
-            self._reset()
+            self._reset_linked_list()
             if policy == 'LRU':
                 for _, node in self.items():
                     self._add(node)
@@ -93,7 +129,7 @@ class Cache(dict):
     def set_max_size(self, max_size):
         if max_size >= 0:
             while super().__len__() > max_size:
-                self._remove_one_by_policy()
+                self._cache_pop()
             self.max_size = max_size
         else:
             raise Exception("Invalid max size")
