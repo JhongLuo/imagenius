@@ -1,4 +1,3 @@
-
 from flask import render_template, url_for, request
 from app import webapp, memcache
 from flask import json
@@ -8,7 +7,8 @@ from flask import json
 def main():
     return render_template("main.html")
 
-@webapp.route('/get',methods=['POST'])
+
+@webapp.route('/get', methods=['POST'])
 def get():
     key = request.form.get('key')
 
@@ -28,7 +28,8 @@ def get():
 
     return response
 
-@webapp.route('/put',methods=['POST'])
+
+@webapp.route('/put', methods=['POST'])
 def put():
     key = request.form.get('key')
     value = request.form.get('value')
@@ -41,4 +42,3 @@ def put():
     )
 
     return response
-
