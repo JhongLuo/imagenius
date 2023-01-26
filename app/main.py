@@ -1,6 +1,7 @@
 from flask import render_template, url_for, request
 from app import webapp, memcache
-from flask import json
+from flask import json, jsonify
+
 
 
 @webapp.route('/')
@@ -42,3 +43,43 @@ def put():
     )
 
     return response
+
+# Automatic Testing Endpoints
+
+@webapp.route('/api/delete_all', methods=['POST'])
+def delete_all():
+    pass
+
+@webapp.route('/api/upload', methods=['POST'])
+def upload():
+    pass
+
+@webapp.route('/api/list_keys', methods=['POST'])
+def list_keys():
+    pass
+
+@webapp.route('/api/key/<key_value>', methods=['POST'])
+def get_key(key_value):
+    pass
+
+# self defined Endpoints
+
+@webapp.route('/api/key/<key_value>', methods=['DELETE'])
+def delete_key(key_value):
+    pass
+
+@webapp.route('/api/delete_cache/', methods=['POST'])
+def delete_cache():
+    pass
+
+@webapp.route('/api/statistics/max_size/', methods=['PUT'])
+def set_maxsize():
+    pass
+
+@webapp.route('/api/statistics/replacement_policy/', methods=['PUT'])
+def set_replacement_policy():
+    pass
+
+@webapp.route('/api/statistics/', methods=['GET'])
+def get_statistics():
+    pass
