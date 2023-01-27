@@ -1,12 +1,16 @@
 from flask import Flask
 from .cache import Cache
-from .db_operations import init_db
-import mysql.connector
+from . import db_operations
+from .statistics import Statistics
 
 global memcache
 global db
+global stats
 webapp = Flask(__name__)
-memcache = Cache()
-db = init_db()
+
+db = db_operations.init_db()
+stats = Statistics()
+stats.add2db(db)
+memcache = Cache(stats)
 
 from app import  main

@@ -1,5 +1,5 @@
 from flask import render_template, url_for, request
-from app import webapp, memcache
+from app import webapp, memcache, stats, db
 from flask import json, jsonify
 
 

@@ -1,7 +1,7 @@
 import sys
-
+from .statistics import Statistics, ReplacementPolicies
 def small_test_for_cache():
-    memcache = Cache(max_size=100, policy='random')
+    memcache = Cache(max_size=100, policy=ReplacementPolicies.RANDOM)
     memcache['a'] = 1
     print(memcache['a'])
     memcache['a'] = 2
@@ -10,7 +10,7 @@ def small_test_for_cache():
     memcache.clear()
     print('a' in memcache)
     memcache.set_max_size(5)
-    memcache.set_policy('LRU')
+    memcache.set_policy(ReplacementPolicies.LRU)
     for i in range(10):
         memcache[i] = i
         print(f'len: {len(memcache)}')
@@ -33,11 +33,12 @@ class Node:
         self.prev = None
         self.next = None
 
+
 class Cache(dict):
-    def __init__(self, max_size=100000, policy = 'LRU', *args, **kwargs) -> None:
+    def __init__(self, stat : Statistics, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.max_size = max_size
-        self.policy = policy
+        self.max_size = stat.max_size
+        self.policy = stat.replacement_policy
         # implment LRU with double linked list
         self.head = Node(0, 0)
         self.tail = Node(0, 0)
@@ -69,7 +70,7 @@ class Cache(dict):
     # utils
     
     def _cache_pop(self):
-        if self.policy == 'LRU':
+        if self.policy == ReplacementPolicies.LRU:
             node = self._pop_linked_node()
             super().__delitem__(node.key)
         else:
@@ -81,7 +82,7 @@ class Cache(dict):
             
     def __getitem__(self, key):
         node = super().__getitem__(key)
-        if self.policy == 'LRU':
+        if self.policy == ReplacementPolicies.LRU:
             self._remove_linked_node(node)
             self._add(node)
         return node.value
@@ -92,14 +93,14 @@ class Cache(dict):
         if super().__len__() == self.max_size:
             self._cache_pop()
         node = Node(key, value)
-        if self.policy == 'LRU':
+        if self.policy == ReplacementPolicies.LRU:
             self._add(node)
         self.bytes += sys.getsizeof(value)
         return super().__setitem__(key, node)     
     
     def __delitem__(self, key) -> None:
         node = super().__getitem__(key)
-        if self.policy == 'LRU':
+        if self.policy == ReplacementPolicies.LRU:
             self._remove_linked_node(node)
         self.bytes -= sys.getsizeof(node.value)
         return super().__delitem__(key)
@@ -117,9 +118,9 @@ class Cache(dict):
     def set_policy(self, policy):
         if policy == self.policy:
             return
-        elif policy == 'LRU' or policy == 'random':
+        elif policy in ReplacementPolicies:
             self._reset_linked_list()
-            if policy == 'LRU':
+            if policy == ReplacementPolicies.LRU:
                 for _, node in self.items():
                     self._add(node)
             self.policy = policy
@@ -133,3 +134,7 @@ class Cache(dict):
             self.max_size = max_size
         else:
             raise Exception("Invalid max size")
+        
+    def set_config(self, stat : Statistics):
+        self.set_max_size(stat.max_size)
+        self.set_policy(stat.replacement_policy)
