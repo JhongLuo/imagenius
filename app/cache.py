@@ -44,6 +44,7 @@ class Cache(dict):
         self.tail = Node(0, 0)
         self.bytes = 0
         self._connect_linked_node(self.head, self.tail)
+        self.stat = stat
 
     # double linked list operations
     
@@ -109,9 +110,7 @@ class Cache(dict):
         self._reset_linked_list()
         self.bytes = 0
         return super().clear()
-    
-    #configuration operations
-    
+        
     def get_bytes(self):
         return self.bytes
     
