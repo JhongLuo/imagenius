@@ -1,7 +1,7 @@
 from flask import render_template, url_for, request
 from app import webapp, memcache, stats, db
 from flask import json, jsonify
-
+from . import storage_operations
 
 
 @webapp.route('/')
@@ -29,6 +29,23 @@ def get():
 
     return response
 
+@webapp.route('/upload-test', methods=['POST'])
+def upload_test():
+    image = request.files.get('image')
+    try:
+        filename = storage_operations.store_image(image)
+        response = webapp.response_class(
+            response=json.dumps("OK"),
+            status=200,
+            mimetype='application/json'
+        )
+    except Exception as e:
+        response = webapp.response_class(
+            response=json.dumps("Error: {}".format(e)),
+            status=400,
+            mimetype='application/json'
+        )
+    return response
 
 @webapp.route('/put', methods=['POST'])
 def put():
