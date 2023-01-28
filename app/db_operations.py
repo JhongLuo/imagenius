@@ -17,24 +17,42 @@ def update_statistics(db, name, value):
     cursor.execute("UPDATE statistics SET value = %s WHERE name = %s", (value, name))
     db.commit()
     cursor.close()
-    
-def get_statistics(db, name):
-    cursor = db.cursor()
-    cursor.execute("SELECT value FROM statistics WHERE name = %s", (name,))
-    db.commit()
-    cursor.close()
 
-def add_image(db, keyword, path):
+def get_statistics(db):
     cursor = db.cursor()
+    cursor.execute("SELECT * FROM statistics")
+    res = cursor.fetchall()
+    cursor.close()
+    return res
+
+def set_key(db, keyword, path):
+    cursor = db.cursor()
+    cursor.execute("SELECT path FROM images WHERE keyword = %s", (keyword,))
+    if cursor.fetchone() is not None:
+        cursor.execute("DELETE FROM images WHERE keyword = %s", (keyword,))
     cursor.execute("INSERT INTO images (keyword, path) VALUES (%s, %s)", (keyword, path))
     db.commit()
     cursor.close()
 
-def delete_image(db, keyword):
+def delete_key(db, keyword):
     cursor = db.cursor()
     cursor.execute("DELETE FROM images WHERE keyword = %s", (keyword,))
     db.commit()
     cursor.close()
+
+def has_key(db, keyword):
+    cursor = db.cursor()
+    cursor.execute("SELECT path FROM images WHERE keyword = %s", (keyword,))
+    res = cursor.fetchone()
+    cursor.close()
+    return res is not None
+
+def key2filename(db, keyword):
+    cursor = db.cursor()
+    cursor.execute("SELECT path FROM images WHERE keyword = %s", (keyword,))
+    res = cursor.fetchone()
+    cursor.close()
+    return res
 
 def init_db():
     db = mysql.connector.connect(

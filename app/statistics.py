@@ -12,6 +12,14 @@ class ReplacementPolicies(Enum):
             return 'random'
         else:
             raise Exception('Invalid policy')
+    @staticmethod 
+    def str2policy(policy_str):
+        if policy_str == 'LRU':
+            return ReplacementPolicies.LRU
+        elif policy_str == 'random':
+            return ReplacementPolicies.RANDOM
+        else:
+            raise Exception('Invalid policy')
         
 class Statistics:
     def __init__(self):
@@ -60,6 +68,10 @@ class Statistics:
         self.requests_count += 1
         if is_hit:
             self.requests_hit_count += 1
+    
+    def memcache_updated(self, memcache):
+        self.items_len = len(memcache)
+        self.items_bytes = memcache.get_bytes()
     
     def get_hit_rate(self):
         if self.requests_count == 0:

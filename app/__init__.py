@@ -1,16 +1,21 @@
 from flask import Flask
-from .cache import Cache
-from . import db_operations
-from .statistics import Statistics
+from .app_operations import init_app
+import logging
 
-global memcache
 global db
 global stats
+global memcache
+
 webapp = Flask(__name__)
 
-db = db_operations.init_db()
-stats = Statistics()
-stats.add2db(db)
-memcache = Cache(stats)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+file_handler = logging.FileHandler('logfile.log')
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
+
+
+db, stats, memcache = init_app()
 
 from app import  main
