@@ -27,8 +27,8 @@ class Statistics:
     
     def add2db(self, db):
         db_operations.clear_statistics(db)
-        for data_row in self._get_data():
-            db_operations.add_statistics(db, *data_row)
+        
+        db_operations.add_statistics(db, self._get_data())
                                          
     def _get_data(self):
         return [
@@ -52,10 +52,6 @@ class Statistics:
             "miss_rate": self.get_miss_rate()
         }
     
-    def save(self, db):
-        for data_row in self._get_data():
-            db_operations.update_statistics(db, *data_row)
-
     def reset(self):
         self.max_size = 100000
         self.replacement_policy = ReplacementPolicies.LRU
