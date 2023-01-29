@@ -1,5 +1,5 @@
 from flask import render_template, request
-from app import webapp, memcache, stats, db
+from app import webapp, memcache, stats, db, scheduler
 from flask import jsonify
 from . import storage_operations, app_operations, db_operations
 from .statistics import ReplacementPolicies
@@ -25,7 +25,8 @@ def delete_all():
     global db
     global stats
     global memcache
-    db, stats, memcache = app_operations.init_app(db=db, stats=stats, memcache=memcache)
+    global scheduler
+    db, stats, memcache, scheduler = app_operations.init_app(db=db, stats=stats, memcache=memcache, scheduler=scheduler)
     return jsonify({
         "success": "true"
     })
@@ -139,7 +140,7 @@ def delete_key(key_value):
             'key': key_value
         })
 
-@webapp.route('/api/delete_cache/', methods=['POST'])
+@webapp.route('/api/delete_cache', methods=['POST'])
 def delete_cache():
     global memcache
     memcache.clear()
@@ -149,7 +150,7 @@ def delete_cache():
         'success': 'true'
     })
     
-@webapp.route('/api/statistics/max_size/', methods=['PUT'])
+@webapp.route('/api/statistics/max_size', methods=['PUT'])
 def set_maxsize():
     global stats
     stats.max_size = request.form.get('max_size')
@@ -158,15 +159,21 @@ def set_maxsize():
         'max_size': stats.max_size
     })
 
-@webapp.route('/api/statistics/replacement_policy/', methods=['PUT'])
+@webapp.route('/api/statistics/replacement_policy', methods=['PUT'])
 def set_replacement_policy():
     global stats
-    stats.replacement_policy = ReplacementPolicies.str2policy[request.form.get('replacement_policy')]
-    return jsonify({
-        'success': 'true'
-    })
+    try:
+        stats.replacement_policy = ReplacementPolicies.str2policy(request.form.get('replacement_policy'))
+        return jsonify({
+            'success': 'true'
+        })
+    except Exception as e:
+        return jsonify({
+            'success': 'false',
+            'error': 'Invalid replacement policy'
+        })
     
-@webapp.route('/api/statistics/', methods=['GET'])
+@webapp.route('/api/statistics', methods=['GET'])
 def get_statistics():
     global stats
     return jsonify({
