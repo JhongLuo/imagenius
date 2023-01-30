@@ -1,4 +1,4 @@
-from flask import render_template, request
+from flask import render_template, request,redirect,url_for
 from app import webapp, memcache, stats, db, scheduler
 from flask import jsonify
 from . import storage_operations, app_operations, db_operations
@@ -20,16 +20,17 @@ def main():
     }
 
 '''
-@webapp.route('/api/delete_all', methods=['POST'])
+@webapp.route('/api/delete_all', methods=['GET','POST'])
 def delete_all():
-    global db
-    global stats
-    global memcache
-    global scheduler
-    db, stats, memcache, scheduler = app_operations.init_app(db=db, stats=stats, memcache=memcache, scheduler=scheduler)
-    return jsonify({
-        "success": "true"
-    })
+    if request.method == 'POST':
+        global db
+        global stats
+        global memcache
+        global scheduler
+        db, stats, memcache, scheduler = app_operations.init_app(db=db, stats=stats, memcache=memcache, scheduler=scheduler)
+        return jsonify({
+            "success": "true"
+        })
 
 '''
     enctype = multipart/form-data
@@ -41,7 +42,7 @@ def delete_all():
         "key": [String]
     }
 '''
-@webapp.route('/api/upload', methods=['Get','POST'])
+@webapp.route('/api/upload', methods=['GET','POST'])
 def upload():
     if request.method == 'POST':
         key = request.form.get('key')
@@ -84,6 +85,8 @@ def upload():
 def list_keys():
     if request.method == 'GET':
         return render_template("list_key.html", keys=list(memcache.keys()))
+    else:
+        return redirect(url_for('delete_all'))
 
     '''if request.method == 'POST':
         return jsonify({
