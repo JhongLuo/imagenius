@@ -41,42 +41,46 @@ def delete_all():
         "key": [String]
     }
 '''
-@webapp.route('/api/upload', methods=['POST'])
+@webapp.route('/api/upload', methods=['Get','POST'])
 def upload():
-    key = request.form.get('key')
-    file = request.files.get('file')
-    if not key or not file:
-        return jsonify({
-            "success": "false",
-            "error": "Invalid key or file"
-        })
-    global memcache
-    if key in memcache:
-        del memcache[key]
-    filename = storage_operations.store_image(file)
-    filedict = storage_operations.filename2dict(filename)
-    memcache[key] = filedict
-    global stats
-    stats.memcache_updated(memcache)
-    global db
-    db_operations.set_key(db, key, filename)
-    
-    logger.debug(f'memcache keys: {memcache.keys()}')
-    logger.debug(f'stats: {stats.dump()}')
-    logger.debug(f'db: {db_operations.get_statistics(db)}')
-    
-    return jsonify({
-        "success": "true",
-        "key": key
-    })
+    if request.method == 'POST':
+        key = request.form.get('key')
+        file = request.files.get('file')
+        print(key)
+        if not key or not file:
+            return jsonify({
+                "success": "false",
+                "error": "Invalid key or file"
+            })
+        global memcache
+        if key in memcache:
+            del memcache[key]
+        filename = storage_operations.store_image(file)
+        filedict = storage_operations.filename2dict(filename)
+        memcache[key] = filedict
+        global stats
+        stats.memcache_updated(memcache)
+        global db
+        db_operations.set_key(db, key, filename)
 
-'''
-    Expected JSON response:
-    {
-        "success": "true",
-        "keys": [Array of keys (Strings)]
-}
-'''
+        logger.debug(f'memcache keys: {memcache.keys()}')
+        logger.debug(f'stats: {stats.dump()}')
+        logger.debug(f'db: {db_operations.get_statistics(db)}')
+
+        return jsonify({
+            "success": "true",
+            "key": key
+        })
+    else:
+        return render_template("upload.html")
+
+    '''
+        Expected JSON response:
+        {
+            "success": "true",
+            "keys": [Array of keys (Strings)]
+    }
+    '''
 @webapp.route('/api/list_keys', methods=['POST'])
 def list_keys():
     return jsonify({
