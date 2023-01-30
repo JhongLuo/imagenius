@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Image</title>
+    <h2>Select a key and a file to upload</h2>
+</head>
+<body>
+    <form action="/api/upload" method="post" enctype="multipart/form-data">
+        <label for="key">Key:</label>
+        <input type="text" id="key" name="key">
+        <br>
+        <label for="file">File:</label>
+        <input type="file" id="file" name="file">
+        <br><br>
+        <input type="submit" value="Submit">
+    </form>
+
+</body>
+</html>
