@@ -1,4 +1,4 @@
-from flask import render_template, request,redirect,url_for
+from flask import render_template, request,redirect,url_for,flash
 from app import webapp, memcache, stats, db, scheduler
 from flask import jsonify
 from . import storage_operations, app_operations, db_operations
@@ -7,8 +7,12 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+webapp.secret_key = 'bvceu3v2'
+
+
 @webapp.route('/')
 def main():
+    flash('Welcome to group 18 Project!', category='success')
     return render_template("base.html")
 
 # Automatic Testing Endpoints
@@ -48,10 +52,13 @@ def upload():
         key = request.form.get('key')
         file = request.files.get('file')
         if not key or not file:
-            return jsonify({
+            flash('Invalid key or file', category='error')
+            return render_template("upload.html")
+
+            '''return jsonify({
                 "success": "false",
                 "error": "Invalid key or file"
-            })
+            })'''
         global memcache
         if key in memcache:
             del memcache[key]
@@ -67,10 +74,12 @@ def upload():
         logger.debug(f'stats: {stats.dump()}')
         logger.debug(f'db: {db_operations.get_statistics(db)}')
 
-        return jsonify({
+        flash('Successfully added key and image:' + str(key), category='success')
+        return render_template("upload.html")
+        '''return jsonify({
             "success": "true",
             "key": key
-        })
+        })'''
     else:
         return render_template("upload.html")
 
