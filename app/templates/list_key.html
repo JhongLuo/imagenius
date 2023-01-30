@@ -1,0 +1,19 @@
+<!--<form action="/api/list_keys" method="post">
+  <input type="submit" value="List Keys">
+</form> -->
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>List Keys</title>
+</head>
+<body>
+<h1>List of Keys</h1>
+<ul>
+{% for key in keys %}
+<li>{{ key }}</li>
+{% endfor %}
+</ul>
+</body>
+</html>
