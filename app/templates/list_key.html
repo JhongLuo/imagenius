@@ -1,10 +1,9 @@
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>List Keys</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{%  block title %} List Keys {% endblock %}
+
+{%  block body %}
     <h1>List of Keys</h1>
     <ul>
     {% for key in keys %}
@@ -14,5 +13,4 @@
     <form action="/api/delete_all", method="post">
         <input type="submit" value="DELETE ALL">
     </form>
-</body>
-</html>
+{% endblock %}
