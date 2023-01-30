@@ -80,12 +80,18 @@ def upload():
             "keys": [Array of keys (Strings)]
     }
     '''
-@webapp.route('/api/list_keys', methods=['POST'])
+@webapp.route('/api/list_keys', methods=['GET','POST'])
 def list_keys():
-    return jsonify({
-        "success": "true",
-        "keys": list(memcache.keys())
-    })
+    if request.method == 'GET':
+        return render_template("list_key.html", keys=list(memcache.keys()))
+
+    '''if request.method == 'POST':
+        return jsonify({
+            "success": "true",
+            "keys": list(memcache.keys())
+        })
+    else:
+        return render_template("list_key.html")'''
 
 '''
     Expected JSON response:
