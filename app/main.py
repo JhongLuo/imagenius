@@ -46,7 +46,6 @@ def upload():
     if request.method == 'POST':
         key = request.form.get('key')
         file = request.files.get('file')
-        print(key)
         if not key or not file:
             return jsonify({
                 "success": "false",
