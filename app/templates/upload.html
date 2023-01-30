@@ -1,10 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Upload Image</title>
+{% extends "base.html" %}
+
+{%  block title %} Upload {% endblock %}
+
+{%  block body %}
     <h2>Select a key and a file to upload</h2>
-</head>
-<body>
+
     <form action="/api/upload" method="post" enctype="multipart/form-data">
         <label for="key">Key:</label>
         <input type="text" id="key" name="key">
@@ -15,5 +15,4 @@
         <input type="submit" value="Submit">
     </form>
 
-</body>
-</html>
+{% endblock %}
