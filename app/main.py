@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 webapp.secret_key = 'bvceu3v2'
 
 
-@webapp.route('/')
+@webapp.route('/home')
 def main():
     flash('Welcome to group 18 Project!', category='success')
     return render_template("base.html")
@@ -24,7 +24,7 @@ def main():
     }
 
 '''
-@webapp.route('/api/delete_all', methods=['GET','POST'])
+@webapp.route('/v2/delete_all', methods=['GET','POST'])
 def delete_all():
     if request.method == 'POST':
         global db
@@ -32,9 +32,13 @@ def delete_all():
         global memcache
         global scheduler
         db, stats, memcache, scheduler = app_operations.init_app(db=db, stats=stats, memcache=memcache, scheduler=scheduler)
-        return jsonify({
+
+        flash("Delete all keys: Success !", category='sucess')
+        return redirect(url_for('list_keys'))
+
+        '''return jsonify({
             "success": "true"
-        })
+        })'''
 
 '''
     enctype = multipart/form-data
@@ -46,7 +50,7 @@ def delete_all():
         "key": [String]
     }
 '''
-@webapp.route('/api/upload', methods=['GET','POST'])
+@webapp.route('/v2/upload', methods=['GET','POST'])
 def upload():
     if request.method == 'POST':
         key = request.form.get('key')
@@ -90,7 +94,7 @@ def upload():
             "keys": [Array of keys (Strings)]
     }
     '''
-@webapp.route('/api/list_keys', methods=['GET','POST'])
+@webapp.route('/v2/list_keys', methods=['GET','POST'])
 def list_keys():
     if request.method == 'GET':
         return render_template("list_key.html", keys=list(memcache.keys()))
