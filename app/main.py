@@ -11,10 +11,9 @@ webapp.secret_key = 'bvceu3v2'
 
 
 @webapp.route('/home')
-def main():
+def main_v2():
     flash('Welcome to group 18 Project!', category='success')
     return render_template("base.html")
-
 # Automatic Testing Endpoints
 
 '''
@@ -25,7 +24,7 @@ def main():
 
 '''
 @webapp.route('/v2/delete_all', methods=['GET','POST'])
-def delete_all():
+def delete_all_v2():
     if request.method == 'POST':
         global db
         global stats
@@ -34,7 +33,7 @@ def delete_all():
         db, stats, memcache, scheduler = app_operations.init_app(db=db, stats=stats, memcache=memcache, scheduler=scheduler)
 
         flash("Delete all keys: Success !", category='sucess')
-        return redirect(url_for('list_keys'))
+        return redirect(url_for('list_keys_v2'))
 
         '''return jsonify({
             "success": "true"
@@ -50,8 +49,9 @@ def delete_all():
         "key": [String]
     }
 '''
+
 @webapp.route('/v2/upload', methods=['GET','POST'])
-def upload():
+def upload_v2():
     if request.method == 'POST':
         key = request.form.get('key')
         file = request.files.get('file')
@@ -95,11 +95,11 @@ def upload():
     }
     '''
 @webapp.route('/v2/list_keys', methods=['GET','POST'])
-def list_keys():
+def list_keys_v2():
     if request.method == 'GET':
         return render_template("list_key.html", keys=list(memcache.keys()))
     else:
-        return redirect(url_for('delete_all'))
+        return redirect(url_for('delete_all_v2'))
 
     '''if request.method == 'POST':
         return jsonify({
