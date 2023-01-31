@@ -9,20 +9,11 @@ logger = logging.getLogger(__name__)
 
 webapp.secret_key = 'bvceu3v2'
 
-
 @webapp.route('/home')
 def main_v2():
     flash('Welcome to group 18 Project!', category='success')
     return render_template("base.html")
-# Automatic Testing Endpoints
 
-'''
-    Expected JSON response:
-    {
-        "success": "true"
-    }
-
-'''
 @webapp.route('/v2/delete_all', methods=['GET','POST'])
 def delete_all_v2():
     if request.method == 'POST':
@@ -35,21 +26,6 @@ def delete_all_v2():
         flash("Delete all keys: Success !", category='sucess')
         return redirect(url_for('list_keys_v2'))
 
-        '''return jsonify({
-            "success": "true"
-        })'''
-
-'''
-    enctype = multipart/form-data
-    POST parameter: name = key, type = string
-    POST parameter: name = file, type = file
-    Expected JSON response:
-    {
-        "success": "true",
-        "key": [String]
-    }
-'''
-
 @webapp.route('/v2/upload', methods=['GET','POST'])
 def upload_v2():
     if request.method == 'POST':
@@ -58,11 +34,6 @@ def upload_v2():
         if not key or not file:
             flash('Invalid key or file', category='error')
             return render_template("upload.html")
-
-            '''return jsonify({
-                "success": "false",
-                "error": "Invalid key or file"
-            })'''
         global memcache
         if key in memcache:
             del memcache[key]
@@ -80,20 +51,9 @@ def upload_v2():
 
         flash('Successfully added key and image:' + str(key), category='success')
         return render_template("upload.html")
-        '''return jsonify({
-            "success": "true",
-            "key": key
-        })'''
     else:
         return render_template("upload.html")
 
-    '''
-        Expected JSON response:
-        {
-            "success": "true",
-            "keys": [Array of keys (Strings)]
-    }
-    '''
 @webapp.route('/v2/list_keys', methods=['GET','POST'])
 def list_keys_v2():
     if request.method == 'GET':
@@ -101,13 +61,78 @@ def list_keys_v2():
     else:
         return redirect(url_for('delete_all_v2'))
 
-    '''if request.method == 'POST':
+# Automatic Testing Endpoints
+
+'''
+    Expected JSON response:
+    {
+        "success": "true"
+    }
+
+'''
+@webapp.route('/api/delete_all', methods=['POST'])
+def delete_all():
+    global db
+    global stats
+    global memcache
+    global scheduler
+    db, stats, memcache, scheduler = app_operations.init_app(db=db, stats=stats, memcache=memcache, scheduler=scheduler)
+    return jsonify({
+        "success": "true"
+    })
+
+'''
+    enctype = multipart/form-data
+    POST parameter: name = key, type = string
+    POST parameter: name = file, type = file
+    Expected JSON response:
+    {
+        "success": "true",
+        "key": [String]
+    }
+'''
+@webapp.route('/api/upload', methods=['POST'])
+def upload():
+    key = request.form.get('key')
+    file = request.files.get('file')
+    if not key or not file:
         return jsonify({
-            "success": "true",
-            "keys": list(memcache.keys())
+            "success": "false",
+            "error": "Invalid key or file"
         })
-    else:
-        return render_template("list_key.html")'''
+    global memcache
+    if key in memcache:
+        del memcache[key]
+    filename = storage_operations.store_image(file)
+    filedict = storage_operations.filename2dict(filename)
+    memcache[key] = filedict
+    global stats
+    stats.memcache_updated(memcache)
+    global db
+    db_operations.set_key(db, key, filename)
+    
+    logger.debug(f'memcache keys: {memcache.keys()}')
+    logger.debug(f'stats: {stats.dump()}')
+    logger.debug(f'db: {db_operations.get_statistics(db)}')
+    
+    return jsonify({
+        "success": "true",
+        "key": key
+    })
+
+'''
+    Expected JSON response:
+    {
+        "success": "true",
+        "keys": [Array of keys (Strings)]
+}
+'''
+@webapp.route('/api/list_keys', methods=['POST'])
+def list_keys():
+    return jsonify({
+        "success": "true",
+        "keys": list(memcache.keys())
+    })
 
 '''
     Expected JSON response:
