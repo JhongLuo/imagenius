@@ -61,7 +61,7 @@ def key2filename(db, keyword):
 def init_db():
     db = mysql.connector.connect(
         user='root',
-        password='longqin0427',
+        password='',
         host='localhost',
         database='group18a1',
     )
