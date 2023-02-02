@@ -1,7 +1,7 @@
 from flask import render_template, request,redirect,url_for,flash
 from app import webapp, memcache, stats, db, scheduler
 from flask import jsonify
-from . import storage_operations, app_operations, db_operations
+from . import storage_operations, app_operations
 from .statistics import ReplacementPolicies
 import logging
 
@@ -43,11 +43,11 @@ def upload_v2():
         global stats
         stats.memcache_updated(memcache)
         global db
-        db_operations.set_key(db, key, filename)
+        db.set_key(key, filename)
 
         logger.debug(f'memcache keys: {memcache.keys()}')
         logger.debug(f'stats: {stats.dump()}')
-        logger.debug(f'db: {db_operations.get_statistics(db)}')
+        logger.debug(f'db: {db.get_statistics()}')
 
         flash('Successfully added key and image:' + str(key), category='success')
         return render_template("upload.html")
@@ -109,11 +109,11 @@ def upload():
     global stats
     stats.memcache_updated(memcache)
     global db
-    db_operations.set_key(db, key, filename)
+    db.set_key(key, filename)
     
     logger.debug(f'memcache keys: {memcache.keys()}')
     logger.debug(f'stats: {stats.dump()}')
-    logger.debug(f'db: {db_operations.get_statistics(db)}')
+    logger.debug(f'db: {db.get_statistics()}')
     
     return jsonify({
         "success": "true",
@@ -132,7 +132,7 @@ def list_keys():
     global db
     return jsonify({
         "success": "true",
-        "keys": db_operations.get_keys(db)
+        "keys": db.get_keys()
     })
 
 '''
@@ -150,7 +150,7 @@ def get_key(key_value):
     stats.add_request_count(key_value in memcache)
     if key_value not in memcache:
         global db
-        filename = db_operations.key2filename(db, key_value)
+        filename = db.key2path(key_value)
         if filename is None:
             return jsonify({
                 "success": "false",
@@ -176,7 +176,7 @@ def delete_key(key_value):
         global stats
         stats.memcache_updated(memcache)
     global db
-    filename = db_operations.key2filename(db, key_value)
+    filename = db.key2path(key_value)
     if not filename:
         return jsonify({
             'success': 'false',
@@ -184,7 +184,7 @@ def delete_key(key_value):
             'error': 'Key not found'
         })
     else:
-        db_operations.delete_key(db, key_value)
+        db.delete_key(key_value)
         storage_operations.delete_image(filename)
         return jsonify({
             'success': 'true',

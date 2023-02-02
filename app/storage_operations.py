@@ -50,7 +50,6 @@ def get_image_path(filename):
 
 # get the image
 def filename2dict(filename):
-    print(filename)
     with open(get_image_path(filename), 'rb') as f:
         return {"filename": filename, "content_type": "image/" + get_ext(filename), "data": base64.b64encode(f.read()).decode()}
 

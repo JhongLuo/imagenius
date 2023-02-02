@@ -1,16 +1,16 @@
 from .cache import Cache
-from . import db_operations, storage_operations
+from . import DBConnector, storage_operations
 from .statistics import Statistics
 from apscheduler.schedulers.background import BackgroundScheduler
 
 def start_scheduler(db, stats, memcache):
     scheduler = BackgroundScheduler()
-    scheduler.add_job(func=syncStats, trigger='interval', args=(db, stats, memcache), seconds=10)
+    scheduler.add_job(func=syncStats, trigger='interval', args=(db, stats, memcache), seconds=5)
     scheduler.start()
     return scheduler
 
 def syncStats(db, stats, memcache):
-    stats.add2db(db)
+    stats.set2db(db)
     memcache.set_config(stats)
 
 def init_app(db=None, stats=None, memcache=None, scheduler=None):
@@ -19,7 +19,7 @@ def init_app(db=None, stats=None, memcache=None, scheduler=None):
         scheduler.shutdown()
     if db:
         db.close()
-    db = db_operations.init_db()
+    db = DBConnector.DBConnector()
     if not stats:
         stats = Statistics()
     stats.add2db(db)
