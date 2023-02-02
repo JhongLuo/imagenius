@@ -26,9 +26,7 @@ class Statistics:
         self.reset()
     
     def add2db(self, db):
-        db_operations.clear_statistics(db)
-        
-        db_operations.add_statistics(db, self._get_data())
+        db_operations.set_statistics(db, self._get_data())
                                          
     def _get_data(self):
         return [

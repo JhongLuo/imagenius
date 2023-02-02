@@ -7,19 +7,12 @@ def get_keys(db):
     cursor.close()
     return res
 
-def add_statistics(db, rows):
-    cursor = db.cursor()
-    cursor.execute("START TRANSACTION")
-    for name, value in rows:
-        cursor.execute("INSERT INTO statistics (name, value) VALUES (%s, %s)", (name, value))
-    cursor.execute("COMMIT")
-    db.commit()
-    cursor.close()
-    
-def clear_statistics(db):
+def set_statistics(db, rows):
     cursor = db.cursor()
     cursor.execute("START TRANSACTION")
     cursor.execute("TRUNCATE TABLE statistics")
+    for name, value in rows:
+        cursor.execute("INSERT INTO statistics (name, value) VALUES (%s, %s)", (name, value))
     cursor.execute("COMMIT")
     db.commit()
     cursor.close()
