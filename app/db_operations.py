@@ -1,6 +1,11 @@
 import mysql.connector
 
-
+def get_keys(db):
+    cursor = db.cursor()
+    cursor.execute("SELECT keyword FROM images")
+    res = cursor.fetchall()
+    cursor.close()
+    return res
 
 def add_statistics(db, rows):
     cursor = db.cursor()

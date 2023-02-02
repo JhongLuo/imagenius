@@ -129,9 +129,10 @@ def upload():
 '''
 @webapp.route('/api/list_keys', methods=['POST'])
 def list_keys():
+    global db
     return jsonify({
         "success": "true",
-        "keys": list(memcache.keys())
+        "keys": db_operations.get_keys(db)
     })
 
 '''
@@ -230,3 +231,12 @@ def get_statistics():
         'success': 'true',
         'statistics': stats.dump()
     })
+    
+@webapp.route('/api/cache_keys', methods=['GET'])
+def get_cache_keys():
+    global memcache
+    return jsonify({
+        "success": "true",
+        "keys": list(memcache.keys())
+    })
+    
