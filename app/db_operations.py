@@ -42,24 +42,20 @@ def delete_key(db, keyword):
     db.commit()
     cursor.close()
 
-def has_key(db, keyword):
-    cursor = db.cursor()
-    cursor.execute("SELECT path FROM images WHERE keyword = %s", (keyword,))
-    res = cursor.fetchone()
-    cursor.close()
-    return res is not None
-
 def key2filename(db, keyword):
     cursor = db.cursor()
     cursor.execute("SELECT path FROM images WHERE keyword = %s", (keyword,))
     res = cursor.fetchone()
     cursor.close()
-    return res
+    if res:
+        return res[0]
+    else:
+        return None
 
 def init_db():
     db = mysql.connector.connect(
         user='root',
-        password='longqin0427',
+        password='ece1779pass',
         host='localhost',
         database='group18a1',
     )
