@@ -1,4 +1,4 @@
-from . import db_operations
+from . import DBConnector
 from enum import Enum
 
 class ReplacementPolicies(Enum):
@@ -25,9 +25,12 @@ class Statistics:
     def __init__(self):
         self.reset()
     
-    def add2db(self, db):
-        db_operations.set_statistics(db, self._get_data())
-                                         
+    def add2db(self, db : DBConnector):
+        db.add_statistics(self._get_data())
+
+    def set2db(self, db : DBConnector):
+        db.set_statistics(self._get_data())
+                          
     def _get_data(self):
         return [
             ('max_size', self.max_size),

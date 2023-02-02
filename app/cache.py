@@ -2,32 +2,6 @@ import sys
 from .statistics import Statistics, ReplacementPolicies
 import threading
 
-def small_test_for_cache():
-    memcache = Cache(max_size=100, policy=ReplacementPolicies.RANDOM)
-    memcache['a'] = 1
-    print(memcache['a'])
-    memcache['a'] = 2
-    print(memcache['a'])
-    print('b' in memcache)
-    memcache.clear()
-    print('a' in memcache)
-    memcache.set_max_size(5)
-    memcache.set_policy(ReplacementPolicies.LRU)
-    for i in range(10):
-        memcache[i] = i
-        print(f'len: {len(memcache)}')
-        print(f'bytes: {memcache.get_bytes()}')
-        for key in memcache:
-            print(f'{key}: {memcache[key]}')
-    memcache.set_max_size(2)
-
-    print(f'len: {len(memcache)}')
-    print(f'bytes: {memcache.get_bytes()}')
-    for key in memcache:
-        print(f'{key}: {memcache[key]}')
-    memcache['a'] = 100
-    print(memcache['a'])
-
 class Node:
     def __init__(self, key, value):
         self.key = key
