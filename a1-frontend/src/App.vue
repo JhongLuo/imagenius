@@ -10,8 +10,8 @@ import { RouterLink, RouterView } from "vue-router";
   <nav class="navbar navbar-expand-lg bg-dark">
     <div class="container-fluid">
       <RouterLink to="/" class="ms-5 my-2 link-light navbar-brand"
-        >Home</RouterLink
-      >
+      >Home
+      </RouterLink>
       <div class="me-5 d-flex flex-row-reverse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="mx-1 nav-item">
@@ -20,8 +20,9 @@ import { RouterLink, RouterView } from "vue-router";
               class="link-secondary nav-link"
               active-class="link-light active"
               aria-current="page"
-              >Upload</RouterLink
             >
+              Upload
+            </RouterLink>
           </li>
 
           <li class="mx-1 nav-item">
@@ -30,8 +31,9 @@ import { RouterLink, RouterView } from "vue-router";
               class="link-secondary nav-link"
               active-class="link-light active"
               aria-current="page"
-              >Query</RouterLink
             >
+              Query
+            </RouterLink>
           </li>
 
           <li class="mx-1 nav-item">
@@ -40,8 +42,9 @@ import { RouterLink, RouterView } from "vue-router";
               class="link-secondary nav-link"
               active-class="link-light active"
               aria-current="page"
-              >Keys</RouterLink
             >
+              Keys
+            </RouterLink>
           </li>
 
           <li class="mx-1 nav-item">
@@ -50,8 +53,9 @@ import { RouterLink, RouterView } from "vue-router";
               class="link-secondary nav-link"
               active-class="link-light active"
               aria-current="page"
-              >Config</RouterLink
             >
+              Config
+            </RouterLink>
           </li>
 
           <li class="mx-1 nav-item">
@@ -60,8 +64,9 @@ import { RouterLink, RouterView } from "vue-router";
               class="link-secondary nav-link"
               active-class="link-light active"
               aria-current="page"
-              >Stats</RouterLink
             >
+              Stats
+            </RouterLink>
           </li>
         </ul>
       </div>
