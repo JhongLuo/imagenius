@@ -13,8 +13,7 @@ logger.addHandler(file_handler)
 
 global db
 global stats
-global memcache
 global scheduler
-db, stats, memcache, scheduler = init_app()
+db, stats, scheduler = init_app()
 
 from app import  main
