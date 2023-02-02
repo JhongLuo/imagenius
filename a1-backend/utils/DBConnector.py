@@ -1,7 +1,6 @@
 import mysql.connector
 import threading
 
-
 class DBConnector:
     def __init__(self):
         self.sql_connector = mysql.connector.connect(
@@ -10,28 +9,18 @@ class DBConnector:
             host='localhost',
             database='group18a1',
         )
-        cursor = self.sql_connector.cursor()
-        cursor.execute("START TRANSACTION")
-        cursor.execute("SHOW TABLES")
-        tables = cursor.fetchall()
-        for table in tables:
-            cursor.execute("DROP TABLE {}".format(table[0]))
-
-        create_images = '''CREATE TABLE images (
-                                    keyword VARCHAR(255) PRIMARY KEY,
-                                    path VARCHAR(255) NOT NULL
-                            )'''
-        create_statistics = '''CREATE TABLE statistics (
-                                    name VARCHAR(255) PRIMARY KEY,
-                                    value DECIMAL(65, 3) NOT NULL
-                            )'''    
-        cursor.execute(create_images)
-        cursor.execute(create_statistics)
-        cursor.execute("COMMIT")
-        self.sql_connector.commit()
-        cursor.close()
+        
         self.statistic_lock = threading.Lock()
         self.images_lock = threading.Lock()
+
+    def delete_keys(self):
+        with self.images_lock:
+            cursor = self.sql_connector.cursor()
+            cursor.execute("START TRANSACTION")
+            cursor.execute("TRUNCATE TABLE images")
+            cursor.execute("COMMIT")
+            self.sql_connector.commit()
+            cursor.close()
 
     def get_keys(self):
         cursor = self.sql_connector.cursor()
@@ -60,14 +49,17 @@ class DBConnector:
             cursor.execute("COMMIT")
             self.sql_connector.commit()
             cursor.close()
-
-    def get_statistics(self):
+    
+    def select_statistics(self, key):
         cursor = self.sql_connector.cursor()
-        cursor.execute("SELECT * FROM statistics")
-        res = cursor.fetchall()
+        cursor.execute("SELECT value FROM statistics WHERE name = %s", (key,))
+        res = cursor.fetchone()
         cursor.close()
-        return res
-
+        if res:
+            return res[0]
+        else:
+            return None
+        
     def set_key(self, keyword, path):
         with self.images_lock:
             cursor = self.sql_connector.cursor()
@@ -97,3 +89,6 @@ class DBConnector:
             return res[0]
         else:
             return None
+
+    def close(self):
+        self.sql_connector.close()

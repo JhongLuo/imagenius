@@ -1,6 +1,7 @@
 import sys
-from .statistics import Statistics, ReplacementPolicies
+from utils.ReplacementPolicies import ReplacementPolicies
 import threading
+from utils.DBConnector import DBConnector
 
 class Node:
     def __init__(self, key, value):
@@ -9,21 +10,31 @@ class Node:
         self.prev = None
         self.next = None
 
-
 class Cache(dict):
-    def __init__(self, stat : Statistics, *args, **kwargs) -> None:
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.max_size = stat.max_size
-        self.policy = stat.replacement_policy
+        self.db = DBConnector()
+        self.max_size = 0
+        self.policy = ReplacementPolicies.RANDOM
         # implment LRU with double linked list
         self.head = Node(0, 0)
         self.tail = Node(0, 0)
         self.bytes = 0
         self._connect_linked_node(self.head, self.tail)
-        self.stat = stat
         self.configurate_lock = threading.Lock()
         self.linked_list_lock = threading.Lock()
         self.write_lock = threading.Lock()
+        self.syncDB()
+        
+    def syncDB(self):
+        self.db.set_statistics([('items_len', len(self)), ('item_bytes', self.bytes)])
+        max_size_str = self.db.select_statistics('max_size')
+        if max_size_str:
+            self.set_max_size(int(max_size_str))
+        policy_str = self.db.select_statistics('replacement_policy')
+        if policy_str:
+            self.set_policy(ReplacementPolicies.int2policy(int(policy_str)))
+    
     # double linked list operations
     
     def _connect_linked_node(self, node1, node2):
@@ -100,10 +111,10 @@ class Cache(dict):
         return self.bytes
     
     def set_policy(self, policy):
+        if policy == self.policy:
+            return
         with self.write_lock:
-            if policy == self.policy:
-                return
-            elif policy in ReplacementPolicies:
+            if policy in ReplacementPolicies:
                 self._reset_linked_list()
                 if policy == ReplacementPolicies.LRU:
                     for _, node in self.items():
@@ -113,14 +124,12 @@ class Cache(dict):
                 raise Exception("Unknown replacement policy")
 
     def set_max_size(self, max_size):
+        if max_size == self.max_size:
+            return
         with self.write_lock:
             if max_size >= 0:
                 while super().__len__() > max_size:
                     self._cache_pop()
                 self.max_size = max_size
             else:
-                raise Exception("Invalid max size")
-        
-    def set_config(self, stat : Statistics):
-        self.set_max_size(stat.max_size)
-        self.set_policy(stat.replacement_policy)
+                raise Exception("Invalid max size")        
