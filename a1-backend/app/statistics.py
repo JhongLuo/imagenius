@@ -1,43 +1,30 @@
-from . import db_operations
-from enum import Enum
+from utils.DBConnector import DBConnector
+from collections import deque
+from utils.ReplacementPolicies import ReplacementPolicies
 
-class ReplacementPolicies(Enum):
-    LRU = 0
-    RANDOM = 1
-    @staticmethod
-    def policy2str(policy):
-        if policy == ReplacementPolicies.LRU:
-            return 'LRU'
-        elif policy == ReplacementPolicies.RANDOM:
-            return 'random'
-        else:
-            raise Exception('Invalid policy')
-    @staticmethod 
-    def str2policy(policy_str):
-        if policy_str == 'LRU':
-            return ReplacementPolicies.LRU
-        elif policy_str == 'random':
-            return ReplacementPolicies.RANDOM
-        else:
-            raise Exception('Invalid policy')
-        
 class Statistics:
     def __init__(self):
         self.reset()
+        self.statistic_history = deque(maxlen=120)
+                          
+    def syncDB(self, db : DBConnector):        
+        db.set_statistics(self._get_instance1_data())
+        self.items_len = db.select_statistics('items_len')
+        self.items_bytes = db.select_statistics('items_bytes')
+        self.statistic_history.append(self.dump())
     
-    def add2db(self, db):
-        db_operations.clear_statistics(db)
-        
-        db_operations.add_statistics(db, self._get_data())
-                                         
-    def _get_data(self):
+    def _get_instance1_data(self):
         return [
             ('max_size', self.max_size),
             ('replacement_policy', self.replacement_policy.value),
-            ('items_len', self.items_len),
-            ('items_bytes', self.items_bytes),
             ('requests_count', self.requests_count),
             ('requests_hit_count', self.requests_hit_count)
+        ]
+    
+    def _get_instance2_data(self):
+        return [
+            ('items_len', self.items_len),
+            ('items_bytes', self.items_bytes)
         ]
 
     def dump(self):
