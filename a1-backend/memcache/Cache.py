@@ -27,13 +27,9 @@ class Cache(dict):
         self.syncDB()
         
     def syncDB(self):
-        self.db.set_statistics([('items_len', len(self)), ('item_bytes', self.bytes)])
-        max_size_str = self.db.select_statistics('max_size')
-        if max_size_str:
-            self.set_max_size(int(max_size_str))
-        policy_str = self.db.select_statistics('replacement_policy')
-        if policy_str:
-            self.set_policy(ReplacementPolicies.int2policy(int(policy_str)))
+        self.db.set_statistics([('items_len', len(self)), ('items_bytes', self.bytes)])
+        self.set_max_size(int(self.db.select_statistics('max_size')))
+        self.set_policy(ReplacementPolicies.int2policy(self.db.select_statistics('replacement_policy')))
     
     # double linked list operations
     
