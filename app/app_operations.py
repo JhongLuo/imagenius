@@ -5,7 +5,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 def start_scheduler(db, stats, memcache):
     scheduler = BackgroundScheduler()
-    scheduler.add_job(func=syncStats, trigger='interval', args=(db, stats, memcache), seconds=1)
+    scheduler.add_job(func=syncStats, trigger='interval', args=(db, stats, memcache), seconds=10)
     scheduler.start()
     return scheduler
 
