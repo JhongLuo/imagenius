@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 # TODO: handle all error cases according to following:
 # {
-#     'success': false,
+#     'success': False,
 #     'error': {
 #         'code': int (server_error_code)
 #         'message': str (error_message)
@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
     POST parameter: name = file, type = file
     Expected JSON response:
     {
-        'success': true,
+        'success': True,
         'key': [str]
     }
 '''
@@ -40,7 +40,7 @@ def upload():
     file = request.files.get('file')
     if not key or not file:
         return jsonify({
-            'success': false,
+            'success': False,
             'error': 'Invalid key or file'
         })
     memcache_operations.delete_key(key)
@@ -50,7 +50,7 @@ def upload():
     db.set_key(key, filename)
 
     return jsonify({
-        'success': true,
+        'success': True,
         'key': key
     })
 
@@ -63,7 +63,7 @@ def upload():
     ----
     Expected JSON response:
     {
-        'success': true,
+        'success': True,
         'key' : [str],
         'content' : file contents
     }
@@ -77,14 +77,14 @@ def get_image(key_value):
         filename = db.key2path(key_value)
         if filename is None:
             return jsonify({
-                'success': false,
+                'success': False,
                 'error': 'Key not found'
             })
         json_content = storage_operations.filename2dict(filename)
         memcache_operations.set_key(key_value, json_content)
     stats.add_request_count(is_hit)
     return jsonify({
-        'success': true,
+        'success': True,
         'key': key_value,
         'content': json_content
     })
@@ -98,14 +98,14 @@ def get_image(key_value):
     ----
     Expected JSON response:
     {
-        'success': true,
+        'success': True,
         'keys': [str]
     }
 '''
 @webapp.route('/api/list_keys', methods=['GET'])
 def list_keys():
     return jsonify({
-        'success': true,
+        'success': True,
         'keys': db.get_keys()
     })
 
@@ -115,7 +115,7 @@ def list_keys():
     ----
     Expected JSON response:
     {
-        'success': true
+        'success': True
     }
 '''
 @webapp.route('/api/delete_all', methods=['POST'])
@@ -125,7 +125,7 @@ def delete_all():
     global scheduler
     db, stats, scheduler = app_operations.init_app(db=db, stats=stats, scheduler=scheduler)
     return jsonify({
-        'success': true
+        'success': True
     })
 
 # self defined Endpoints
@@ -139,14 +139,14 @@ def delete_all():
     ----
     Expected JSON response:
     {
-        'success': true,
+        'success': True,
         'keys': [str]
 }
 '''
 @webapp.route('/api/cache_keys', methods=['GET'])
 def get_cache_keys():
     return jsonify({
-        'success': true,
+        'success': True,
         'keys': list(memcache_operations.get_keys())
     })
 
@@ -155,7 +155,7 @@ def get_cache_keys():
     ----
     Expected JSON response:
     {
-        'success': true,
+        'success': True,
         'replacement_policy': str,
         'max_size': str
     }
@@ -163,7 +163,7 @@ def get_cache_keys():
 @webapp.route('/api/cache_configs', methods=['GET'])
 def get_cache_configs():
     return jsonify({
-        'success': true,
+        'success': True,
         'replacement_policy': stats.replacement_policy,
         'max_size': stats.max_size
 
@@ -179,7 +179,7 @@ def get_cache_configs():
     }
     Expected JSON response:
     {
-        'success': true,
+        'success': True,
         'replacement_policy': str,
         'max_size': float
     }
@@ -190,14 +190,14 @@ def set_cache_configs():
         stats.replacement_policy = ReplacementPolicies.str2policy(request.form.get('replacement_policy'))
         stats.max_size = float(request.form.get('max_size'))
         return jsonify({
-            'success': true,
+            'success': True,
             'replacement_policy': stats.replacement_policy,
             'max_size': stats.max_size
 
         })
     except Exception:
         return jsonify({
-            'success': false,
+            'success': False,
             'error': 'Invalid replacement policy'
         })
 
@@ -206,7 +206,7 @@ def set_cache_configs():
     ----
     Expected JSON response:
     {
-        'success': true,
+        'success': True,
         'keys': [str]
     }
 '''
@@ -214,7 +214,7 @@ def set_cache_configs():
 def clear_cache():
     memcache_operations.delete_keys()
     return jsonify({
-        'success': true,
+        'success': True,
         'keys': list(memcache_operations.get_keys())
     })
 
@@ -229,7 +229,7 @@ def clear_cache():
     Expected JSON response:
     {
         #TODO: revise response format
-        'success': true,
+        'success': True,
         'keys': [str]
     }
 '''
@@ -237,7 +237,6 @@ def clear_cache():
 @webapp.route('/api/stats', methods=['GET'])
 def get_stats():
     return jsonify({
-        'success': true,
+        'success': True,
         'stats': list(stats.statistic_history)
     })
-
