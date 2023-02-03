@@ -181,7 +181,7 @@ def delete_cache():
     
 @webapp.route('/api/statistics/max_size', methods=['PUT'])
 def set_maxsize():
-    stats.max_size = float(request.form.get('max_size'))
+    stats.max_size = int(request.form.get('max_size'))
     return jsonify({
         'success': 'true',
         'max_size': stats.max_size
