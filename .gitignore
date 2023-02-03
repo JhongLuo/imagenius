@@ -22,4 +22,7 @@ images/
 **.vscode
 
 # ignore node.js pkgs
-**node_modules
+**/node_modules
+
+# ignore frontend test json files
+**/test_jsons/test**.json

@@ -1,18 +1,14 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
-// import { dummyCarData } from "@/testData.json";
-// import { ref } from "vue";
-
-// const cars = ref(dummyCarData);
 </script>
 
 <template>
   <nav class="navbar navbar-expand-lg bg-dark">
     <div class="container-fluid">
       <RouterLink to="/" class="ms-5 my-2 link-light navbar-brand"
-      >Home
+        >Home
       </RouterLink>
-      <div class="me-5 d-flex flex-row-reverse" id="navbarNav">
+      <div id="navbarNav" class="me-5 d-flex flex-row-reverse">
         <ul class="navbar-nav">
           <li class="mx-1 nav-item">
             <RouterLink

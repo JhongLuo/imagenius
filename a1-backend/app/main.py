@@ -7,86 +7,31 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# webapp.secret_key = 'bvceu3v2'
-
-# @webapp.route('/home')
-# def main_v2():
-#     flash('Welcome to group 18 Project!', category='success')
-#     return render_template("base.html")
-
-# @webapp.route('/v2/delete_all', methods=['GET','POST'])
-# def delete_all_v2():
-#     if request.method == 'POST':
-#         global db
-#         global stats
-#         global memcache
-#         global scheduler
-#         db, stats, memcache, scheduler = app_operations.init_app(db=db, stats=stats, memcache=memcache, scheduler=scheduler)
-
-#         flash("Delete all keys: Success !", category='sucess')
-#         return redirect(url_for('list_keys_v2'))
-
-# @webapp.route('/v2/upload', methods=['GET','POST'])
-# def upload_v2():
-#     if request.method == 'POST':
-#         key = request.form.get('key')
-#         file = request.files.get('file')
-#         if not key or not file:
-#             flash('Invalid key or file', category='error')
-#             return render_template("upload.html")
-#         global memcache
-#         if key in memcache:
-#             del memcache[key]
-#         filename = storage_operations.store_image(file)
-#         filedict = storage_operations.filename2dict(filename)
-#         memcache[key] = filedict
-#         global stats
-#         stats.memcache_updated(memcache)
-#         global db
-#         db.set_key(key, filename)
-
-#         logger.debug(f'memcache keys: {memcache.keys()}')
-#         logger.debug(f'stats: {stats.dump()}')
-
-#         flash('Successfully added key and image:' + str(key), category='success')
-#         return render_template("upload.html")
-#     else:
-#         return render_template("upload.html")
-
-# @webapp.route('/v2/list_keys', methods=['GET','POST'])
-# def list_keys_v2():
-#     if request.method == 'GET':
-#         return render_template("list_key.html", keys=list(memcache.keys()))
-#     else:
-#         return redirect(url_for('delete_all_v2'))
-
 # Automatic Testing Endpoints
 
-'''
-    Expected JSON response:
-    {
-        "success": "true"
-    }
+# TODO: handle all error cases according to following:
+# {
+#     'success': false,
+#     'error': {
+#         'code': int (server_error_code)
+#         'message': str (error_message)
+#     }
+# }
 
 '''
-@webapp.route('/api/delete_all', methods=['POST'])
-def delete_all():
-    global db
-    global stats
-    global scheduler
-    db, stats, scheduler = app_operations.init_app(db=db, stats=stats, scheduler=scheduler)
-    return jsonify({
-        "success": "true"
-    })
+==== UPLOAD PAGE ====
+'''
 
 '''
+    Upload Image
+    ----
     enctype = multipart/form-data
-    POST parameter: name = key, type = string
+    POST parameter: name = key, type = str
     POST parameter: name = file, type = file
     Expected JSON response:
     {
-        "success": "true",
-        "key": [String]
+        'success': true,
+        'key': [str]
     }
 '''
 @webapp.route('/api/upload', methods=['POST'])
@@ -95,44 +40,36 @@ def upload():
     file = request.files.get('file')
     if not key or not file:
         return jsonify({
-            "success": "false",
-            "error": "Invalid key or file"
+            'success': false,
+            'error': 'Invalid key or file'
         })
     memcache_operations.delete_key(key)
     filename = storage_operations.store_image(file)
     filedict = storage_operations.filename2dict(filename)
     memcache_operations.set_key(key, filedict)
     db.set_key(key, filename)
-        
+
     return jsonify({
-        "success": "true",
-        "key": key
+        'success': true,
+        'key': key
     })
 
 '''
-    Expected JSON response:
-    {
-        "success": "true",
-        "keys": [Array of keys (Strings)]
-}
+==== QUERY PAGE ====
 '''
-@webapp.route('/api/list_keys', methods=['POST'])
-def list_keys():
-    return jsonify({
-        "success": "true",
-        "keys": db.get_keys()
-    })
 
 '''
+    Query Image
+    ----
     Expected JSON response:
     {
-        "success": "true",
-        "key" : [String],
-        "content" : file contents
+        'success': true,
+        'key' : [str],
+        'content' : file contents
     }
 '''
-@webapp.route('/api/key/<key_value>', methods=['POST'])
-def get_key(key_value):
+@webapp.route('/api/key/<key_value>', methods=['GET'])
+def get_image(key_value):
     json_content = memcache_operations.get_key(key_value)
     is_hit = True
     if not json_content:
@@ -140,77 +77,167 @@ def get_key(key_value):
         filename = db.key2path(key_value)
         if filename is None:
             return jsonify({
-                "success": "false",
-                "error": "Key not found"
+                'success': false,
+                'error': 'Key not found'
             })
         json_content = storage_operations.filename2dict(filename)
         memcache_operations.set_key(key_value, json_content)
     stats.add_request_count(is_hit)
     return jsonify({
-        "success": "true",
-        "key": key_value,
-        "content": json_content
+        'success': true,
+        'key': key_value,
+        'content': json_content
+    })
+
+'''
+==== Keys PAGE ====
+'''
+
+'''
+    Get All Keys
+    ----
+    Expected JSON response:
+    {
+        'success': true,
+        'keys': [str]
+    }
+'''
+@webapp.route('/api/list_keys', methods=['GET'])
+def list_keys():
+    return jsonify({
+        'success': true,
+        'keys': db.get_keys()
+    })
+
+
+'''
+    Delete All
+    ----
+    Expected JSON response:
+    {
+        'success': true
+    }
+'''
+@webapp.route('/api/delete_all', methods=['POST'])
+def delete_all():
+    global db
+    global stats
+    global scheduler
+    db, stats, scheduler = app_operations.init_app(db=db, stats=stats, scheduler=scheduler)
+    return jsonify({
+        'success': true
     })
 
 # self defined Endpoints
 
-@webapp.route('/api/key/<key_value>', methods=['DELETE'])
-def delete_key(key_value):
-    memcache_operations.delete_key(key_value)
-    filename = db.key2path(key_value)
-    if not filename:
-        return jsonify({
-            'success': 'false',
-            'key': key_value,
-            'error': 'Key not found'
-        })
-    else:
-        db.delete_key(key_value)
-        storage_operations.delete_image(filename)
-        return jsonify({
-            'success': 'true',
-            'key': key_value
-        })
+'''
+==== CONFIG PAGE ====
+'''
 
-@webapp.route('/api/delete_cache', methods=['POST'])
-def delete_cache():
-    memcache_operations.delete_keys()
-    return jsonify({
-        'success': 'true'
-    })
-    
-@webapp.route('/api/statistics/max_size', methods=['PUT'])
-def set_maxsize():
-    stats.max_size = float(request.form.get('max_size'))
-    return jsonify({
-        'success': 'true',
-        'max_size': stats.max_size
-    })
-
-@webapp.route('/api/statistics/replacement_policy', methods=['PUT'])
-def set_replacement_policy():
-    try:
-        stats.replacement_policy = ReplacementPolicies.str2policy(request.form.get('replacement_policy'))
-        return jsonify({
-            'success': 'true'
-        })
-    except Exception:
-        return jsonify({
-            'success': 'false',
-            'error': 'Invalid replacement policy'
-        })
-    
-@webapp.route('/api/statistics', methods=['GET'])
-def get_statistics():
-    return jsonify({
-        'success': 'true',
-        'statistics': list(stats.statistic_history)
-    })
-    
+'''
+    Get Cache Keys
+    ----
+    Expected JSON response:
+    {
+        'success': true,
+        'keys': [str]
+}
+'''
 @webapp.route('/api/cache_keys', methods=['GET'])
 def get_cache_keys():
     return jsonify({
-        "success": "true",
-        "keys": list(memcache_operations.get_keys())
+        'success': true,
+        'keys': list(memcache_operations.get_keys())
     })
-    
+
+'''
+    Get Cache Configs
+    ----
+    Expected JSON response:
+    {
+        'success': true,
+        'replacement_policy': str,
+        'max_size': str
+    }
+'''
+@webapp.route('/api/cache_configs', methods=['GET'])
+def get_cache_configs():
+    return jsonify({
+        'success': true,
+        'replacement_policy': stats.replacement_policy,
+        'max_size': stats.max_size
+
+    })
+
+'''
+    Set Cache Configs
+    ----
+    Expected request JSON:
+    {
+        "replacement_policy": str ("LRU" / "random"),
+        "max_size": int (in bytes)
+    }
+    Expected JSON response:
+    {
+        'success': true,
+        'replacement_policy': str,
+        'max_size': float
+    }
+'''
+@webapp.route('/api/cache_configs', methods=['PUT'])
+def set_cache_configs():
+    try:
+        stats.replacement_policy = ReplacementPolicies.str2policy(request.form.get('replacement_policy'))
+        stats.max_size = float(request.form.get('max_size'))
+        return jsonify({
+            'success': true,
+            'replacement_policy': stats.replacement_policy,
+            'max_size': stats.max_size
+
+        })
+    except Exception:
+        return jsonify({
+            'success': false,
+            'error': 'Invalid replacement policy'
+        })
+
+'''
+    Clear Cache
+    ----
+    Expected JSON response:
+    {
+        'success': true,
+        'keys': [str]
+    }
+'''
+@webapp.route('/api/clear_cache', methods=['POST'])
+def clear_cache():
+    memcache_operations.delete_keys()
+    return jsonify({
+        'success': true,
+        'keys': list(memcache_operations.get_keys())
+    })
+
+'''
+==== STATS PAGE ====
+'''
+
+
+'''
+    Get Stats
+    ----
+    Expected JSON response:
+    {
+        #TODO: revise response format
+        'success': true,
+        'keys': [str]
+    }
+'''
+
+@webapp.route('/api/stats', methods=['GET'])
+def get_stats():
+    return jsonify({
+        'success': true,
+        'stats': list(stats.statistic_history)
+    })
+

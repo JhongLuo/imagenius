@@ -1,8 +1,18 @@
 import API from "@/services/API";
 
+// (ERROR format)
+//   {
+//     "success": false,
+//     "error": {
+//       "code": String (server_error_code)
+//       "message": String (error_message)
+//     }
+//   }
+
 export default {
   // UPLOAD PAGE
   // ----------------------------------------------------------------
+  //
 
   // - Post Image:
   //
@@ -14,20 +24,11 @@ export default {
   //   }
   //
   // response format:
-  // (SUCCESS)
   //   {
-  //     "success": "true",
+  //     "success": true,
   //     "key" : [String]
   //   }
   //
-  // (ERROR)
-  //   {
-  //     "success": "false",
-  //     "error": {
-  //       "code": server_error_code
-  //       "message": error_message
-  //     }
-  //   }
   //
   postImage(data) {
     return API().post("/api/upload", data);
@@ -40,24 +41,15 @@ export default {
   // - Get Image:
   //
   // request format:
-  // (GET)
-  // None
+  //   (GET)
+  //   None
   //
   // response format:
-  // (SUCCESS)
-  // {
-  //   "success": "true",
-  //   "key" : [String]
-  //   "content": file
-  // }
-  // (ERROR)
-  // {
-  //   "success": "false",
-  //   "error": {
-  //     "code": server_error_code
-  //     "message": error_message
+  //   {
+  //     "success": true,
+  //     "key" : [String]
+  //     "content": file
   //   }
-  // }
   //
   getImage(key) {
     return API().get("/api/key/" + key);
@@ -70,72 +62,127 @@ export default {
   // - Get All Keys:
   //
   // request format:
-  // (GET)
-  // None
+  //   (GET)
+  //   None
   //
   // response format:
-  // (SUCCESS)
-  // {
-  //   "success": "true",
-  //   "key" : [String]
-  //   "content": file
-  // }
-  // (ERROR)
-  // {
-  //   "success": "false",
-  //   "error": {
-  //     "code": server_error_code
-  //     "message": error_message
+  //   {
+  //     "success": true,
+  //     "keys" : [String]
   //   }
-  // }
   //
-  // TODO: change api to all keys instead of cache keys
   getAllKeys() {
     return API().get("/api/list_keys");
   },
 
-  // - Delete All Keys and Values:
+  // - Delete All Data (Keys and Values):
   //
   // request format:
-  // (POST)
-  // None
+  //   (POST)
+  //   None
   //
   // response format:
-  // (SUCCESS)
-  // {
-  //   "success": "true"
-  // }
+  //   {
+  //     "success": true
+  //   }
   //
-  deleteAllKeysAndValues() {
+  postDeleteAllData() {
     return API().post("/api/delete_all");
   },
 
   // CONFIG PAGE
   // ----------------------------------------------------------------
   //
-  // TODO: implement api for cache keys
+
+  // - Get All Cache Keys:
+  //
+  // request format:
+  //   (GET)
+  //   None
+  //
+  // response format:
+  //   {
+  //     "success": true,
+  //     "keys" : [String]
+  //   }
+  //
   getCacheKeys() {
-    return 0;
+    return API().get("/api/cache_keys");
   },
 
-  // TODO: change URL?
-  putReplacementPolicy(data) {
-    return API().put("/api/statistics/replacement_policy", data);
+  // - Get Cache Configs:
+  //
+  // request format:
+  //   (GET)
+  //   None
+  //
+  // response format:
+  //   {
+  //     "success": true,
+  //     "replacement_policy": String,
+  //     "max_size": Number
+  //   }
+  //
+  getCacheConfigs(data) {
+    return API().get("/api/cache_configs", data);
   },
 
-  // TODO: change URL?
-  putMaxCacheSize(data) {
-    return API().put("/api/statistics/max_size", data);
+  // - Put Cache Configs:
+  //
+  // request format:
+  //   (POST)
+  //   {
+  //     "replacement_policy": String ("LRU" / "random"),
+  //     "max_size": Int (in bytes)
+  //   }
+  //
+  // response format:
+  //   {
+  //     "success": true,
+  //     "replacement_policy": String,
+  //     "max_size": Number
+  //   }
+  //
+  putCacheConfigs(data) {
+    // return API().put("/api/cache_configs", data);
+    return API().put("/api/cache_configs_put", data); // for testing
   },
 
+  // - Clear All Cache Data (reset cache):
+  //
+  // request format:
+  //   (POST)
+  //   None
+  //
+  // response format:
+  //   {
+  //     "success": true,
+  //     "replacement_policy": String,
+  //     "max_size": String
+  //   }
+  //
   postClearCache() {
-    return API().post("/api/delete_all");
+    return API().post("/api/clear_cache");
   },
 
   // STATS PAGE
   // ----------------------------------------------------------------
   //
+
+  // - Get Stats:
+  //
+  // request format:
+  //   (GET)
+  //   None
+  //
+  // response format:
+  //   {
+  //     TODO: specify response format
+  //     "success": true,
+  //     "stats" : [String]
+  //   }
+  //
   getStats() {
-    return API().get("/api/statistics");
+    return API().get("/api/stats");
   },
 };
