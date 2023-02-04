@@ -5,62 +5,142 @@
   </div>
 
   <!--  Page Content: result component -->
-  <div class="container-lg mt-5">
-    <!-- img key -->
-    <div class="mb-3">
-      <label for="imgKey" class="form-label">Image Key</label>
-      <input
-        id="imgKey"
-        type="text"
-        class="form-control"
-        placeholder="e.g., ece1779a1_1"
-      />
-    </div>
-
-    <!-- img result -->
-    <div class="mb-3">
-      <label for="imgResult" class="form-label">Result</label>
-
-      <!-- result card -->
-      <div class="card mw-25" style="width: 24rem" aria-hidden="true">
-        <!-- img  -->
-        <img
-          src="https://picsum.photos/200/300"
-          class="img-thumbnail"
-          alt="image query result"
+  <div class="container-lg mb-5">
+    <!--  form  -->
+    <form class="input-group mb-3" @submit.prevent>
+      <!--  img key  -->
+      <div class="form-floating">
+        <input
+          id="img-key"
+          v-model="imgKey"
+          type="text"
+          class="form-control"
+          placeholder="Type in your key here..."
         />
+        <label for="img-key">Image key</label>
+      </div>
 
-        <!-- response -->
-        <div class="card-body">
-          <!-- LOADING -->
-          <h5 class="card-title placeholder-glow">
-            <span class="placeholder col-6"></span>
-          </h5>
+      <!--  submit button  -->
+      <button
+        id="submit-button"
+        class="btn btn-primary"
+        type="submit"
+        @click="handleRetrieve"
+      >
+        Submit
+      </button>
+    </form>
 
-          <!-- SUCCESS -->
-          <div class="alert alert-success" role="alert">
-            <h4 class="alert-heading">SUCCESS</h4>
-            <hr />
-            <p class="mb-0">Image retrieved</p>
-          </div>
-
-          <!-- FAILURE -->
-          <div class="alert alert-danger" role="alert">
-            <h4 class="alert-heading">ERROR</h4>
-            <hr />
-            <p class="mb-0">Image not found</p>
-          </div>
-        </div>
+    <!--  image result  -->
+    <div v-show="imgUrl" class="vstack mb-5">
+      <h4><span class="badge mb-2 bg-secondary">Result:</span></h4>
+      <div class="mb-3">
+        <img
+          id="img-display"
+          class="img-thumbnail bg-light"
+          :src="imgUrl"
+          alt="image retrieval result"
+        />
       </div>
     </div>
-    <div class="mb-3">
-      <button type="submit" class="btn btn-primary mb-3">Submit</button>
+
+    <!--  toasts  -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <!--  error toast  -->
+      <div
+        id="errorToast"
+        class="toast text-bg-danger"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="toast-header">
+          <strong class="me-auto">ERROR</strong>
+          <small>just now</small>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="toast-body">{{ stateErrorMsg }}</div>
+      </div>
+
+      <!--  success toast  -->
+      <div
+        id="successToast"
+        class="toast text-bg-success"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="toast-header">
+          <strong class="me-auto">SUCCESS</strong>
+          <small>just now</small>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="toast-body">{{ stateSuccessMsg }}</div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { ref } from "vue";
+import APIEndpoints from "@/services/APIEndpoints";
+import utils from "@/composables/utils";
+import * as Constants from "@/composables/constants";
+
+export default {
+  setup() {
+    const imgKey = ref("");
+    const imgUrl = ref("");
+    const stateErrorMsg = ref("");
+    const stateSuccessMsg = ref("");
+
+    const handleRetrieve = async () => {
+      // validate key
+      if (!imgKey.value) {
+        stateErrorMsg.value = Constants.ERR_MSG_FORM_KEY_EMPTY;
+        utils.triggerToast(Constants.ID_TOAST_ERROR);
+        return;
+      }
+
+      // fetch data
+      try {
+        let response;
+        response = await APIEndpoints.getImage(imgKey.value);
+        utils.helperThrowIfNotSuccess(response);
+        // handle success
+        imgUrl.value = response.data.content;
+        stateSuccessMsg.value = Constants.SUCCESS_MSG_RETRIEVE_IMG;
+        utils.triggerToast(Constants.ID_TOAST_SUCCESS);
+      } catch (errMsg) {
+        // handle error
+        stateErrorMsg.value = errMsg;
+        utils.triggerToast(Constants.ID_TOAST_ERROR);
+      }
+    };
+
+    return {
+      imgKey,
+      imgUrl,
+      stateErrorMsg,
+      stateSuccessMsg,
+      handleRetrieve,
+    };
+  },
+};
 </script>
 
-<style scoped></style>
+<style scoped>
+#img-display {
+  max-height: 60vh;
+}
+</style>

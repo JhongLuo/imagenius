@@ -5,7 +5,7 @@
   </div>
 
   <!--  Page Content: keys table  -->
-  <div class="container-lg mt-5">
+  <div class="container-lg mb-3">
     <table class="table">
       <!-- table head -->
       <thead>
@@ -27,9 +27,9 @@
   </div>
 
   <!-- Delete All Button -->
-  <div class="my-4">
+  <div class="container">
     <button
-      class="btn btn-danger"
+      class="btn btn-outline-danger"
       data-bs-toggle="modal"
       data-bs-target="#modalDeleteConfirm"
     >
@@ -50,9 +50,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 id="modalDeleteConfirmLabel" class="modal-title fs-5">
-            Confirmation
-          </h1>
+          <h1 id="modalDeleteConfirmLabel" class="modal-title fs-5">Confirm</h1>
           <button
             type="button"
             class="btn-close"
@@ -69,7 +67,7 @@
         <div class="modal-footer">
           <button
             type="button"
-            class="btn btn-outline-secondary"
+            class="btn btn-secondary"
             data-bs-dismiss="modal"
           >
             Go Back
@@ -86,12 +84,58 @@
       </div>
     </div>
   </div>
+
+  <!--  toasts  -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <!--  error toast  -->
+    <div
+      id="errorToast"
+      class="toast text-bg-danger"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+    >
+      <div class="toast-header">
+        <strong class="me-auto">ERROR</strong>
+        <small>just now</small>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="toast"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="toast-body">{{ stateErrorMsg }}</div>
+    </div>
+
+    <!--  success toast  -->
+    <div
+      id="successToast"
+      class="toast text-bg-success"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+    >
+      <div class="toast-header">
+        <strong class="me-auto">SUCCESS</strong>
+        <small>just now</small>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="toast"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="toast-body">{{ stateSuccessMsg }}</div>
+    </div>
+  </div>
 </template>
 
 <script>
 import { ref, onMounted } from "vue";
 import APIEndpoints from "@/services/APIEndpoints";
 import utils from "@/composables/utils";
+import * as Constants from "@/composables/constants";
 
 export default {
   setup() {
@@ -100,34 +144,49 @@ export default {
     });
 
     const keys = ref([]);
+    const stateErrorMsg = ref("");
+    const stateSuccessMsg = ref("");
 
-    const handleGetKeys = async () => {
+    const handleGetKeys = async (ifSkipSuccessToast = false) => {
+      // fetch data
       try {
         let response;
         response = await APIEndpoints.getAllKeys();
         utils.helperThrowIfNotSuccess(response);
-        console.log(response.data);
+        // handle success
         keys.value = response.data.keys;
-      } catch (err) {
-        // TODO: add error handling here
-        console.error(err);
+        if (!ifSkipSuccessToast) {
+          stateSuccessMsg.value = Constants.SUCCESS_MSG_GET_KEYS;
+          utils.triggerToast(Constants.ID_TOAST_SUCCESS);
+        }
+      } catch (errMsg) {
+        // handle error
+        stateErrorMsg.value = errMsg;
+        utils.triggerToast(Constants.ID_TOAST_ERROR);
       }
     };
 
     const handleDeleteAll = async () => {
+      // fetch data
       try {
         let response;
         response = await APIEndpoints.postDeleteAllData();
         utils.helperThrowIfNotSuccess(response);
-        await handleGetKeys();
-      } catch (err) {
-        // TODO: add error handling here
-        console.error(err);
+        // handle success
+        stateSuccessMsg.value = Constants.SUCCESS_MSG_DELETE_KEYS;
+        utils.triggerToast(Constants.ID_TOAST_SUCCESS);
+        await handleGetKeys(true);
+      } catch (errMsg) {
+        // handle error
+        stateErrorMsg.value = errMsg;
+        utils.triggerToast(Constants.ID_TOAST_ERROR);
       }
     };
 
     return {
       keys,
+      stateErrorMsg,
+      stateSuccessMsg,
       handleDeleteAll,
     };
   },

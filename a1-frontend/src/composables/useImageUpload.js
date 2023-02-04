@@ -3,7 +3,6 @@ import { ref, watch } from "vue";
 /**
  * Utilities for vue 3 implementation of upload action
  * @returns {{imgUrl: Ref<string>,
- *            imgFile: Ref<string>,
  *            onFileSelected: function}}
  */
 export function useImageUpload() {
@@ -34,7 +33,6 @@ export function useImageUpload() {
   });
 
   return {
-    imgFile,
     imgUrl,
     onFileSelected,
   };
