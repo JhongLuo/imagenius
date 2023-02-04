@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 # Automatic Testing Endpoints
 
-# TODO: handle all error cases according to following:
+# ---- All error response would be of following format:
 # {
 #     'success': "false",
 #     'error': {
@@ -202,7 +202,6 @@ def get_cache_configs():
         'success': "true",
         'replacement_policy': ReplacementPolicies.policy2str(stats.replacement_policy),
         'max_size': stats.max_size
-
     })
 
 '''
@@ -229,7 +228,6 @@ def set_cache_configs():
             'success': "true",
             'replacement_policy': ReplacementPolicies.policy2str(stats.replacement_policy),
             'max_size': stats.max_size
-
         })
     except Exception:
         return jsonify({
@@ -266,7 +264,6 @@ def clear_cache():
     ----
     Expected JSON response:
     {
-        #TODO: revise response format
         'success': "true",
         'keys': [str]
     }

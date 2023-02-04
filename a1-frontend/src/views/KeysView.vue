@@ -154,6 +154,7 @@ export default {
         response = await APIEndpoints.getAllKeys();
         utils.helperThrowIfNotSuccess(response);
         // handle success
+        // console.log(response.data);
         keys.value = response.data.keys;
         if (!ifSkipSuccessToast) {
           stateSuccessMsg.value = Constants.SUCCESS_MSG_GET_KEYS;

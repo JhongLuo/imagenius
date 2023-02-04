@@ -144,8 +144,7 @@ export default {
   //   }
   //
   putCacheConfigs(data) {
-    // return API().put("/api/cache_configs", data);
-    return API().put("/api/cache_configs_put", data); // for testing
+    return API().put("/api/cache_configs", data);
   },
 
   // - Clear All Cache Data (reset cache):

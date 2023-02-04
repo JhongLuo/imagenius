@@ -140,6 +140,7 @@ export default {
         // console.log("base64 string -> :", imgUrl.value);
         let response;
         response = await APIEndpoints.postImage(fd);
+        // console.log(response.data);
         utils.helperThrowIfNotSuccess(response);
         // handle success
         stateSuccessMsg.value = Constants.SUCCESS_MSG_UPLOAD_IMG;

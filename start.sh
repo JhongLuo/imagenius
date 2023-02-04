@@ -1,6 +1,2 @@
-cd a1-backend
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-cd ../
-sh run.sh
+sh ./scripts/run_backend.sh
+sh ./scripts/run_frontend.sh

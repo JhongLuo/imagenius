@@ -26,3 +26,6 @@ images/
 
 # ignore frontend test json files
 **/test_jsons/test*.json
+
+# ignore vite build dist
+a1-frontend/dist
