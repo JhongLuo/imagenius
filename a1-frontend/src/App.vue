@@ -3,7 +3,7 @@ import { RouterLink, RouterView } from "vue-router";
 </script>
 
 <template>
-  <nav class="navbar navbar-expand-lg bg-dark">
+  <nav class="navbar navbar-expand-lg bg-dark-subtle">
     <div class="container-fluid">
       <RouterLink to="/" class="ms-5 my-2 link-light navbar-brand"
         >Home
@@ -69,9 +69,13 @@ import { RouterLink, RouterView } from "vue-router";
     </div>
   </nav>
 
-  <main class="container py-5 px-5 mx-auto">
+  <main class="container p-5 mx-auto">
     <RouterView />
   </main>
 </template>
 
-<style></style>
+<style>
+#app {
+  height: 100vh;
+}
+</style>
