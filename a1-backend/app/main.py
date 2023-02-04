@@ -37,22 +37,30 @@ logger = logging.getLogger(__name__)
 @webapp.route('/api/upload', methods=['POST'])
 def upload():
     key = request.form.get('key')
-    file = request.files.get('file')
+    file = request.form.get('file')
     if not key or not file:
         return jsonify({
             'success': "false",
-            'error': 'Invalid key or file'
+            'error': {
+                'message':'Invalid key or file',
+            }
         })
-    memcache_operations.delete_key(key)
-    filename = storage_operations.store_image(file)
-    filedict = storage_operations.filename2dict(filename)
-    memcache_operations.set_key(key, filedict)
-    db.set_key(key, filename)
-
-    return jsonify({
-        'success': "true",
-        'key': key
-    })
+    try:
+        memcache_operations.delete_key(key)
+        filename = storage_operations.store_image(file)
+        memcache_operations.set_key(key, file)
+        db.set_key(key, filename)
+        return jsonify({
+            'success': "true",
+            'key': key
+        })
+    except Exception as e:
+        return jsonify({
+            'success': "false",
+            'error': {
+                'message':str(e),
+            }
+        })
 
 '''
 ==== QUERY PAGE ====
@@ -70,24 +78,34 @@ def upload():
 '''
 @webapp.route('/api/key/<key_value>', methods=['GET'])
 def get_image(key_value):
-    json_content = memcache_operations.get_key(key_value)
-    is_hit = "true"
-    if not json_content:
-        is_hit = "false"
-        filename = db.key2path(key_value)
-        if filename is None:
-            return jsonify({
-                'success': "false",
-                'error': 'Key not found'
-            })
-        json_content = storage_operations.filename2dict(filename)
-        memcache_operations.set_key(key_value, json_content)
-    stats.add_request_count(is_hit)
-    return jsonify({
-        'success': "true",
-        'key': key_value,
-        'content': json_content
-    })
+    try:
+        file_content = memcache_operations.get_key(key_value)
+        is_hit = "true"
+        if not file_content:
+            is_hit = "false"
+            filename = db.key2path(key_value)
+            if filename is None:
+                return jsonify({
+                    'success': "false",
+                    'error': {
+                        'message':'Invalid key',
+                    }
+                })
+            file_content = storage_operations.read_image(filename)
+            memcache_operations.set_key(key_value, file_content)
+        stats.add_request_count(is_hit)
+        return jsonify({
+            'success': "true",
+            'key': key_value,
+            'content': file_content
+        })
+    except Exception as e:
+        return jsonify({
+            'success': "false",
+            'error': {
+                'message':str(e),
+            }
+        })
 
 '''
     Retrieve Image (POST variant)
@@ -211,7 +229,9 @@ def set_cache_configs():
     except Exception:
         return jsonify({
             'success': "false",
-            'error': 'Invalid replacement policy'
+            'error': {
+                'message':'Invalid replacement policy',
+            }
         })
 
 '''
