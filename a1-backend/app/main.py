@@ -51,7 +51,6 @@ def upload():
         if type(file) != str:
             import base64
             file = base64.b64encode(file.read()).decode()
-        print(file)
         memcache_operations.delete_key(key)
         filename = storage_operations.store_image(file)
         memcache_operations.set_key(key, file)
