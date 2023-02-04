@@ -25,4 +25,4 @@ images/
 **/node_modules
 
 # ignore frontend test json files
-**/test_jsons/test**.json
+**/test_jsons/test*.json

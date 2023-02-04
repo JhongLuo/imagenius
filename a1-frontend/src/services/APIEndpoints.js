@@ -2,7 +2,7 @@ import API from "@/services/API";
 
 // (ERROR format)
 //   {
-//     "success": false,
+//     "success": "false",
 //     "error": {
 //       "code": String (server_error_code)
 //       "message": String (error_message)
@@ -25,7 +25,7 @@ export default {
   //
   // response format:
   //   {
-  //     "success": true,
+  //     "success": "true",
   //     "key" : [String]
   //   }
   //
@@ -34,11 +34,11 @@ export default {
     return API().post("/api/upload", data);
   },
 
-  // QUERY PAGE
+  // RETRIEVE PAGE
   // ----------------------------------------------------------------
   //
 
-  // - Get Image:
+  // - Retrieve Image:
   //
   // request format:
   //   (GET)
@@ -46,7 +46,7 @@ export default {
   //
   // response format:
   //   {
-  //     "success": true,
+  //     "success": "true",
   //     "key" : [String]
   //     "content": file
   //   }
@@ -59,7 +59,7 @@ export default {
   // ----------------------------------------------------------------
   //
 
-  // - Get All Keys:
+  // - Retrieve All Keys:
   //
   // request format:
   //   (GET)
@@ -67,7 +67,7 @@ export default {
   //
   // response format:
   //   {
-  //     "success": true,
+  //     "success": "true",
   //     "keys" : [String]
   //   }
   //
@@ -83,7 +83,7 @@ export default {
   //
   // response format:
   //   {
-  //     "success": true
+  //     "success": "true"
   //   }
   //
   postDeleteAllData() {
@@ -102,7 +102,7 @@ export default {
   //
   // response format:
   //   {
-  //     "success": true,
+  //     "success": "true",
   //     "keys" : [String]
   //   }
   //
@@ -118,7 +118,7 @@ export default {
   //
   // response format:
   //   {
-  //     "success": true,
+  //     "success": "true",
   //     "replacement_policy": String,
   //     "max_size": Number
   //   }
@@ -138,7 +138,7 @@ export default {
   //
   // response format:
   //   {
-  //     "success": true,
+  //     "success": "true",
   //     "replacement_policy": String,
   //     "max_size": Number
   //   }
@@ -156,7 +156,7 @@ export default {
   //
   // response format:
   //   {
-  //     "success": true,
+  //     "success": "true",
   //     "replacement_policy": String,
   //     "max_size": String
   //   }
@@ -178,7 +178,7 @@ export default {
   // response format:
   //   {
   //     TODO: specify response format
-  //     "success": true,
+  //     "success": "true",
   //     "stats" : [String]
   //   }
   //
