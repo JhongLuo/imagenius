@@ -38,6 +38,8 @@ logger = logging.getLogger(__name__)
 def upload():
     key = request.form.get('key')
     file = request.form.get('file')
+    if not file:
+        file = request.files.get('file')
     if not key or not file:
         return jsonify({
             'success': "false",
@@ -46,13 +48,17 @@ def upload():
             }
         })
     try:
+        if type(file) != str:
+            import base64
+            file = base64.b64encode(file.read()).decode()
+        print(file)
         memcache_operations.delete_key(key)
         filename = storage_operations.store_image(file)
         memcache_operations.set_key(key, file)
         db.set_key(key, filename)
         return jsonify({
             'success': "true",
-            'key': key
+            'key': [key]
         })
     except Exception as e:
         return jsonify({
@@ -96,7 +102,7 @@ def get_image(key_value):
         stats.add_request_count(is_hit)
         return jsonify({
             'success': "true",
-            'key': key_value,
+            'key': [key_value],
             'content': file_content
         })
     except Exception as e:
@@ -219,7 +225,7 @@ def get_cache_configs():
 def set_cache_configs():
     try:
         stats.replacement_policy = ReplacementPolicies.str2policy(request.form.get('replacement_policy'))
-        stats.max_size = float(request.form.get('max_size'))
+        stats.max_size = int(request.form.get('max_size'))
         return jsonify({
             'success': "true",
             'replacement_policy': ReplacementPolicies.policy2str(stats.replacement_policy),

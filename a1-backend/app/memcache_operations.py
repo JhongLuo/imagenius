@@ -16,7 +16,6 @@ def get_key(key):
         return None
 
 def set_key(key, json_content):
-    print('app sending content: ' + str(json_content))
     requests.post(url_prefix + '/key/' + key, json=json_content)
 
 def delete_keys():

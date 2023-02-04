@@ -32,7 +32,6 @@ def get_key(key_value):
 @webapp.route('/api/key/<key_value>', methods=['POST'])
 def set_key(key_value):
     content = request.get_json()
-    print('memcache get content: ' + str(content))
     memcache[key_value] = content
     return jsonify({
         'success': 'true'

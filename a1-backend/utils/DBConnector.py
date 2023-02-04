@@ -27,7 +27,7 @@ class DBConnector:
         cursor.execute("SELECT keyword FROM images")
         res = cursor.fetchall()
         cursor.close()
-        return res
+        return [x[0] for x in res]
 
     def set_statistics(self, rows):
         with self.statistic_lock:
