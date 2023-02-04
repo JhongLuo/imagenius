@@ -78,7 +78,7 @@
             type="button"
             class="btn btn-outline-danger"
             data-bs-dismiss="modal"
-            @click="deleteAll"
+            @click="handleDeleteAll"
           >
             Delete
           </button>
@@ -91,42 +91,44 @@
 <script>
 import { ref, onMounted } from "vue";
 import APIEndpoints from "@/services/APIEndpoints";
-import utils from "@/utils/utils";
+import utils from "@/composables/utils";
 
 export default {
   setup() {
     onMounted(() => {
-      getKeys();
+      handleGetKeys();
     });
 
     const keys = ref([]);
 
-    const getKeys = async () => {
+    const handleGetKeys = async () => {
       try {
         let response;
         response = await APIEndpoints.getAllKeys();
         utils.helperThrowIfNotSuccess(response);
+        console.log(response.data);
         keys.value = response.data.keys;
       } catch (err) {
+        // TODO: add error handling here
         console.error(err);
       }
     };
 
-    const deleteAll = async () => {
+    const handleDeleteAll = async () => {
       try {
         let response;
         response = await APIEndpoints.postDeleteAllData();
         utils.helperThrowIfNotSuccess(response);
-        await getKeys();
+        await handleGetKeys();
       } catch (err) {
+        // TODO: add error handling here
         console.error(err);
       }
     };
 
     return {
       keys,
-      getKeys,
-      deleteAll,
+      handleDeleteAll,
     };
   },
 };

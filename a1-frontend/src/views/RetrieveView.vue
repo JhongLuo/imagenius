@@ -1,7 +1,7 @@
 <template>
   <!--  Page Title  -->
   <div class="container mb-5">
-    <h1>Query</h1>
+    <h1>Retrieve</h1>
   </div>
 
   <!--  Page Content: result component -->
@@ -60,9 +60,7 @@
 </template>
 
 <script>
-export default {
-  name: "QueryView.vue",
-};
+export default {};
 </script>
 
 <style scoped></style>

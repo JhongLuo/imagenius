@@ -1,5 +1,5 @@
 export default {
   helperThrowIfNotSuccess(response) {
-    if (response.data.success == false) throw "failure";
+    if (response.data.success !== "true") throw "failure";
   },
 };

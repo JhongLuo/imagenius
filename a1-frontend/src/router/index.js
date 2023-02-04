@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
 import UploadView from "@/views/UploadView.vue";
-import QueryView from "@/views/QueryView.vue";
+import RetrieveView from "@/views/RetrieveView.vue";
 import KeysView from "@/views/KeysView.vue";
 import ConfigView from "@/views/ConfigView.vue";
 import StatsView from "@/views/StatsView.vue";
@@ -23,9 +23,9 @@ const router = createRouter({
       component: UploadView,
     },
     {
-      path: "/query",
-      name: "query",
-      component: QueryView,
+      path: "/retrieve",
+      name: "retrieve",
+      component: RetrieveView,
     },
     {
       path: "/keys",

@@ -23,12 +23,12 @@ import { RouterLink, RouterView } from "vue-router";
 
           <li class="mx-1 nav-item">
             <RouterLink
-              to="/query"
+              to="/retrieve"
               class="link-secondary nav-link"
               active-class="link-light active"
               aria-current="page"
             >
-              Query
+              Retrieve
             </RouterLink>
           </li>
 

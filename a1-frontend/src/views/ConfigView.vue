@@ -100,7 +100,7 @@
   </div>
 
   <!--  modals  -->
-  <!-- Clear Cache Confirmation Modal -->
+  <!-- Modal: Clear Cache Confirmation -->
   <div
     id="modalClearCacheConfirm"
     class="modal fade"
@@ -141,7 +141,7 @@
             type="button"
             class="btn btn-outline-danger"
             data-bs-dismiss="modal"
-            @click="clearCache"
+            @click="handleClearCache"
           >
             Clear
           </button>
@@ -150,7 +150,7 @@
     </div>
   </div>
 
-  <!--  Set Replacement Policy Modal  -->
+  <!-- Modal: Set Replacement Policy  -->
   <div
     id="modalPutConfigsConfirm"
     class="modal fade"
@@ -178,7 +178,7 @@
           <p>
             Set max cache size:
             {{
-              cacheConfigs.sizeFactor == 1000
+              cacheConfigs.sizeFactor == 1024
                 ? cacheConfigs.maxSizeFactored + " KB"
                 : cacheConfigs.maxSizeFactored + " MB"
             }}
@@ -196,7 +196,7 @@
             type="button"
             class="btn btn-outline-primary"
             data-bs-dismiss="modal"
-            @click="putCacheConfigs"
+            @click="handlePutCacheConfigs"
           >
             Confirm
           </button>
@@ -209,34 +209,35 @@
 <script>
 import { onMounted, ref, reactive } from "vue";
 import APIEndpoints from "@/services/APIEndpoints";
-import utils from "@/utils/utils";
+import utils from "@/composables/utils";
 
 export default {
-  setup: function () {
+  setup() {
     onMounted(() => {
-      getCacheKeys();
-      getCacheConfigs();
+      handleGetCacheKeys();
+      handleGetCacheConfigs();
     });
 
     const cacheKeys = ref([]);
     const cacheConfigs = reactive({
       replacementPolicy: "",
       maxSizeFactored: 0,
-      sizeFactor: 1024,
+      sizeFactor: 1048576,
     });
 
-    const getCacheKeys = async () => {
+    const handleGetCacheKeys = async () => {
       try {
         let response;
         response = await APIEndpoints.getCacheKeys();
         utils.helperThrowIfNotSuccess(response);
         cacheKeys.value = response.data.keys;
       } catch (err) {
+        // TODO: add error handling here
         console.error(err);
       }
     };
 
-    const getCacheConfigs = async () => {
+    const handleGetCacheConfigs = async () => {
       try {
         let response;
         response = await APIEndpoints.getCacheConfigs();
@@ -245,11 +246,25 @@ export default {
         cacheConfigs.maxSizeFactored =
           response.data.max_size / cacheConfigs.sizeFactor;
       } catch (err) {
+        // TODO: add error handling here
         console.error(err);
       }
     };
 
-    const putCacheConfigs = async () => {
+    const handleClearCache = async () => {
+      try {
+        let response;
+        response = await APIEndpoints.postClearCache();
+        utils.helperThrowIfNotSuccess(response);
+        // TODO: handle data with new format
+        await handleGetCacheKeys();
+      } catch (err) {
+        // TODO: add error handling here
+        console.error(err);
+      }
+    };
+
+    const handlePutCacheConfigs = async () => {
       try {
         let data = {
           replacement_policy: cacheConfigs.replacementPolicy,
@@ -262,18 +277,7 @@ export default {
         cacheConfigs.maxSizeFactored =
           response.data.max_size / cacheConfigs.sizeFactor;
       } catch (err) {
-        console.error(err);
-      }
-    };
-
-    const clearCache = async () => {
-      try {
-        let response;
-        response = await APIEndpoints.postClearCache();
-        utils.helperThrowIfNotSuccess(response);
-        // TODO: handle data with new format
-        await getCacheKeys();
-      } catch (err) {
+        // TODO: add error handling here
         console.error(err);
       }
     };
@@ -281,10 +285,8 @@ export default {
     return {
       cacheKeys,
       cacheConfigs,
-      getCacheKeys,
-      getCacheConfigs,
-      putCacheConfigs,
-      clearCache,
+      handlePutCacheConfigs,
+      handleClearCache,
     };
   },
 };
