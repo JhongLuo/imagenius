@@ -251,6 +251,27 @@
       </div>
       <div class="toast-body">{{ stateSuccessMsg }}</div>
     </div>
+
+    <!--  extra: config load success toast  -->
+    <div
+      id="successToastExtra"
+      class="toast text-bg-success"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+    >
+      <div class="toast-header">
+        <strong class="me-auto">SUCCESS</strong>
+        <small>just now</small>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="toast"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="toast-body">{{ stateSuccessMsgExtra }}</div>
+    </div>
   </div>
 </template>
 
@@ -275,6 +296,7 @@ export default {
     });
     const stateErrorMsg = ref("");
     const stateSuccessMsg = ref("");
+    const stateSuccessMsgExtra = ref("");
 
     const handleGetCacheKeys = async (ifSkipSuccessToast = false) => {
       // fetch data
@@ -305,8 +327,8 @@ export default {
         cacheConfigs.replacementPolicy = response.data.replacement_policy;
         cacheConfigs.maxSizeFactored =
           response.data.max_size / cacheConfigs.sizeFactor;
-        stateSuccessMsg.value = Constants.SUCCESS_MSG_GET_CONFIGS;
-        utils.triggerToast(Constants.ID_TOAST_SUCCESS);
+        stateSuccessMsgExtra.value = Constants.SUCCESS_MSG_GET_CONFIGS;
+        utils.triggerToast(Constants.ID_TOAST_SUCCESS_EXTRA);
       } catch (errMsg) {
         // handle error
         stateErrorMsg.value = errMsg;
@@ -360,6 +382,7 @@ export default {
       cacheConfigs,
       stateErrorMsg,
       stateSuccessMsg,
+      stateSuccessMsgExtra,
       handlePutCacheConfigs,
       handleClearCache,
     };
