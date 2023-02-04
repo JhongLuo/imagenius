@@ -5,13 +5,14 @@
   </div>
 
   <!--  Page Content: button to upload  -->
-  <div class="container-lg mt-5">
+  <div class="container-lg">
     <RouterLink
       to="/upload"
       class="btn btn-secondary btn-lg"
       aria-current="page"
-      >Get Started →</RouterLink
     >
+      Get Started →
+    </RouterLink>
   </div>
 </template>
 

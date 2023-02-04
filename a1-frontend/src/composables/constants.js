@@ -18,3 +18,4 @@ export const SUCCESS_MSG_PUT_CONFIGS = "Configs updated";
 
 export const ID_TOAST_ERROR = "errorToast";
 export const ID_TOAST_SUCCESS = "successToast";
+export const ID_TOAST_SUCCESS_EXTRA = "successToastExtra";
