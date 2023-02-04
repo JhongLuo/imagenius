@@ -222,8 +222,9 @@ def get_cache_configs():
 @webapp.route('/api/cache_configs', methods=['PUT'])
 def set_cache_configs():
     try:
-        stats.replacement_policy = ReplacementPolicies.str2policy(request.form.get('replacement_policy'))
-        stats.max_size = int(request.form.get('max_size'))
+        data = request.get_json()
+        stats.replacement_policy = ReplacementPolicies.str2policy(data['replacement_policy'])
+        stats.max_size = int(data['max_size'])
         return jsonify({
             'success': "true",
             'replacement_policy': ReplacementPolicies.policy2str(stats.replacement_policy),
