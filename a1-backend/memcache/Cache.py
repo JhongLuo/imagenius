@@ -16,12 +16,12 @@ class Cache(dict):
         self.db = DBConnector()
         self.max_size = 0
         self.policy = ReplacementPolicies.RANDOM
-        # implment LRU with double linked list
+        # implement LRU with double linked list
         self.head = Node(0, 0)
         self.tail = Node(0, 0)
         self.bytes = 0
         self._connect_linked_node(self.head, self.tail)
-        self.configurate_lock = threading.Lock()
+        self.configuration_lock = threading.Lock()
         self.linked_list_lock = threading.Lock()
         self.write_lock = threading.Lock()
         self.syncDB()
@@ -81,13 +81,14 @@ class Cache(dict):
         if super().__contains__(key):
             self.__delitem__(key)
         with self.write_lock:
-            if super().__len__() == self.max_size:
-                self._cache_pop()
             node = Node(key, value)
             if self.policy == ReplacementPolicies.LRU:
                 self._add(node)
             self.bytes += sys.getsizeof(value)
-            return super().__setitem__(key, node)     
+            rtn = super().__setitem__(key, node)
+            while self.bytes > self.max_size:
+                self._cache_pop()
+            return rtn    
     
     def __delitem__(self, key) -> None:
         with self.write_lock:
@@ -124,8 +125,8 @@ class Cache(dict):
             return
         with self.write_lock:
             if max_size >= 0:
-                while super().__len__() > max_size:
-                    self._cache_pop()
                 self.max_size = max_size
+                while self.bytes > self.max_size:
+                    self._cache_pop()
             else:
                 raise Exception("Invalid max size")        

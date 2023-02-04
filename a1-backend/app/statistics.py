@@ -40,7 +40,7 @@ class Statistics:
         }
     
     def reset(self):
-        self.max_size = 100000
+        self.max_size = 100 * 1024 * 1024
         self.replacement_policy = ReplacementPolicies.LRU
         self.items_len = 0
         self.items_bytes = 0

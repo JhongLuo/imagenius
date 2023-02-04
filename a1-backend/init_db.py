@@ -21,7 +21,7 @@ cursor.close()
 
 db.delete_keys()
 initial_data = [
-    ('max_size', 10000000),
+    ('max_size', 100 * 1024 * 1024),
     ('replacement_policy', ReplacementPolicies.LRU.value),
     ('requests_count', 0),
     ('requests_hit_count', 0),
