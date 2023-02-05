@@ -1,2 +1,3 @@
-cd ../a1-frontend
+cd ./a1-frontend
+npm install
 npm run build

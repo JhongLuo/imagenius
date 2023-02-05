@@ -2,7 +2,7 @@ cd ./a1-backend
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-cd ../
+cd ..
 
 pid_5000=$(lsof -ti tcp:5000)
 pid_5001=$(lsof -ti tcp:5001)
