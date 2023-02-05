@@ -14,9 +14,9 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
-global db
+
 global stats
 global scheduler
-db, stats, scheduler = init_app()
+stats, scheduler = init_app()
 
 from app import  main

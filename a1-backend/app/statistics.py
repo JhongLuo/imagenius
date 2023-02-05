@@ -7,10 +7,10 @@ class Statistics:
         self.reset()
         self.statistic_history = deque(maxlen=120)
                           
-    def syncDB(self, db : DBConnector):        
-        db.set_statistics(self._get_instance1_data())
-        self.items_len = db.select_statistics('items_len')
-        self.items_bytes = db.select_statistics('items_bytes')
+    def syncDB(self):        
+        DBConnector.set_statistics(self._get_instance1_data())
+        self.items_len = DBConnector.select_statistics('items_len')
+        self.items_bytes = DBConnector.select_statistics('items_bytes')
         self.statistic_history.append(self.dump())
     
     def _get_instance1_data(self):
@@ -51,10 +51,6 @@ class Statistics:
         self.requests_count += 1
         if is_hit:
             self.requests_hit_count += 1
-    
-    def memcache_updated(self, memcache):
-        self.items_len = len(memcache)
-        self.items_bytes = memcache.get_bytes()
     
     def get_hit_rate(self):
         if self.requests_count == 0:

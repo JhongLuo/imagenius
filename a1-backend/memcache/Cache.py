@@ -13,7 +13,6 @@ class Node:
 class Cache(dict):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.db = DBConnector()
         self.max_size = 0
         self.policy = ReplacementPolicies.RANDOM
         # implement LRU with double linked list
@@ -27,9 +26,9 @@ class Cache(dict):
         self.syncDB()
         
     def syncDB(self):
-        self.db.set_statistics([('items_len', len(self)), ('items_bytes', self.bytes)])
-        self.set_max_size(int(self.db.select_statistics('max_size')))
-        self.set_policy(ReplacementPolicies.int2policy(self.db.select_statistics('replacement_policy')))
+        DBConnector.set_statistics([('items_len', len(self)), ('items_bytes', self.bytes)])
+        self.set_max_size(int(DBConnector.select_statistics('max_size')))
+        self.set_policy(ReplacementPolicies.int2policy(DBConnector.select_statistics('replacement_policy')))
     
     # double linked list operations
     

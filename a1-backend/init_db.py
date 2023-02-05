@@ -1,8 +1,13 @@
 from utils.DBConnector import DBConnector
 from utils.ReplacementPolicies import ReplacementPolicies
-db = DBConnector()
+import mysql.connector
 
-cnx = db.sql_connector
+cnx = mysql.connector.connect(
+            user='root',
+            password='ece1779pass',
+            host='localhost',
+            database='group18a1',
+)
 cursor = cnx.cursor()
 create_images = '''CREATE TABLE IF NOT EXISTS images (
                     keyword VARCHAR(255) PRIMARY KEY,
@@ -13,13 +18,13 @@ create_statistics = '''CREATE TABLE IF NOT EXISTS statistics (
                     value DECIMAL(65, 3) NOT NULL
                 )'''    
 
-
 cursor.execute(create_images)
 cursor.execute(create_statistics)
 cnx.commit()
 cursor.close()
+cnx.close()
+DBConnector.delete_keys()
 
-db.delete_keys()
 initial_data = [
     ('max_size', 100 * 1024 * 1024),
     ('replacement_policy', ReplacementPolicies.LRU.value),
@@ -28,5 +33,5 @@ initial_data = [
     ('items_len', 0),
     ('items_bytes', 0),
 ]
-db.add_statistics(initial_data)
-db.close()
+
+DBConnector.add_statistics(initial_data)

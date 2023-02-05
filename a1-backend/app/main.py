@@ -1,8 +1,9 @@
 from flask import render_template, request, redirect, url_for, flash
-from app import webapp, stats, db, scheduler
+from app import webapp, stats, scheduler
 from flask import jsonify
 from . import storage_operations, app_operations, memcache_operations
 from utils.ReplacementPolicies import ReplacementPolicies
+from utils.DBConnector import DBConnector
 import logging
 
 logger = logging.getLogger(__name__)
@@ -54,7 +55,7 @@ def upload():
         memcache_operations.delete_key(key)
         filename = storage_operations.store_image(file)
         memcache_operations.set_key(key, file)
-        db.set_key(key, filename)
+        DBConnector.set_key(key, filename)
         return jsonify({
             'success': "true",
             'key': [key]
@@ -88,7 +89,7 @@ def get_image(key_value):
         is_hit = "true"
         if not file_content:
             is_hit = "false"
-            filename = db.key2path(key_value)
+            filename = DBConnector.key2path(key_value)
             if filename is None:
                 return jsonify({
                     'success': "false",
@@ -136,7 +137,7 @@ def get_image_alt_post(key_value):
 def list_keys():
     return jsonify({
         'success': "true",
-        'keys': db.get_keys()
+        'keys': DBConnector.get_keys()
     })
 
 '''
@@ -156,10 +157,9 @@ def list_keys_alt_post():
 '''
 @webapp.route('/api/delete_all', methods=['POST'])
 def delete_all():
-    global db
     global stats
     global scheduler
-    db, stats, scheduler = app_operations.init_app(db=db, stats=stats, scheduler=scheduler)
+    stats, scheduler = app_operations.init_app(stats=stats, scheduler=scheduler)
     return jsonify({
         'success': "true"
     })
