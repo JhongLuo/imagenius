@@ -7,7 +7,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-    "start": "vite"
+    "start": "vite --host"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.6",
