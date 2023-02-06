@@ -4,10 +4,10 @@ import time
 import threading
 import matplotlib.pyplot as plt
 
-aws_url = 'http://44.211.118.125:5000/api'
+aws_url = 'http://3.239.25.150:5000/api'
 local_url = 'http://localhost:5000/api'
 
-base_url = local_url
+base_url = aws_url
 upload_url = base_url + '/upload'
 delete_all_url = base_url + '/delete_all'
 set_cache = base_url + '/cache_configs'
@@ -44,6 +44,7 @@ def random_rw(ratio : float, keys : list) -> None:
 
 def throughput_test(timestamps : list, ratio : float, config : dict):
     keys = []
+    requests.post(delete_all_url)
     requests.put(set_cache, json=config)
     end_time = time.time() + timestamps[-1]
     recorder = Recorder(timestamps)
@@ -60,13 +61,13 @@ def throughput_test(timestamps : list, ratio : float, config : dict):
         if time.time() > end_time:
             break
         th = threading.Thread(target=request_and_record, args=(ratio, keys, recorder))
-        time.sleep(0.01)
+        time.sleep(0.1)
         ths.append(th)
         th.start()
         
     for th in ths:
         th.join()
-        
+    requests.post(delete_all_url)
     res = recorder.res
     return res
 
@@ -75,11 +76,12 @@ def latency_test(total_requests, ratio, config):
     keys = []    
     res = dict()
     start_time = time.time()
+    requests.post(delete_all_url)
     requests.put(set_cache, json=config)
     for i in range(total_requests):
         random_rw(ratio, keys)
         res[i] = time.time() - start_time
-        
+    requests.post(delete_all_url)
     return res
 
 def ratio_latency_test(total_requests, ratio):
@@ -93,7 +95,7 @@ def ratio_latency_test(total_requests, ratio):
         f.write('LRU cache' + str(res2) + '\n')
         x = [i for i in range(1, total_requests + 1)]
         def get_average_latency(res):
-            return [float(t) / (i + 1) for i, t in enumerate(res)]
+            return [float(res[i]) / (i + 1) for i in range(total_requests)]
         
         plt.clf()
         plt.plot(x, get_average_latency(res0), label='no cache')
@@ -133,5 +135,5 @@ def ratio_throughput_test(total_time, ratio):
         
 
 for ratio in [0.2, 0.5, 0.8]:
-    ratio_latency_test(200, ratio)
-    # ratio_throughput_test(10, ratio)
+    ratio_latency_test(50, ratio)
+    ratio_throughput_test(10, ratio)
