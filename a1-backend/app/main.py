@@ -87,9 +87,9 @@ def upload():
 def get_image(key_value):
     try:
         file_content = memcache_operations.get_key(key_value)
-        is_hit = "true"
+        is_hit = True
         if not file_content:
-            is_hit = "false"
+            is_hit = False
             filename = DBConnector.key2path(key_value)
             if filename is None:
                 return jsonify({
