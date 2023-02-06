@@ -1,8 +1,10 @@
 from flask import Flask
-from .app_operations import init_app
 import logging
 from flask_cors import CORS
 from apscheduler.schedulers.background import BackgroundScheduler
+from utils.DBConnector import DBConnector
+from . import storage_operations, memcache_operations
+from .statistics import Statistics
 
 webapp = Flask(__name__)
 CORS(webapp, resources={r"/*": {"origins": "*"}})
@@ -16,7 +18,12 @@ logger.addHandler(file_handler)
 
 
 global stats
-stats = init_app(None)
+
+memcache_operations.delete_keys()
+DBConnector.delete_keys()
+stats = Statistics()
+stats.syncDB()
+storage_operations.clear_images()
 
 def start_scheduler(stats):
     scheduler = BackgroundScheduler()

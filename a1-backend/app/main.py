@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, url_for, flash
 from app import webapp, stats
 from flask import jsonify
-from . import storage_operations, app_operations, memcache_operations
+from . import storage_operations, memcache_operations
 from utils.ReplacementPolicies import ReplacementPolicies
 from utils.DBConnector import DBConnector
 import logging
@@ -158,8 +158,9 @@ def list_keys_alt_post():
 '''
 @webapp.route('/api/delete_all', methods=['POST'])
 def delete_all():
-    global stats
-    stats = app_operations.init_app(stats=stats)
+    memcache_operations.delete_keys()
+    DBConnector.delete_keys()
+    storage_operations.clear_images()
     return jsonify({
         'success': "true"
     })
