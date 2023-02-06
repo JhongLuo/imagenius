@@ -18,7 +18,7 @@ class Statistics:
             ('max_size', self.max_size),
             ('replacement_policy', self.replacement_policy.value),
             ('requests_count', self.requests_count),
-            ('requests_hit_count', self.requests_hit_count)
+            ('requests_hit_count', self.hit_count),
         ]
     
     def _get_instance2_data(self):
@@ -34,7 +34,7 @@ class Statistics:
             "items_len": self.items_len,
             "items_bytes": self.items_bytes,
             "requests_count": self.requests_count,
-            "requests_hit_count": self.requests_hit_count,
+            "requests_hit_count": self.hit_count,
             "hit_rate": self.get_hit_rate(),
             "miss_rate": self.get_miss_rate()
         }
@@ -45,21 +45,25 @@ class Statistics:
         self.items_len = 0
         self.items_bytes = 0
         self.requests_count = 0
-        self.requests_hit_count = 0
+        self.hit_count = 0
+        self.miss_count = 0
 
-    def add_request_count(self, is_hit):
+    def add_request_count(self, is_get, is_hit):
         self.requests_count += 1
-        if is_hit:
-            self.requests_hit_count += 1
+        if is_get:
+            if is_hit:
+                self.hit_count += 1
+            else:
+                self.miss_count += 1
     
     def get_hit_rate(self):
-        if self.requests_count == 0:
+        if self.hit_count + self.miss_count == 0:
             return 0
         else:
-            return float(self.requests_hit_count) / self.requests_count
+            return float(self.hit_count) / (self.hit_count + self.miss_count)
         
     def get_miss_rate(self):
-        if self.requests_count == 0:
+        if self.hit_count + self.miss_count == 0:
             return 0
         else:
-            return float(self.requests_count - self.requests_hit_count) / self.requests_count
+            return float(self.miss_count) / (self.hit_count + self.miss_count)

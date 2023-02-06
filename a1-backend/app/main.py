@@ -49,6 +49,7 @@ def upload():
             }
         })
     try:
+        stats.add_request_count(False, False)
         if type(file) != str:
             import base64
             file = base64.b64encode(file.read()).decode()
@@ -99,7 +100,7 @@ def get_image(key_value):
                 })
             file_content = storage_operations.read_image(filename)
             memcache_operations.set_key(key_value, file_content)
-        stats.add_request_count(is_hit)
+        stats.add_request_count(True, is_hit)
         return jsonify({
             'success': "true",
             'key': [key_value],
