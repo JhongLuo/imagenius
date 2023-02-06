@@ -266,7 +266,7 @@ def clear_cache():
     Expected JSON response:
     {
         'success': "true",
-        'keys': [str]
+        'keys': [obj]
     }
 '''
 

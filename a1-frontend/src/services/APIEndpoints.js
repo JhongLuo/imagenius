@@ -176,9 +176,8 @@ export default {
   //
   // response format:
   //   {
-  //     TODO: specify response format
   //     "success": "true",
-  //     "stats" : [String]
+  //     "stats" : [Object]
   //   }
   //
   getStats() {

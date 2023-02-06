@@ -6,8 +6,8 @@ let selected_host;
 let selected_port;
 
 // ******** PLEASE SELECT THE CORRECT MODE ********
-apiMode = "production";
-// apiMode = "dev";
+// apiMode = "production";
+apiMode = "dev";
 // ********************************
 
 if (apiMode === "dev") {

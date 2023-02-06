@@ -1,5 +1,6 @@
 import * as bootstrap from "bootstrap";
 import * as Constants from "@/composables/constants";
+// import { Chart } from "chart.js/auto";
 
 export default {
   helperThrowIfNotSuccess(response) {
@@ -39,4 +40,102 @@ export default {
     const toast = new bootstrap.Toast(toastError);
     toast.show();
   },
+
+  arrayOfObjsToObjOfArrays(statsArray) {
+    const statsData = {};
+    statsArray.forEach((timestamp) => {
+      Object.keys(timestamp).forEach((key) => {
+        if (statsData[key]) {
+          statsData[key].push(timestamp[key]);
+        } else {
+          statsData[key] = [timestamp[key]];
+        }
+      });
+    });
+
+    return statsData;
+  },
+
+  generateChartConfig(title, numOrPercent = "NUM") {
+    let scaleOptions;
+    if (numOrPercent === "NUM") {
+      scaleOptions = {
+        x: {
+          display: false,
+        },
+        y: {
+          beginAtZero: true,
+          grid: {
+            tickLength: 2,
+          },
+          ticks: {
+            stepSize: 1,
+          },
+        },
+      };
+    } else {
+      scaleOptions = {
+        x: {
+          display: false,
+        },
+        y: {
+          beginAtZero: true,
+          suggestedMax: 1,
+          grid: {
+            tickLength: 2,
+          },
+          ticks: {
+            stepSize: 0.25,
+            callback: (value) => {
+              return (value * 100).toFixed(0) + "%"; // convert it to percentage
+            },
+          },
+        },
+      };
+    }
+
+    const config = {
+      type: "line",
+      data: {
+        labels: [],
+        datasets: [
+          {
+            label: "",
+            data: [],
+            borderWidth: 2,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: title,
+          },
+          legend: {
+            display: false,
+          },
+        },
+        scales: scaleOptions,
+      },
+    };
+
+    return config;
+  },
+
+  // initChartByDOM(id, title, type = "NUM") {
+  //   return new Chart(
+  //     document.getElementById(id),
+  //     this.renderChartConfig(title, [], type)
+  //   );
+  // },
+
+  // updateChart(chart, dataArray) {
+  //   chart.data.labels.push("");
+  //   chart.data.datasets.forEach((dataset) => {
+  //     dataset.data = dataArray;
+  //   });
+  //   chart.update();
+  // },
 };
