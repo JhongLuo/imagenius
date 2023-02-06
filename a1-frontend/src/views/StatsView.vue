@@ -6,12 +6,6 @@
 
   <!--  Page Content: Charts  -->
   <div class="container-lg my-5 px-0 mb-3">
-    <!--    <div class="container">-->
-    <!--      <button type="submit" class="btn btn-warning" @click="buttonPressed">-->
-    <!--        Refresh-->
-    <!--      </button>-->
-    <!--    </div>-->
-
     <div class="container">
       <div class="row row-cols-2 g-5">
         <div class="col">
@@ -93,7 +87,6 @@ export default {
   setup() {
     onMounted(() => {
       handleGetStats();
-      // drawCharts();
     });
 
     const stateErrorMsg = ref("");
@@ -190,7 +183,6 @@ export default {
         utils.helperThrowIfNotSuccess(response);
         // handle success
         const rawStats = utils.arrayOfObjsToObjOfArrays(response.data.stats);
-        // console.log(rawStats);
         populateStats(rawStats);
         drawCharts();
         if (!ifSkipSuccessToast) {
