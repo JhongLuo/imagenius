@@ -3,10 +3,12 @@ from utils.ReplacementPolicies import ReplacementPolicies
 import mysql.connector
 
 cnx = mysql.connector.connect(
-            user='root',
-            password='ece1779pass',
-            host='localhost',
-            database='group18a1',
+    pool_name = "group18a1_pool",
+    pool_size = 16,
+    user='root',
+    password='ece1779pass',
+    host='localhost',
+    database='group18a1',
 )
 cursor = cnx.cursor()
 create_images = '''CREATE TABLE IF NOT EXISTS images (

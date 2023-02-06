@@ -7,6 +7,8 @@ class DBConnector:
     @staticmethod
     def delete_keys():
         sql_connector = mysql.connector.connect(
+            pool_name = "group18a1_pool",
+            pool_size = 16,
             user='root',
             password='ece1779pass',
             host='localhost',
@@ -21,6 +23,8 @@ class DBConnector:
     @staticmethod
     def get_keys():
         sql_connector = mysql.connector.connect(
+            pool_name = "group18a1_pool",
+            pool_size = 16,
             user='root',
             password='ece1779pass',
             host='localhost',
@@ -36,6 +40,8 @@ class DBConnector:
     @staticmethod
     def set_statistics(rows):
         sql_connector = mysql.connector.connect(
+            pool_name = "group18a1_pool",
+            pool_size = 16,
             user='root',
             password='ece1779pass',
             host='localhost',
@@ -51,6 +57,8 @@ class DBConnector:
     @staticmethod
     def add_statistics(rows):
         sql_connector = mysql.connector.connect(
+            pool_name = "group18a1_pool",
+            pool_size = 16,
             user='root',
             password='ece1779pass',
             host='localhost',
@@ -67,6 +75,8 @@ class DBConnector:
     @staticmethod
     def select_statistics(key):
         sql_connector = mysql.connector.connect(
+            pool_name = "group18a1_pool",
+            pool_size = 16,
             user='root',
             password='ece1779pass',
             host='localhost',
@@ -85,6 +95,8 @@ class DBConnector:
     @staticmethod
     def set_key(keyword, path):
         sql_connector = mysql.connector.connect(
+            pool_name = "group18a1_pool",
+            pool_size = 16,
             user='root',
             password='ece1779pass',
             host='localhost',
@@ -103,6 +115,8 @@ class DBConnector:
     @staticmethod
     def delete_key(keyword):
         sql_connector = mysql.connector.connect(
+            pool_name = "group18a1_pool",
+            pool_size = 16,
             user='root',
             password='ece1779pass',
             host='localhost',
@@ -117,6 +131,8 @@ class DBConnector:
     @staticmethod
     def key2path(keyword):
         sql_connector = mysql.connector.connect(
+            pool_name = "group18a1_pool",
+            pool_size = 16,
             user='root',
             password='ece1779pass',
             host='localhost',

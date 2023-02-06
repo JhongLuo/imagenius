@@ -54,12 +54,13 @@ def throughput_test(timestamps : list, ratio : float, config : dict):
             random_rw(ratio, keys)
             recorder.finish_a_request()
         except Exception as e:
-            pass
+            print(e)
     
     while True:   
         if time.time() > end_time:
             break
         th = threading.Thread(target=request_and_record, args=(ratio, keys, recorder))
+        time.sleep(0.01)
         ths.append(th)
         th.start()
         
@@ -133,4 +134,4 @@ def ratio_throughput_test(total_time, ratio):
 
 for ratio in [0.2, 0.5, 0.8]:
     ratio_latency_test(200, ratio)
-    # ratio_throughput_test(3, ratio)
+    # ratio_throughput_test(10, ratio)
