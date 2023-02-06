@@ -12,12 +12,12 @@ def start_scheduler(stats):
 def syncStats(stats):
     stats.syncDB()
     
-def init_app(stats=None, scheduler=None):
+def init_app(stats=None):
     memcache_operations.delete_keys()
     DBConnector.delete_keys()
     stats = Statistics()
     stats.syncDB()
     storage_operations.clear_images()
-    return stats, scheduler
+    return stats
     
     

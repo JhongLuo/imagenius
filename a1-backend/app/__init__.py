@@ -1,5 +1,5 @@
 from flask import Flask
-from .app_operations import init_app
+from .app_operations import init_app, start_scheduler
 import logging
 from flask_cors import CORS
 
@@ -16,7 +16,7 @@ logger.addHandler(file_handler)
 
 
 global stats
-global scheduler
-stats, scheduler = init_app()
+stats = init_app()
+start_scheduler(stats)
 
 from app import  main
