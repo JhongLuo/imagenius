@@ -1,7 +1,7 @@
 export const PORT_FLASK_APP = 5000;
 export const PORT_JSON_SERVER = 3000;
 
-export const LOCALHOST_HOST_PREFIX = "localhost";
+export const BACKEND_HOST_PREFIX = "3.239.25.150"; // TODO: change to backend host
 export const PROXYMAN_HOST_PREFIX = "proxyman.local";
 
 export const ERR_MSG_FORM_KEY_EMPTY = "No key specified";

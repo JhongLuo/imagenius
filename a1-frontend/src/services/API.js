@@ -6,15 +6,15 @@ let selected_host;
 let selected_port;
 
 // ******** PLEASE SELECT THE CORRECT MODE ********
-// apiMode = "production";
-apiMode = "dev";
+apiMode = "production";
+// apiMode = "dev";
 // ********************************
 
 if (apiMode === "dev") {
   selected_host = Constants.PROXYMAN_HOST_PREFIX;
   selected_port = Constants.PORT_JSON_SERVER;
 } else {
-  selected_host = Constants.LOCALHOST_HOST_PREFIX;
+  selected_host = Constants.BACKEND_HOST_PREFIX;
   selected_port = Constants.PORT_FLASK_APP;
 }
 
