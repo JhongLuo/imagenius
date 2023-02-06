@@ -1,8 +1,8 @@
 from flask import Flask
-from .app_operations import init_app, start_scheduler
+from .app_operations import init_app
 import logging
 from flask_cors import CORS
-
+from apscheduler.schedulers.background import BackgroundScheduler
 
 webapp = Flask(__name__)
 CORS(webapp, resources={r"/*": {"origins": "*"}})
@@ -16,7 +16,16 @@ logger.addHandler(file_handler)
 
 
 global stats
-stats = init_app()
-start_scheduler(stats)
+stats = init_app(None)
+
+def start_scheduler(stats):
+    scheduler = BackgroundScheduler()
+    def syncStats(stats):
+        stats.syncDB()
+    scheduler.add_job(func=syncStats, trigger='interval', args=(stats,), seconds=5)
+    scheduler.start()
+
+start_scheduler(stats) 
+
 
 from app import  main

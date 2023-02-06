@@ -1,5 +1,5 @@
 from flask import render_template, request, redirect, url_for, flash
-from app import webapp, stats, scheduler
+from app import webapp, stats
 from flask import jsonify
 from . import storage_operations, app_operations, memcache_operations
 from utils.ReplacementPolicies import ReplacementPolicies
@@ -158,8 +158,7 @@ def list_keys_alt_post():
 @webapp.route('/api/delete_all', methods=['POST'])
 def delete_all():
     global stats
-    global scheduler
-    stats, scheduler = app_operations.init_app(stats=stats, scheduler=scheduler)
+    stats = app_operations.init_app(stats=stats)
     return jsonify({
         'success': "true"
     })

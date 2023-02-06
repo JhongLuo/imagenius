@@ -10,7 +10,6 @@ def start_scheduler(memcache):
     scheduler = BackgroundScheduler()
     scheduler.add_job(func=syncStats, trigger='interval', args=(memcache,), seconds=5)
     scheduler.start()
-    return scheduler
 
 webapp = Flask(__name__)
 
