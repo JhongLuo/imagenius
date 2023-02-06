@@ -56,7 +56,7 @@ export default {
     return statsData;
   },
 
-  generateChartConfig(title, numOrPercent = "NUM") {
+  generateChartConfig(title, array, numOrPercent = "NUM") {
     let scaleOptions;
     if (numOrPercent === "NUM") {
       scaleOptions = {
@@ -69,7 +69,7 @@ export default {
             tickLength: 2,
           },
           ticks: {
-            stepSize: 1,
+            precision: 0,
           },
         },
       };
@@ -97,11 +97,12 @@ export default {
     const config = {
       type: "line",
       data: {
-        labels: [],
+        labels: array,
         datasets: [
           {
             label: "",
-            data: [],
+            data: array,
+            borderColor: "#82E0AA",
             borderWidth: 2,
           },
         ],
@@ -123,19 +124,4 @@ export default {
 
     return config;
   },
-
-  // initChartByDOM(id, title, type = "NUM") {
-  //   return new Chart(
-  //     document.getElementById(id),
-  //     this.renderChartConfig(title, [], type)
-  //   );
-  // },
-
-  // updateChart(chart, dataArray) {
-  //   chart.data.labels.push("");
-  //   chart.data.datasets.forEach((dataset) => {
-  //     dataset.data = dataArray;
-  //   });
-  //   chart.update();
-  // },
 };

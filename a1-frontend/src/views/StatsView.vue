@@ -5,25 +5,113 @@
   </div>
 
   <!--  Page Content: Charts  -->
-  <BarChart />
+  <div class="container-lg my-5 px-0 mb-3">
+    <!--    <div class="container">-->
+    <!--      <button type="submit" class="btn btn-warning" @click="buttonPressed">-->
+    <!--        Refresh-->
+    <!--      </button>-->
+    <!--    </div>-->
+
+    <div class="container">
+      <div class="row row-cols-2 g-5">
+        <div class="col">
+          <canvas :id="idChartNumsItems"></canvas>
+        </div>
+        <div class="col">
+          <canvas :id="idChartUsagesSize"></canvas>
+        </div>
+        <div class="col">
+          <canvas :id="idChartUsagesPercent"></canvas>
+        </div>
+        <div class="col">
+          <canvas :id="idChartNumsRequests"></canvas>
+        </div>
+        <div class="col">
+          <canvas :id="idChartHitRates"></canvas>
+        </div>
+        <div class="col">
+          <canvas :id="idChartMissRates"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--  toasts  -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <!--  error toast  -->
+    <div
+      id="errorToast"
+      class="toast text-bg-danger"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+    >
+      <div class="toast-header">
+        <strong class="me-auto">ERROR</strong>
+        <small>just now</small>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="toast"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="toast-body">{{ stateErrorMsg }}</div>
+    </div>
+
+    <!--  success toast  -->
+    <div
+      id="successToast"
+      class="toast text-bg-success"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+    >
+      <div class="toast-header">
+        <strong class="me-auto">SUCCESS</strong>
+        <small>just now</small>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="toast"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="toast-body">{{ stateSuccessMsg }}</div>
+    </div>
+  </div>
 </template>
 
 <script>
-import { onMounted, ref, reactive } from "vue";
-// import { Chart } from "chart.js/auto";
+import { onMounted, reactive, ref } from "vue";
+import Chart from "chart.js/auto";
 import APIEndpoints from "@/services/APIEndpoints";
 import utils from "@/composables/utils";
 import * as Constants from "@/composables/constants";
-import Barchart from "@/composables/Barchart.vue";
-import BarChart from "@/composables/Barchart.vue";
 
 export default {
-  components: { BarChart },
   setup() {
     onMounted(() => {
-      // mountCharts();
-      // handleGetStats();
+      handleGetStats();
+      // drawCharts();
     });
+
+    const stateErrorMsg = ref("");
+    const stateSuccessMsg = ref("");
+
+    const idChartNumsItems = ref("chart_nums_items");
+    const idChartUsagesSize = ref("chart_usages_size");
+    const idChartUsagesPercent = ref("chart_usages_percent");
+    const idChartNumsRequests = ref("chart_nums_requests");
+    const idChartHitRates = ref("chart_hit_rates");
+    const idChartMissRates = ref("chart_miss_rates");
+
+    const chartNumsItems = ref(null);
+    const chartUsagesSize = ref(null);
+    const chartUsagesPercent = ref(null);
+    const chartNumsRequests = ref(null);
+    const chartHitRates = ref(null);
+    const chartMissRates = ref(null);
 
     const stats = reactive({
       nums_items: [],
@@ -33,145 +121,65 @@ export default {
       hit_rates: [],
       miss_rates: [],
     });
-    const idChartNumsItems = ref("chart_nums_items");
-    const idChartUsagesSize = ref("chart_usages_size");
-    const idChartUsagesPercent = ref("chart_usages_percent");
-    const idChartNumsRequests = ref("chart_nums_requests");
-    const idChartHitRates = ref("chart_hit_rates");
-    const idChartMissRates = ref("chart_miss_rates");
 
-    const stateErrorMsg = ref("");
-    const stateSuccessMsg = ref("");
+    const titles = {
+      nums_items: "# of Items",
+      usages_size: "Cache Usage (size in MB)",
+      usages_percent: "Cache Usage (percentage)",
+      nums_requests: "Requests Served",
+      hit_rates: "Hit Rate",
+      miss_rates: "Miss Rate",
+    };
 
-    // const chartNumsItems = reactive({});
-    // const chartUsageSize = reactive({});
-    // const chartUsagePercent = reactive({});
-    // const chartNumsRequests = reactive({});
-    // const chartHitRates = reactive({});
-    // const chartMissRates = reactive({});
+    const drawCharts = () => {
+      const configNumsItems = utils.generateChartConfig(
+        titles.nums_items,
+        stats.nums_items
+      );
+      const configUsagesSize = utils.generateChartConfig(
+        titles.usages_size,
+        stats.usages_size
+      );
+      const configUsagesPercent = utils.generateChartConfig(
+        titles.usages_percent,
+        stats.usages_percent,
+        "PERCENT"
+      );
+      const configNumsRequests = utils.generateChartConfig(
+        titles.nums_requests,
+        stats.nums_requests
+      );
+      const configHitRates = utils.generateChartConfig(
+        titles.hit_rates,
+        stats.hit_rates,
+        "PERCENT"
+      );
+      const configMissRates = utils.generateChartConfig(
+        titles.miss_rates,
+        stats.miss_rates,
+        "PERCENT"
+      );
 
-    // const mountCharts = () => {
-    //   chartNumsItems.value = initChartByDOM(
-    //     idChartNumsItems.value,
-    //     "# of Items"
-    //   );
-    //   chartUsageSize.value = initChartByDOM(
-    //     idChartUsagesSize.value,
-    //     "Cache Usage (Size)"
-    //   );
-    //   chartUsagePercent.value = initChartByDOM(
-    //     idChartUsagesPercent.value,
-    //     "Cache Usage (Percentage)",
-    //     "PERCENT"
-    //   );
-    //   chartNumsRequests.value = initChartByDOM(
-    //     idChartNumsRequests.value,
-    //     "Requests Served"
-    //   );
-    //   chartHitRates.value = initChartByDOM(
-    //     idChartHitRates.value,
-    //     "Hit Rate",
-    //     "PERCENT"
-    //   );
-    //   chartMissRates.value = initChartByDOM(
-    //     idChartMissRates.value,
-    //     "Miss Rate",
-    //     "PERCENT"
-    //   );
-    // };
+      const DOMNumsItems = document.getElementById(idChartNumsItems.value);
+      const DOMUsagesSize = document.getElementById(idChartUsagesSize.value);
+      const DOMUsagesPercent = document.getElementById(
+        idChartUsagesPercent.value
+      );
+      const DOMNumsRequests = document.getElementById(
+        idChartNumsRequests.value
+      );
+      const DOMHitRates = document.getElementById(idChartHitRates.value);
+      const DOMMissRates = document.getElementById(idChartMissRates.value);
 
-    // const initChartByDOM = (id, title, type = "NUM") => {
-    //   return new Chart(
-    //     document.getElementById(id),
-    //     utils.generateChartConfig(title, type)
-    //   );
-    // };
-
-    // const updateCharts = () => {
-    //   updateChart(chartNumsItems.value, stats.nums_items);
-    //   updateChart(chartUsageSize.value, stats.usages_size);
-    //   updateChart(chartUsagePercent.value, stats.usages_percent);
-    //   updateChart(chartNumsRequests.value, stats.nums_requests);
-    //   updateChart(chartHitRates.value, stats.hit_rates);
-    //   updateChart(chartMissRates.value, stats.miss_rates);
-    // };
-    //
-    // const updateChart = (chart, dataArray) => {
-    //   console.log("here start");
-    //   chart.data.labels.push("");
-    //   chart.data.datasets.forEach((dataset) => {
-    //     dataset.data = dataArray;
-    //   });
-    //   chart.update();
-    //   console.log("here end");
-    // };
-
-    // const populateStats = (data) => {
-    //   for (let i = 0; i < data["max_size"].length; i++) {
-    //     stats.nums_items.push(data["item_len"][i]);
-    //     stats.usages_size.push(data["item_bytes"][i]);
-    //     stats.usages_percent.push(data["item_bytes"][i] / data["max_size"][i]);
-    //     stats.nums_requests.push(data["requests_count"][i]);
-    //     stats.hit_rates.push(data["hit_rate"][i]);
-    //     stats.miss_rates.push(data["miss_rate"][i]);
-    //   }
-    // };
-
-    // const drawChart = () => {
-    //   // chart DOMs
-    //   const chart_nums_items = document.getElementById("chart_nums_items");
-    //   const chart_sizes_occupied = document.getElementById(
-    //     "chart_sizes_occupied"
-    //   );
-    //   const chart_percents_occupied = document.getElementById(
-    //     "chart_percents_occupied"
-    //   );
-    //   const chart_nums_requests = document.getElementById(
-    //     "chart_nums_requests"
-    //   );
-    //   const chart_hit_rates = document.getElementById("chart_hit_rates");
-    //   const chart_miss_rates = document.getElementById("chart_miss_rates");
-    //   // end DOMs
-    //
-    //   new Chart(
-    //     chart_nums_items,
-    //     utils.renderChartConfig("# of Items", stats.nums_items, "NUM")
-    //   );
-    //   new Chart(
-    //     chart_sizes_occupied,
-    //     utils.renderChartConfig("Cache Usage (Size)", stats.usages_size, "NUM")
-    //   );
-    //   new Chart(
-    //     chart_percents_occupied,
-    //     utils.renderChartConfig(
-    //       "Cache Usage (Percentage)",
-    //       stats.usages_percent,
-    //       "PERCENT"
-    //     )
-    //   );
-    //   new Chart(
-    //     chart_nums_requests,
-    //     utils.renderChartConfig("Requests Served", stats.nums_requests, "NUM")
-    //   );
-    //   new Chart(
-    //     chart_hit_rates,
-    //     utils.renderChartConfig("Hit Rate", stats.hit_rates, "PERCENT")
-    //   );
-    //   new Chart(
-    //     chart_miss_rates,
-    //     utils.renderChartConfig("Miss Rate", stats.miss_rates, "PERCENT")
-    //   );
-    // };
-
-    const buttonPressed = () => {
-      stats.nums_items.push(6);
-      stats.usages_size.push(1048576);
-      stats.usages_percent.push(0.6);
-      stats.nums_requests.push(10);
-      stats.hit_rates.push(0.8);
-      stats.miss_rates.push(0.2);
-      // drawChart();
-      // updateCharts();
+      chartNumsItems.value = new Chart(DOMNumsItems, configNumsItems);
+      chartUsagesSize.value = new Chart(DOMUsagesSize, configUsagesSize);
+      chartUsagesPercent.value = new Chart(
+        DOMUsagesPercent,
+        configUsagesPercent
+      );
+      chartNumsRequests.value = new Chart(DOMNumsRequests, configNumsRequests);
+      chartHitRates.value = new Chart(DOMHitRates, configHitRates);
+      chartMissRates.value = new Chart(DOMMissRates, configMissRates);
     };
 
     const handleGetStats = async (ifSkipSuccessToast = false) => {
@@ -181,24 +189,35 @@ export default {
         response = await APIEndpoints.getStats();
         utils.helperThrowIfNotSuccess(response);
         // handle success
-        // const rawStats = utils.arrayOfObjsToObjOfArrays(response.data.stats);
-        // populateStats(rawStats);
-        // updateCharts();
-
-        // console.log(stats.percents_occupied);
+        const rawStats = utils.arrayOfObjsToObjOfArrays(response.data.stats);
+        // console.log(rawStats);
+        populateStats(rawStats);
+        drawCharts();
         if (!ifSkipSuccessToast) {
           stateSuccessMsg.value = Constants.SUCCESS_MSG_GET_KEYS;
-          // utils.triggerToast(Constants.ID_TOAST_SUCCESS);
+          utils.triggerToast(Constants.ID_TOAST_SUCCESS);
         }
       } catch (errMsg) {
         // handle error
         stateErrorMsg.value = errMsg;
-        // utils.triggerToast(Constants.ID_TOAST_ERROR);
+        utils.triggerToast(Constants.ID_TOAST_ERROR);
       }
     };
 
+    const populateStats = (data) => {
+      for (let i = 0; i < data["max_size"].length; i++) {
+        stats.nums_items.push(data["items_len"][i]);
+        stats.usages_size.push(data["items_bytes"][i] / (1024 * 1024));
+        stats.usages_percent.push(data["items_bytes"][i] / data["max_size"][i]);
+        stats.nums_requests.push(data["requests_count"][i]);
+        stats.hit_rates.push(data["hit_rate"][i]);
+        stats.miss_rates.push(data["miss_rate"][i]);
+      }
+    };
+
+    const buttonPressed = () => {};
+
     return {
-      stats,
       idChartNumsItems,
       idChartUsagesSize,
       idChartUsagesPercent,
@@ -207,9 +226,8 @@ export default {
       idChartMissRates,
       stateErrorMsg,
       stateSuccessMsg,
-      handleGetStats,
       buttonPressed,
-      // BarChart,
+      handleGetStats,
     };
   },
 };
