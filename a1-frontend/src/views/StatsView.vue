@@ -42,7 +42,7 @@
     >
       <div class="toast-header">
         <strong class="me-auto">ERROR</strong>
-        <small>just now</small>
+        <small>{{ storeAPI.baseURLShort }}</small>
         <button
           type="button"
           class="btn-close"
@@ -63,7 +63,7 @@
     >
       <div class="toast-header">
         <strong class="me-auto">SUCCESS</strong>
-        <small>just now</small>
+        <small>{{ storeAPI.baseURLShort }}</small>
         <button
           type="button"
           class="btn-close"
@@ -210,6 +210,7 @@ export default {
     };
 
     return {
+      storeAPI,
       idChartNumsItems,
       idChartUsagesSize,
       idChartUsagesPercent,

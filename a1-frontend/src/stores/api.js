@@ -1,11 +1,28 @@
-import { ref, computed } from "vue";
+import { reactive, computed, watch } from "vue";
 import { defineStore } from "pinia";
 import axios from "axios";
 
 export const useAPIStore = defineStore("api", () => {
-  const host = ref("localhost");
-  const port = ref("5000");
-  const baseURL = computed(() => `http://${host.value}:${port.value}/`);
+  let ipAddr = reactive({
+    host: "localhost",
+    port: "5000",
+  });
+
+  if (localStorage.getItem("ipAddr")) {
+    ipAddr.host = JSON.parse(localStorage.getItem("ipAddr")).host;
+    ipAddr.port = JSON.parse(localStorage.getItem("ipAddr")).port;
+  }
+
+  watch(
+    ipAddr,
+    (val) => {
+      localStorage.setItem("ipAddr", JSON.stringify(val));
+    },
+    { deep: true }
+  );
+
+  const baseURL = computed(() => `http://${ipAddr.host}:${ipAddr.port}/`);
+  const baseURLShort = computed(() => `${ipAddr.host}:${ipAddr.port}`);
 
   const baseAxios = computed(() => axios.create({ baseURL: baseURL.value }));
 
@@ -164,8 +181,8 @@ export const useAPIStore = defineStore("api", () => {
   const getStats = () => baseAxios.value.get("/api/stats");
 
   return {
-    host,
-    port,
+    ipAddr,
+    baseURLShort,
     postImage,
     getImage,
     getAllKeys,
