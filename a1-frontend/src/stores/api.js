@@ -1,15 +1,14 @@
-import API from "@/services/API";
+import { ref, computed } from "vue";
+import { defineStore } from "pinia";
+import axios from "axios";
 
-// (ERROR format)
-//   {
-//     "success": "false",
-//     "error": {
-//       "code": String (server_error_code)
-//       "message": String (error_message)
-//     }
-//   }
+export const useAPIStore = defineStore("api", () => {
+  const host = ref("localhost");
+  const port = ref("5000");
+  const baseURL = computed(() => `http://${host.value}:${port.value}/`);
 
-export default {
+  const baseAxios = computed(() => axios.create({ baseURL: baseURL.value }));
+
   // UPLOAD PAGE
   // ----------------------------------------------------------------
   //
@@ -30,9 +29,7 @@ export default {
   //   }
   //
   //
-  postImage(data) {
-    return API().post("/api/upload", data);
-  },
+  const postImage = (data) => baseAxios.value.post("/api/upload", data);
 
   // RETRIEVE PAGE
   // ----------------------------------------------------------------
@@ -51,9 +48,7 @@ export default {
   //     "content": file
   //   }
   //
-  getImage(key) {
-    return API().get("/api/key/" + key);
-  },
+  const getImage = (key) => baseAxios.value.get("/api/key/" + key);
 
   // KEYS PAGE
   // ----------------------------------------------------------------
@@ -71,10 +66,7 @@ export default {
   //     "keys" : [String]
   //   }
   //
-  getAllKeys() {
-    return API().get("/api/list_keys");
-  },
-
+  const getAllKeys = () => baseAxios.value.get("/api/list_keys");
   // - Delete All Data (Keys and Values):
   //
   // request format:
@@ -86,9 +78,7 @@ export default {
   //     "success": "true"
   //   }
   //
-  postDeleteAllData() {
-    return API().post("/api/delete_all");
-  },
+  const postDeleteAllData = () => baseAxios.value.post("/api/delete_all");
 
   // CONFIG PAGE
   // ----------------------------------------------------------------
@@ -106,10 +96,7 @@ export default {
   //     "keys" : [String]
   //   }
   //
-  getCacheKeys() {
-    return API().get("/api/cache_keys");
-  },
-
+  const getCacheKeys = () => baseAxios.value.get("/api/cache_keys");
   // - Get Cache Configs:
   //
   // request format:
@@ -123,10 +110,8 @@ export default {
   //     "max_size": Number
   //   }
   //
-  getCacheConfigs(data) {
-    return API().get("/api/cache_configs", data);
-  },
-
+  const getCacheConfigs = (data) =>
+    baseAxios.value.get("/api/cache_configs", data);
   // - Put Cache Configs:
   //
   // request format:
@@ -143,10 +128,8 @@ export default {
   //     "max_size": Number
   //   }
   //
-  putCacheConfigs(data) {
-    return API().put("/api/cache_configs", data);
-  },
-
+  const putCacheConfigs = (data) =>
+    baseAxios.value.put("/api/cache_configs", data);
   // - Clear All Cache Data (reset cache):
   //
   // request format:
@@ -160,9 +143,7 @@ export default {
   //     "max_size": String
   //   }
   //
-  postClearCache() {
-    return API().post("/api/clear_cache");
-  },
+  const postClearCache = () => baseAxios.value.post("/api/clear_cache");
 
   // STATS PAGE
   // ----------------------------------------------------------------
@@ -180,7 +161,19 @@ export default {
   //     "stats" : [Object]
   //   }
   //
-  getStats() {
-    return API().get("/api/stats");
-  },
-};
+  const getStats = () => baseAxios.value.get("/api/stats");
+
+  return {
+    host,
+    port,
+    postImage,
+    getImage,
+    getAllKeys,
+    postDeleteAllData,
+    getCacheKeys,
+    getCacheConfigs,
+    putCacheConfigs,
+    postClearCache,
+    getStats,
+  };
+});

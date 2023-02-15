@@ -104,13 +104,15 @@
 
 <script>
 import { ref } from "vue";
-import APIEndpoints from "@/services/APIEndpoints";
 import { useImageUpload } from "@/composables/useImageUpload";
 import utils from "@/composables/utils";
 import * as Constants from "@/composables/constants";
+import { useAPIStore } from "@/stores/api";
 
 export default {
   setup() {
+    const storeAPI = useAPIStore();
+
     const imgKey = ref("");
     let { imgUrl, onFileSelected } = useImageUpload();
     const stateErrorMsg = ref("");
@@ -139,7 +141,7 @@ export default {
         fd.append("file", imgUrl.value);
         // console.log("base64 string -> :", imgUrl.value);
         let response;
-        response = await APIEndpoints.postImage(fd);
+        response = await storeAPI.postImage(fd);
         // console.log(response.data);
         utils.helperThrowIfNotSuccess(response);
         // handle success

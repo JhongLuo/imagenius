@@ -79,15 +79,17 @@
 <script>
 import { onMounted, reactive, ref } from "vue";
 import Chart from "chart.js/auto";
-import APIEndpoints from "@/services/APIEndpoints";
 import utils from "@/composables/utils";
 import * as Constants from "@/composables/constants";
+import { useAPIStore } from "@/stores/api";
 
 export default {
   setup() {
     onMounted(() => {
       handleGetStats();
     });
+
+    const storeAPI = useAPIStore();
 
     const stateErrorMsg = ref("");
     const stateSuccessMsg = ref("");
@@ -179,7 +181,7 @@ export default {
       // fetch data
       try {
         let response;
-        response = await APIEndpoints.getStats();
+        response = await storeAPI.getStats();
         utils.helperThrowIfNotSuccess(response);
         // handle success
         const rawStats = utils.arrayOfObjsToObjOfArrays(response.data.stats);
@@ -207,8 +209,6 @@ export default {
       }
     };
 
-    const buttonPressed = () => {};
-
     return {
       idChartNumsItems,
       idChartUsagesSize,
@@ -218,7 +218,6 @@ export default {
       idChartMissRates,
       stateErrorMsg,
       stateSuccessMsg,
-      buttonPressed,
       handleGetStats,
     };
   },

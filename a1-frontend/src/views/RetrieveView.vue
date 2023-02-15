@@ -93,12 +93,14 @@
 
 <script>
 import { ref } from "vue";
-import APIEndpoints from "@/services/APIEndpoints";
 import utils from "@/composables/utils";
 import * as Constants from "@/composables/constants";
+import { useAPIStore } from "@/stores/api";
 
 export default {
   setup() {
+    const storeAPI = useAPIStore();
+
     const imgKey = ref("");
     const imgUrl = ref("");
     const stateErrorMsg = ref("");
@@ -115,7 +117,7 @@ export default {
       // fetch data
       try {
         let response;
-        response = await APIEndpoints.getImage(imgKey.value);
+        response = await storeAPI.getImage(imgKey.value);
         utils.helperThrowIfNotSuccess(response);
         // handle success
         imgUrl.value = response.data.content;

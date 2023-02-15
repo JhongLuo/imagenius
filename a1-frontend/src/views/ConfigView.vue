@@ -277,9 +277,9 @@
 
 <script>
 import { onMounted, ref, reactive } from "vue";
-import APIEndpoints from "@/services/APIEndpoints";
 import utils from "@/composables/utils";
 import * as Constants from "@/composables/constants";
+import { useAPIStore } from "@/stores/api";
 
 export default {
   setup() {
@@ -287,6 +287,8 @@ export default {
       handleGetCacheKeys();
       handleGetCacheConfigs();
     });
+
+    const storeAPI = useAPIStore();
 
     const cacheKeys = ref([]);
     const cacheConfigs = reactive({
@@ -302,7 +304,7 @@ export default {
       // fetch data
       try {
         let response;
-        response = await APIEndpoints.getCacheKeys();
+        response = await storeAPI.getCacheKeys();
         utils.helperThrowIfNotSuccess(response);
         // handle success
         cacheKeys.value = response.data.keys;
@@ -321,7 +323,7 @@ export default {
       // fetch data
       try {
         let response;
-        response = await APIEndpoints.getCacheConfigs();
+        response = await storeAPI.getCacheConfigs();
         utils.helperThrowIfNotSuccess(response);
         // handle success
         cacheConfigs.replacementPolicy = response.data.replacement_policy;
@@ -340,7 +342,7 @@ export default {
       // fetch data
       try {
         let response;
-        response = await APIEndpoints.postClearCache();
+        response = await storeAPI.postClearCache();
         utils.helperThrowIfNotSuccess(response);
         // handle success
         stateSuccessMsg.value = Constants.SUCCESS_MSG_DELETE_KEYS;
@@ -362,7 +364,7 @@ export default {
           max_size: cacheConfigs.maxSizeFactored * cacheConfigs.sizeFactor,
         };
         let response;
-        response = await APIEndpoints.putCacheConfigs(data);
+        response = await storeAPI.putCacheConfigs(data);
         utils.helperThrowIfNotSuccess(response);
         // handle success
         cacheConfigs.replacementPolicy = response.data.replacement_policy;

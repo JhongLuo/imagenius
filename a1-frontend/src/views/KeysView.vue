@@ -133,15 +133,17 @@
 
 <script>
 import { ref, onMounted } from "vue";
-import APIEndpoints from "@/services/APIEndpoints";
 import utils from "@/composables/utils";
 import * as Constants from "@/composables/constants";
+import { useAPIStore } from "@/stores/api";
 
 export default {
   setup() {
     onMounted(() => {
       handleGetKeys();
     });
+
+    const storeAPI = useAPIStore();
 
     const keys = ref([]);
     const stateErrorMsg = ref("");
@@ -151,7 +153,7 @@ export default {
       // fetch data
       try {
         let response;
-        response = await APIEndpoints.getAllKeys();
+        response = await storeAPI.getAllKeys();
         utils.helperThrowIfNotSuccess(response);
         // handle success
         // console.log(response.data);
@@ -171,7 +173,7 @@ export default {
       // fetch data
       try {
         let response;
-        response = await APIEndpoints.postDeleteAllData();
+        response = await storeAPI.postDeleteAllData();
         utils.helperThrowIfNotSuccess(response);
         // handle success
         stateSuccessMsg.value = Constants.SUCCESS_MSG_DELETE_KEYS;
