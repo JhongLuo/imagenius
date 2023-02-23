@@ -1,3 +1,109 @@
+<script setup>
+import { onMounted, reactive, ref } from 'vue'
+import utils from '@/composables/utils'
+import * as Constants from '@/composables/constants'
+import { useAPIStore } from '@/stores/api'
+
+// export default {
+//   setup() {
+
+const storeAPI = useAPIStore()
+
+const cacheKeys = ref([])
+const cacheConfigs = reactive({
+  replacementPolicy: '',
+  maxSizeFactored: 0,
+  sizeFactor: 1048576,
+})
+const stateErrorMsg = ref('')
+const stateSuccessMsg = ref('')
+const stateSuccessMsgExtra = ref('')
+
+const handleGetCacheKeys = async (ifSkipSuccessToast = false) => {
+  // fetch data
+  try {
+    const response = await storeAPI.getCacheKeys()
+    utils.helperThrowIfNotSuccess(response)
+    // handle success
+    cacheKeys.value = response.data.keys
+    if (!ifSkipSuccessToast) {
+      stateSuccessMsg.value = Constants.SUCCESS_MSG_GET_KEYS
+      utils.triggerToast(Constants.ID_TOAST_SUCCESS)
+    }
+  }
+  catch (errMsg) {
+    // handle error
+    stateErrorMsg.value = errMsg
+    utils.triggerToast(Constants.ID_TOAST_ERROR)
+  }
+}
+
+const handleGetCacheConfigs = async () => {
+  // fetch data
+  try {
+    const response = await storeAPI.getCacheConfigs()
+    utils.helperThrowIfNotSuccess(response)
+    // handle success
+    cacheConfigs.replacementPolicy = response.data.replacement_policy
+    cacheConfigs.maxSizeFactored
+          = response.data.max_size / cacheConfigs.sizeFactor
+    stateSuccessMsgExtra.value = Constants.SUCCESS_MSG_GET_CONFIGS
+    utils.triggerToast(Constants.ID_TOAST_SUCCESS_EXTRA)
+  }
+  catch (errMsg) {
+    // handle error
+    stateErrorMsg.value = errMsg
+    utils.triggerToast(Constants.ID_TOAST_ERROR)
+  }
+}
+
+const handleClearCache = async () => {
+  // fetch data
+  try {
+    const response = await storeAPI.postClearCache()
+    utils.helperThrowIfNotSuccess(response)
+    // handle success
+    stateSuccessMsg.value = Constants.SUCCESS_MSG_DELETE_KEYS
+    utils.triggerToast(Constants.ID_TOAST_SUCCESS)
+    await handleGetCacheKeys(true)
+  }
+  catch (errMsg) {
+    // handle error
+    stateErrorMsg.value = errMsg
+    utils.triggerToast(Constants.ID_TOAST_ERROR)
+  }
+}
+
+const handlePutCacheConfigs = async () => {
+  // fetch data
+  try {
+    // construct request data
+    const data = {
+      replacement_policy: cacheConfigs.replacementPolicy,
+      max_size: cacheConfigs.maxSizeFactored * cacheConfigs.sizeFactor,
+    }
+    const response = await storeAPI.putCacheConfigs(data)
+    utils.helperThrowIfNotSuccess(response)
+    // handle success
+    cacheConfigs.replacementPolicy = response.data.replacement_policy
+    cacheConfigs.maxSizeFactored
+          = response.data.max_size / cacheConfigs.sizeFactor
+    stateSuccessMsg.value = Constants.SUCCESS_MSG_PUT_CONFIGS
+    utils.triggerToast(Constants.ID_TOAST_SUCCESS)
+  }
+  catch (errMsg) {
+    // handle error
+    stateErrorMsg.value = errMsg
+    utils.triggerToast(Constants.ID_TOAST_ERROR)
+  }
+}
+
+onMounted(() => {
+  handleGetCacheKeys()
+  handleGetCacheConfigs()
+})
+</script>
+
 <template>
   <!--  Page Title  -->
   <div class="container mb-5">
@@ -9,15 +115,21 @@
     <!--  Key Table Panel  -->
     <div class="container me-4">
       <!--  panel title  -->
-      <h4 class="mb-3">Keys in Memory-Cache</h4>
+      <h4 class="mb-3">
+        Keys in Memory-Cache
+      </h4>
 
       <!--  key table  -->
       <table class="table">
         <!-- table head -->
         <thead>
           <tr>
-            <th scope="col">#</th>
-            <th scope="col">Key Value</th>
+            <th scope="col">
+              #
+            </th>
+            <th scope="col">
+              Key Value
+            </th>
           </tr>
         </thead>
 
@@ -25,7 +137,9 @@
         <tbody>
           <!-- table row -->
           <tr v-for="(key, index) in cacheKeys" :key="key.self">
-            <th scope="row">{{ index + 1 }}</th>
+            <th scope="row">
+              {{ index + 1 }}
+            </th>
             <td>{{ key }}</td>
           </tr>
         </tbody>
@@ -46,11 +160,15 @@
     <!--  Config Panel  -->
     <div id="config-panel" class="container ms-auto">
       <!--  panel title  -->
-      <h4 class="mb-3">Mem-Cache Config</h4>
+      <h4 class="mb-3">
+        Mem-Cache Config
+      </h4>
 
       <!--  replacement policy  -->
       <div class="my-4">
-        <h6 class="mb-3">Replacement Policy</h6>
+        <h6 class="mb-3">
+          Replacement Policy
+        </h6>
         <div class="input-group">
           <select
             id="replacementPolicy"
@@ -58,16 +176,24 @@
             class="form-select"
             aria-label="Memory Cache Replacement Policy"
           >
-            <option disabled>Please choose one:</option>
-            <option value="random">Random Replacement</option>
-            <option value="LRU">Least Recently Used</option>
+            <option disabled>
+              Please choose one:
+            </option>
+            <option value="random">
+              Random Replacement
+            </option>
+            <option value="LRU">
+              Least Recently Used
+            </option>
           </select>
         </div>
       </div>
 
       <!--  max cache size  -->
       <div class="my-4">
-        <h6 class="mb-3">Maximum Cache Size</h6>
+        <h6 class="mb-3">
+          Maximum Cache Size
+        </h6>
         <div class="input-group">
           <input
             v-model="cacheConfigs.maxSizeFactored"
@@ -75,16 +201,22 @@
             class="form-control"
             placeholder="Maximum Cache Size"
             aria-label="Recipient's username with two button addons"
-          />
+          >
           <select
             id="unit-select"
             v-model="cacheConfigs.sizeFactor"
             class="form-select"
             aria-label="Size Unit"
           >
-            <option disabled>Please choose one:</option>
-            <option value="1048576">MB</option>
-            <option value="1024">KB</option>
+            <option disabled>
+              Please choose one:
+            </option>
+            <option value="1048576">
+              MB
+            </option>
+            <option value="1024">
+              KB
+            </option>
           </select>
         </div>
       </div>
@@ -124,7 +256,7 @@
             class="btn-close"
             data-bs-dismiss="modal"
             aria-label="Close"
-          ></button>
+          />
         </div>
         <div class="modal-body">
           <p>
@@ -174,16 +306,16 @@
             class="btn-close"
             data-bs-dismiss="modal"
             aria-label="Close"
-          ></button>
+          />
         </div>
         <div class="modal-body">
           <p>Set replacement policy: {{ cacheConfigs.replacementPolicy }}</p>
           <p>
             Set max cache size:
             {{
-              cacheConfigs.sizeFactor == 1024
-                ? cacheConfigs.maxSizeFactored + " KB"
-                : cacheConfigs.maxSizeFactored + " MB"
+              cacheConfigs.sizeFactor === 1024
+                ? `${cacheConfigs.maxSizeFactored} KB`
+                : `${cacheConfigs.maxSizeFactored} MB`
             }}
           </p>
         </div>
@@ -226,9 +358,11 @@
           class="btn-close"
           data-bs-dismiss="toast"
           aria-label="Close"
-        ></button>
+        />
       </div>
-      <div class="toast-body">{{ stateErrorMsg }}</div>
+      <div class="toast-body">
+        {{ stateErrorMsg }}
+      </div>
     </div>
 
     <!--  success toast  -->
@@ -247,9 +381,11 @@
           class="btn-close"
           data-bs-dismiss="toast"
           aria-label="Close"
-        ></button>
+        />
       </div>
-      <div class="toast-body">{{ stateSuccessMsg }}</div>
+      <div class="toast-body">
+        {{ stateSuccessMsg }}
+      </div>
     </div>
 
     <!--  extra: config load success toast  -->
@@ -268,130 +404,14 @@
           class="btn-close"
           data-bs-dismiss="toast"
           aria-label="Close"
-        ></button>
+        />
       </div>
-      <div class="toast-body">{{ stateSuccessMsgExtra }}</div>
+      <div class="toast-body">
+        {{ stateSuccessMsgExtra }}
+      </div>
     </div>
   </div>
 </template>
-
-<script>
-import { onMounted, ref, reactive } from "vue";
-import utils from "@/composables/utils";
-import * as Constants from "@/composables/constants";
-import { useAPIStore } from "@/stores/api";
-
-export default {
-  setup() {
-    onMounted(() => {
-      handleGetCacheKeys();
-      handleGetCacheConfigs();
-    });
-
-    const storeAPI = useAPIStore();
-
-    const cacheKeys = ref([]);
-    const cacheConfigs = reactive({
-      replacementPolicy: "",
-      maxSizeFactored: 0,
-      sizeFactor: 1048576,
-    });
-    const stateErrorMsg = ref("");
-    const stateSuccessMsg = ref("");
-    const stateSuccessMsgExtra = ref("");
-
-    const handleGetCacheKeys = async (ifSkipSuccessToast = false) => {
-      // fetch data
-      try {
-        let response;
-        response = await storeAPI.getCacheKeys();
-        utils.helperThrowIfNotSuccess(response);
-        // handle success
-        cacheKeys.value = response.data.keys;
-        if (!ifSkipSuccessToast) {
-          stateSuccessMsg.value = Constants.SUCCESS_MSG_GET_KEYS;
-          utils.triggerToast(Constants.ID_TOAST_SUCCESS);
-        }
-      } catch (errMsg) {
-        // handle error
-        stateErrorMsg.value = errMsg;
-        utils.triggerToast(Constants.ID_TOAST_ERROR);
-      }
-    };
-
-    const handleGetCacheConfigs = async () => {
-      // fetch data
-      try {
-        let response;
-        response = await storeAPI.getCacheConfigs();
-        utils.helperThrowIfNotSuccess(response);
-        // handle success
-        cacheConfigs.replacementPolicy = response.data.replacement_policy;
-        cacheConfigs.maxSizeFactored =
-          response.data.max_size / cacheConfigs.sizeFactor;
-        stateSuccessMsgExtra.value = Constants.SUCCESS_MSG_GET_CONFIGS;
-        utils.triggerToast(Constants.ID_TOAST_SUCCESS_EXTRA);
-      } catch (errMsg) {
-        // handle error
-        stateErrorMsg.value = errMsg;
-        utils.triggerToast(Constants.ID_TOAST_ERROR);
-      }
-    };
-
-    const handleClearCache = async () => {
-      // fetch data
-      try {
-        let response;
-        response = await storeAPI.postClearCache();
-        utils.helperThrowIfNotSuccess(response);
-        // handle success
-        stateSuccessMsg.value = Constants.SUCCESS_MSG_DELETE_KEYS;
-        utils.triggerToast(Constants.ID_TOAST_SUCCESS);
-        await handleGetCacheKeys(true);
-      } catch (errMsg) {
-        // handle error
-        stateErrorMsg.value = errMsg;
-        utils.triggerToast(Constants.ID_TOAST_ERROR);
-      }
-    };
-
-    const handlePutCacheConfigs = async () => {
-      // fetch data
-      try {
-        // construct request data
-        let data = {
-          replacement_policy: cacheConfigs.replacementPolicy,
-          max_size: cacheConfigs.maxSizeFactored * cacheConfigs.sizeFactor,
-        };
-        let response;
-        response = await storeAPI.putCacheConfigs(data);
-        utils.helperThrowIfNotSuccess(response);
-        // handle success
-        cacheConfigs.replacementPolicy = response.data.replacement_policy;
-        cacheConfigs.maxSizeFactored =
-          response.data.max_size / cacheConfigs.sizeFactor;
-        stateSuccessMsg.value = Constants.SUCCESS_MSG_PUT_CONFIGS;
-        utils.triggerToast(Constants.ID_TOAST_SUCCESS);
-      } catch (errMsg) {
-        // handle error
-        stateErrorMsg.value = errMsg;
-        utils.triggerToast(Constants.ID_TOAST_ERROR);
-      }
-    };
-
-    return {
-      storeAPI,
-      cacheKeys,
-      cacheConfigs,
-      stateErrorMsg,
-      stateSuccessMsg,
-      stateSuccessMsgExtra,
-      handlePutCacheConfigs,
-      handleClearCache,
-    };
-  },
-};
-</script>
 
 <style scoped>
 #config-panel {

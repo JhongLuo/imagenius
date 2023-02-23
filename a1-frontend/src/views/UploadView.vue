@@ -1,3 +1,55 @@
+<script setup>
+import { ref } from 'vue'
+import { useImageUpload } from '@/composables/useImageUpload'
+import utils from '@/composables/utils'
+import * as Constants from '@/composables/constants'
+import { useAPIStore } from '@/stores/api'
+
+const storeAPI = useAPIStore()
+
+const imgKey = ref('')
+const { imgUrl, onFileSelected } = useImageUpload()
+const stateErrorMsg = ref('')
+const stateSuccessMsg = ref('')
+
+const handleUpload = async () => {
+  // validate key
+  if (!imgKey.value) {
+    stateErrorMsg.value = Constants.ERR_MSG_FORM_KEY_EMPTY
+    utils.triggerToast(Constants.ID_TOAST_ERROR)
+    return
+  }
+
+  // validate file
+  if (!imgUrl.value) {
+    stateErrorMsg.value = Constants.ERR_MSG_FORM_FILE_EMPTY
+    utils.triggerToast(Constants.ID_TOAST_ERROR)
+    return
+  }
+
+  // fetch data
+  try {
+    // construct request form data
+    const fd = new FormData()
+    fd.append('key', imgKey.value)
+    fd.append('file', imgUrl.value)
+    // console.log("base64 string -> :", imgUrl.value);
+    const response = await storeAPI.postImage(fd)
+    utils.helperThrowIfNotSuccess(response)
+    // handle success
+    stateSuccessMsg.value = Constants.SUCCESS_MSG_UPLOAD_IMG
+    utils.triggerToast(Constants.ID_TOAST_SUCCESS)
+    imgKey.value = ''
+    imgUrl.value = ''
+  }
+  catch (errMsg) {
+    // handle error
+    stateErrorMsg.value = errMsg
+    utils.triggerToast(Constants.ID_TOAST_ERROR)
+  }
+}
+</script>
+
 <template>
   <!--  Page Title  -->
   <div class="container mb-5">
@@ -17,7 +69,7 @@
           type="text"
           class="form-control"
           placeholder="Type in your key here..."
-        />
+        >
       </div>
 
       <!--  image file  -->
@@ -28,7 +80,7 @@
           accept="image/*"
           class="form-control"
           @change="onFileSelected"
-        />
+        >
       </div>
 
       <!--  upload button  -->
@@ -51,7 +103,7 @@
           class="img-thumbnail bg-light"
           :src="imgUrl"
           alt="image upload preview"
-        />
+        >
       </div>
     </div>
 
@@ -73,9 +125,11 @@
             class="btn-close"
             data-bs-dismiss="toast"
             aria-label="Close"
-          ></button>
+          />
         </div>
-        <div class="toast-body">{{ stateErrorMsg }}</div>
+        <div class="toast-body">
+          {{ stateErrorMsg }}
+        </div>
       </div>
 
       <!--  success toast  -->
@@ -94,80 +148,15 @@
             class="btn-close"
             data-bs-dismiss="toast"
             aria-label="Close"
-          ></button>
+          />
         </div>
-        <div class="toast-body">{{ stateSuccessMsg }}</div>
+        <div class="toast-body">
+          {{ stateSuccessMsg }}
+        </div>
       </div>
     </div>
   </div>
 </template>
-
-<script>
-import { ref } from "vue";
-import { useImageUpload } from "@/composables/useImageUpload";
-import utils from "@/composables/utils";
-import * as Constants from "@/composables/constants";
-import { useAPIStore } from "@/stores/api";
-
-export default {
-  setup() {
-    const storeAPI = useAPIStore();
-
-    const imgKey = ref("");
-    let { imgUrl, onFileSelected } = useImageUpload();
-    const stateErrorMsg = ref("");
-    const stateSuccessMsg = ref("");
-
-    const handleUpload = async () => {
-      // validate key
-      if (!imgKey.value) {
-        stateErrorMsg.value = Constants.ERR_MSG_FORM_KEY_EMPTY;
-        utils.triggerToast(Constants.ID_TOAST_ERROR);
-        return;
-      }
-
-      // validate file
-      if (!imgUrl.value) {
-        stateErrorMsg.value = Constants.ERR_MSG_FORM_FILE_EMPTY;
-        utils.triggerToast(Constants.ID_TOAST_ERROR);
-        return;
-      }
-
-      // fetch data
-      try {
-        // construct request form data
-        let fd = new FormData();
-        fd.append("key", imgKey.value);
-        fd.append("file", imgUrl.value);
-        // console.log("base64 string -> :", imgUrl.value);
-        let response;
-        response = await storeAPI.postImage(fd);
-        // console.log(response.data);
-        utils.helperThrowIfNotSuccess(response);
-        // handle success
-        stateSuccessMsg.value = Constants.SUCCESS_MSG_UPLOAD_IMG;
-        utils.triggerToast(Constants.ID_TOAST_SUCCESS);
-        imgKey.value = "";
-        imgUrl.value = "";
-      } catch (errMsg) {
-        // handle error
-        stateErrorMsg.value = errMsg;
-        utils.triggerToast(Constants.ID_TOAST_ERROR);
-      }
-    };
-
-    return {
-      storeAPI,
-      imgKey,
-      imgUrl,
-      onFileSelected,
-      stateErrorMsg,
-      stateSuccessMsg,
-      handleUpload,
-    };
-  },
-};
-</script>
 
 <style scoped>
 #img-display {

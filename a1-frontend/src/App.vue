@@ -1,12 +1,12 @@
 <script setup>
-import { RouterLink, RouterView } from "vue-router";
+import { RouterLink, RouterView } from 'vue-router'
 </script>
 
 <template>
   <nav class="navbar navbar-expand-lg bg-dark-subtle">
     <div class="container-fluid">
-      <RouterLink to="/" class="ms-5 my-2 link-light navbar-brand"
-        >Home
+      <RouterLink to="/" class="ms-5 my-2 link-light navbar-brand">
+        Home
       </RouterLink>
       <div id="navbarNav" class="me-5 d-flex flex-row-reverse">
         <ul class="navbar-nav">

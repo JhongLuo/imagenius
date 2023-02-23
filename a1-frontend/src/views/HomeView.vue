@@ -1,7 +1,12 @@
+<script setup>
+import { useAPIStore } from '@/stores/api'
+const apiStore = useAPIStore()
+</script>
+
 <template>
   <!--  Page Title  -->
   <div class="container mb-5">
-    <h1>Home · Web Application A1</h1>
+    <h1>Client · Web Application A2</h1>
   </div>
 
   <!--  Page Content: backend form  -->
@@ -15,7 +20,7 @@
           type="text"
           class="form-control w-50"
           placeholder="hostname"
-        />
+        >
         <span class="input-group-text">:</span>
         <input
           v-model="apiStore.ipAddr.port"
@@ -23,7 +28,7 @@
           class="form-control w-25"
           placeholder="port"
           aria-label="Port"
-        />
+        >
       </div>
     </div>
   </div>
@@ -39,17 +44,5 @@
     </RouterLink>
   </div>
 </template>
-
-<script>
-import { useAPIStore } from "@/stores/api";
-export default {
-  setup() {
-    const apiStore = useAPIStore();
-    return {
-      apiStore,
-    };
-  },
-};
-</script>
 
 <style scoped></style>

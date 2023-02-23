@@ -1,3 +1,56 @@
+<script setup>
+import { onMounted, ref } from 'vue'
+import utils from '@/composables/utils'
+import * as Constants from '@/composables/constants'
+import { useAPIStore } from '@/stores/api'
+
+const storeAPI = useAPIStore()
+
+const keys = ref([])
+const stateErrorMsg = ref('')
+const stateSuccessMsg = ref('')
+
+const handleGetKeys = async (ifSkipSuccessToast = false) => {
+  // fetch data
+  try {
+    const response = await storeAPI.getAllKeys()
+    utils.helperThrowIfNotSuccess(response)
+    // handle success
+    // console.log(response.data);
+    keys.value = response.data.keys
+    if (!ifSkipSuccessToast) {
+      stateSuccessMsg.value = Constants.SUCCESS_MSG_GET_KEYS
+      utils.triggerToast(Constants.ID_TOAST_SUCCESS)
+    }
+  }
+  catch (errMsg) {
+    // handle error
+    stateErrorMsg.value = errMsg
+    utils.triggerToast(Constants.ID_TOAST_ERROR)
+  }
+}
+
+const handleDeleteAll = async () => {
+  // fetch data
+  try {
+    const response = await storeAPI.postDeleteAllData()
+    utils.helperThrowIfNotSuccess(response)
+    // handle success
+    stateSuccessMsg.value = Constants.SUCCESS_MSG_DELETE_KEYS
+    utils.triggerToast(Constants.ID_TOAST_SUCCESS)
+    await handleGetKeys(true)
+  }
+  catch (errMsg) {
+    // handle error
+    stateErrorMsg.value = errMsg
+    utils.triggerToast(Constants.ID_TOAST_ERROR)
+  }
+}
+onMounted(() => {
+  handleGetKeys()
+})
+</script>
+
 <template>
   <!--  Page Title  -->
   <div class="container mb-5">
@@ -10,8 +63,12 @@
       <!-- table head -->
       <thead>
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">Key Value</th>
+          <th scope="col">
+            #
+          </th>
+          <th scope="col">
+            Key Value
+          </th>
         </tr>
       </thead>
 
@@ -19,7 +76,9 @@
       <tbody>
         <!-- table row -->
         <tr v-for="(key, index) in keys" :key="key.self">
-          <th scope="row">{{ index + 1 }}</th>
+          <th scope="row">
+            {{ index + 1 }}
+          </th>
           <td>{{ key }}</td>
         </tr>
       </tbody>
@@ -50,13 +109,15 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 id="modalDeleteConfirmLabel" class="modal-title fs-5">Confirm</h1>
+          <h1 id="modalDeleteConfirmLabel" class="modal-title fs-5">
+            Confirm
+          </h1>
           <button
             type="button"
             class="btn-close"
             data-bs-dismiss="modal"
             aria-label="Close"
-          ></button>
+          />
         </div>
         <div class="modal-body">
           <p>
@@ -103,9 +164,11 @@
           class="btn-close"
           data-bs-dismiss="toast"
           aria-label="Close"
-        ></button>
+        />
       </div>
-      <div class="toast-body">{{ stateErrorMsg }}</div>
+      <div class="toast-body">
+        {{ stateErrorMsg }}
+      </div>
     </div>
 
     <!--  success toast  -->
@@ -124,77 +187,13 @@
           class="btn-close"
           data-bs-dismiss="toast"
           aria-label="Close"
-        ></button>
+        />
       </div>
-      <div class="toast-body">{{ stateSuccessMsg }}</div>
+      <div class="toast-body">
+        {{ stateSuccessMsg }}
+      </div>
     </div>
   </div>
 </template>
-
-<script>
-import { ref, onMounted } from "vue";
-import utils from "@/composables/utils";
-import * as Constants from "@/composables/constants";
-import { useAPIStore } from "@/stores/api";
-
-export default {
-  setup() {
-    onMounted(() => {
-      handleGetKeys();
-    });
-
-    const storeAPI = useAPIStore();
-
-    const keys = ref([]);
-    const stateErrorMsg = ref("");
-    const stateSuccessMsg = ref("");
-
-    const handleGetKeys = async (ifSkipSuccessToast = false) => {
-      // fetch data
-      try {
-        let response;
-        response = await storeAPI.getAllKeys();
-        utils.helperThrowIfNotSuccess(response);
-        // handle success
-        // console.log(response.data);
-        keys.value = response.data.keys;
-        if (!ifSkipSuccessToast) {
-          stateSuccessMsg.value = Constants.SUCCESS_MSG_GET_KEYS;
-          utils.triggerToast(Constants.ID_TOAST_SUCCESS);
-        }
-      } catch (errMsg) {
-        // handle error
-        stateErrorMsg.value = errMsg;
-        utils.triggerToast(Constants.ID_TOAST_ERROR);
-      }
-    };
-
-    const handleDeleteAll = async () => {
-      // fetch data
-      try {
-        let response;
-        response = await storeAPI.postDeleteAllData();
-        utils.helperThrowIfNotSuccess(response);
-        // handle success
-        stateSuccessMsg.value = Constants.SUCCESS_MSG_DELETE_KEYS;
-        utils.triggerToast(Constants.ID_TOAST_SUCCESS);
-        await handleGetKeys(true);
-      } catch (errMsg) {
-        // handle error
-        stateErrorMsg.value = errMsg;
-        utils.triggerToast(Constants.ID_TOAST_ERROR);
-      }
-    };
-
-    return {
-      storeAPI,
-      keys,
-      stateErrorMsg,
-      stateSuccessMsg,
-      handleDeleteAll,
-    };
-  },
-};
-</script>
 
 <style scoped></style>

@@ -1,3 +1,41 @@
+<script setup>
+import { ref } from 'vue'
+import utils from '@/composables/utils'
+import * as Constants from '@/composables/constants'
+import { useAPIStore } from '@/stores/api'
+
+const storeAPI = useAPIStore()
+
+const imgKey = ref('')
+const imgUrl = ref('')
+const stateErrorMsg = ref('')
+const stateSuccessMsg = ref('')
+
+const handleRetrieve = async () => {
+  // validate key
+  if (!imgKey.value) {
+    stateErrorMsg.value = Constants.ERR_MSG_FORM_KEY_EMPTY
+    utils.triggerToast(Constants.ID_TOAST_ERROR)
+    return
+  }
+
+  // fetch data
+  try {
+    const response = await storeAPI.getImage(imgKey.value)
+    utils.helperThrowIfNotSuccess(response)
+    // handle success
+    imgUrl.value = response.data.content
+    stateSuccessMsg.value = Constants.SUCCESS_MSG_RETRIEVE_IMG
+    utils.triggerToast(Constants.ID_TOAST_SUCCESS)
+  }
+  catch (errMsg) {
+    // handle error
+    stateErrorMsg.value = errMsg
+    utils.triggerToast(Constants.ID_TOAST_ERROR)
+  }
+}
+</script>
+
 <template>
   <!--  Page Title  -->
   <div class="container mb-5">
@@ -16,7 +54,7 @@
           type="text"
           class="form-control"
           placeholder="Type in your key here..."
-        />
+        >
         <label for="img-key">Image key</label>
       </div>
 
@@ -40,7 +78,7 @@
           class="img-thumbnail bg-light"
           :src="imgUrl"
           alt="image retrieval result"
-        />
+        >
       </div>
     </div>
 
@@ -62,9 +100,11 @@
             class="btn-close"
             data-bs-dismiss="toast"
             aria-label="Close"
-          ></button>
+          />
         </div>
-        <div class="toast-body">{{ stateErrorMsg }}</div>
+        <div class="toast-body">
+          {{ stateErrorMsg }}
+        </div>
       </div>
 
       <!--  success toast  -->
@@ -83,64 +123,15 @@
             class="btn-close"
             data-bs-dismiss="toast"
             aria-label="Close"
-          ></button>
+          />
         </div>
-        <div class="toast-body">{{ stateSuccessMsg }}</div>
+        <div class="toast-body">
+          {{ stateSuccessMsg }}
+        </div>
       </div>
     </div>
   </div>
 </template>
-
-<script>
-import { ref } from "vue";
-import utils from "@/composables/utils";
-import * as Constants from "@/composables/constants";
-import { useAPIStore } from "@/stores/api";
-
-export default {
-  setup() {
-    const storeAPI = useAPIStore();
-
-    const imgKey = ref("");
-    const imgUrl = ref("");
-    const stateErrorMsg = ref("");
-    const stateSuccessMsg = ref("");
-
-    const handleRetrieve = async () => {
-      // validate key
-      if (!imgKey.value) {
-        stateErrorMsg.value = Constants.ERR_MSG_FORM_KEY_EMPTY;
-        utils.triggerToast(Constants.ID_TOAST_ERROR);
-        return;
-      }
-
-      // fetch data
-      try {
-        let response;
-        response = await storeAPI.getImage(imgKey.value);
-        utils.helperThrowIfNotSuccess(response);
-        // handle success
-        imgUrl.value = response.data.content;
-        stateSuccessMsg.value = Constants.SUCCESS_MSG_RETRIEVE_IMG;
-        utils.triggerToast(Constants.ID_TOAST_SUCCESS);
-      } catch (errMsg) {
-        // handle error
-        stateErrorMsg.value = errMsg;
-        utils.triggerToast(Constants.ID_TOAST_ERROR);
-      }
-    };
-
-    return {
-      storeAPI,
-      imgKey,
-      imgUrl,
-      stateErrorMsg,
-      stateSuccessMsg,
-      handleRetrieve,
-    };
-  },
-};
-</script>
 
 <style scoped>
 #img-display {
