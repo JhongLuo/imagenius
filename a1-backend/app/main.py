@@ -45,6 +45,7 @@ def upload():
         return jsonify({
             'success': "false",
             'error': {
+                'code': 400,
                 'message':'Invalid key or file',
             }
         })
@@ -65,6 +66,7 @@ def upload():
         return jsonify({
             'success': "false",
             'error': {
+                'code': 400,
                 'message':str(e),
             }
         })
@@ -95,6 +97,7 @@ def get_image(key_value):
                 return jsonify({
                     'success': "false",
                     'error': {
+                        'code': 400,
                         'message':'Invalid key',
                     }
                 })
@@ -110,6 +113,7 @@ def get_image(key_value):
         return jsonify({
             'success': "false",
             'error': {
+                'code': 400,
                 'message':str(e),
             }
         })
@@ -235,6 +239,7 @@ def set_cache_configs():
         return jsonify({
             'success': "false",
             'error': {
+                'code' : 415,
                 'message':'Invalid replacement policy',
             }
         })
