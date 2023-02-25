@@ -1,0 +1,18 @@
+<template>
+  <div flex flex-row justify-center>
+    <div i-carbon:cloud-services text-4xl inline-block />
+    <div px-2 />
+    <div flex flex-col>
+      <p>
+        <a text-lg rel="noreferrer" href="/">
+          A2 Manager Web Frontend
+        </a>
+      </p>
+      <p>
+        <em text-sm op75>
+          Memcache Pool Management
+        </em>
+      </p>
+    </div>
+  </div>
+</template>
