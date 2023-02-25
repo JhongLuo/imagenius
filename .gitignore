@@ -10,8 +10,8 @@ instance/
 .coverage
 htmlcov/
 
-dist/
-build/
+*.local
+**/build/
 *.egg-info/
 
 images/
@@ -32,3 +32,8 @@ images/
 
 # ignore vite config files
 **/.vite
+
+# ignore vite ssg
+**/.vite-ssg-dist
+**/.vite-ssg-temp
+**/dist-ssr
