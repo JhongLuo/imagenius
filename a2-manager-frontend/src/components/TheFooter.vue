@@ -1,12 +1,12 @@
 <template>
-  <nav flex justify-center items-center text-xl mt-6 inline-flex gap-2>
+  <nav flex justify-center items-center text-xl mt-6 space-x-3>
     <a
       icon-btn i-carbon:home
       href="/"
       title="Home"
     />
 
-    <p mx-2>
+    <p mx-1 select-none>
       ·
     </p>
 
@@ -40,7 +40,7 @@
       title="Stats"
     />
 
-    <p mx-2>
+    <p mx-1 select-none>
       ·
     </p>
 
