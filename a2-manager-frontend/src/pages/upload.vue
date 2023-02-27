@@ -5,10 +5,7 @@ defineOptions({
 
 const name = ref('')
 
-// const router = useRouter()
 const pressed = () => {
-  // if (name)
-  //   router.push(`/hi/${encodeURIComponent(name)}`)
   console.warn(name.value)
 }
 </script>
