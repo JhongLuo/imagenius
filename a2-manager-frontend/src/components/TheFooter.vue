@@ -44,9 +44,7 @@
       ·
     </p>
 
-    <button icon-btn @click="toggleDark()">
-      <div dark:i-carbon-moon i-carbon-sun />
-    </button>
+    <button icon-btn dark:i-carbon-moon i-carbon-sun @click="toggleDark()" />
 
     <a
       icon-btn i-carbon-logo-github
