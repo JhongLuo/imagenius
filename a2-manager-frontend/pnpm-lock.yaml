@@ -12,6 +12,7 @@ specifiers:
   '@vueuse/core': ^9.13.0
   autoprefixer: ^10.4.13
   eslint: ^8.35.0
+  flowbite: ^1.6.3
   jsdom: ^21.1.0
   pnpm: ^7.28.0
   postcss: ^8.4.21
@@ -45,6 +46,7 @@ devDependencies:
   '@vue/test-utils': 2.3.0_vue@3.2.47
   autoprefixer: 10.4.13_postcss@8.4.21
   eslint: 8.35.0
+  flowbite: 1.6.3
   jsdom: 21.1.0
   pnpm: 7.28.0
   postcss: 8.4.21
@@ -866,6 +868,10 @@ packages:
 
   /@polka/url/1.0.0-next.21:
     resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
+    dev: true
+
+  /@popperjs/core/2.11.6:
+    resolution: {integrity: sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==}
     dev: true
 
   /@rollup/pluginutils/5.0.2:
@@ -3202,6 +3208,13 @@ packages:
     resolution: {integrity: sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==}
     dev: true
 
+  /flowbite/1.6.3:
+    resolution: {integrity: sha512-wTtAzZBLrUYqUBoTSNcMAeJrZNAcdx04EDgXWnkQ7gkKoAPFvLaq/H/Zw0JKZLVKFpKxqJ7PlvocfDApSHjhvw==}
+    dependencies:
+      '@popperjs/core': 2.11.6
+      mini-svg-data-uri: 1.4.4
+    dev: true
+
   /for-each/0.3.3:
     resolution: {integrity: sha512-jqYfLp7mo9vIyQf8ykW2v7A+2N4QjeCeI5+Dz9XraiO1ign81wjiH7Fb9vSOWvQfNtmSa4H2RoQTrrXivdUZmw==}
     dependencies:
@@ -4213,6 +4226,11 @@ packages:
   /min-indent/1.0.1:
     resolution: {integrity: sha512-I9jwMn07Sy/IwOj3zVkVik2JTvgpaykDZEigL6Rx6N9LbMywwUSMtxET+7lVoDLLd3O3IXwJwvuuns8UB/HeAg==}
     engines: {node: '>=4'}
+    dev: true
+
+  /mini-svg-data-uri/1.4.4:
+    resolution: {integrity: sha512-r9deDe9p5FJUPZAk3A59wGH7Ii9YrjjWw0jmw/liSbHl2CHiyXj6FcDXDu2K3TjVAXqiJdaw3xxwlZZr9E6nHg==}
+    hasBin: true
     dev: true
 
   /minimatch/3.1.2:
