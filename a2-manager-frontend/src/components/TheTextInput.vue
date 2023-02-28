@@ -6,12 +6,10 @@ const { modelValue } = defineModel<{
 
 <template>
   <input
-    id="input"
     v-model="modelValue"
-    type="text"
     v-bind="$attrs"
-    the-input
-    w="250px"
-    text="center"
+    type="text"
+    my-text-input-style
+    autocomplete="false"
   >
 </template>

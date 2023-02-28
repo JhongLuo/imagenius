@@ -3,20 +3,23 @@ defineOptions({
   name: 'UploadPage',
 })
 
-// const name = ref('')
-
-// const pressed = () => {
-//   console.warn(name.value)
-// }
+const imgKey = ref('')
+const pressed = () => {
+  // if (name)
+  //   router.push(`/hi/${encodeURIComponent(name)}`)
+  console.warn(typeof imgKey.value)
+}
 </script>
 
 <template>
-  <p my-title-style>
+  <!-- Page Title -->
+  <h1 my-title-style>
     Upload
-  </p>
-  <!-- content -->
+  </h1>
+
+  <!-- Page Content -->
   <div w-lg flex flex-col items-center>
-    <!-- Input Group: items-start -->
+    <!-- Input group: -->
     <div flex flex-col items-start>
       <!-- Input: image key  -->
       <label
@@ -25,16 +28,16 @@ defineOptions({
       >
         Image Key
       </label>
-      <div class="relative mb-6">
+      <div class="relative mb-4">
         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
           <span icon-plain i-carbon:password />
         </div>
-        <input
+        <TheTextInput
           id="input-image-key"
-          type="text"
-          my-text-input-style pl-10
+          v-model="imgKey"
+          pl-10
           placeholder="Your image key"
-        >
+        />
       </div>
 
       <!-- Input: image file -->
@@ -48,7 +51,8 @@ defineOptions({
       <input
         id="input-image-file"
         type="file"
-        my-input-style block w-full cursor-pointer
+        my-input-style text-xs
+        block w-full cursor-pointer rounded-lg
         aria-describedby="file_input_help"
       >
       <p
@@ -57,6 +61,15 @@ defineOptions({
       >
         Image format only (e.g. PNG, JPG, GIF, etc.)
       </p>
+
+      <!-- Button: upload -->
+      <button
+        my-btn-primary mt5
+        :disabled="!imgKey"
+        @click="pressed"
+      >
+        Upload
+      </button>
     </div>
   </div>
 </template>

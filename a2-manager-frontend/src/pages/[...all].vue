@@ -1,5 +1,6 @@
 <template>
-  <div>
-    Not Found
-  </div>
+  <!-- Page Title -->
+  <h1 my-title-style>
+    Page Not Found
+  </h1>
 </template>
