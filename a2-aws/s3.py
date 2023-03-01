@@ -11,7 +11,7 @@ class s3:
     def createBucket(self):
         exist = self.s3.checkBucketExists()
         if exist == True:
-            self.deleteBucket()
+            self.s3.deleteBucket()
         else:
             self.s3.create_bucket(Bucket = "a2-bucket")
         
