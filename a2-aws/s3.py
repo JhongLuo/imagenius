@@ -9,9 +9,9 @@ class s3:
         
 
     def createBucket(self):
-        exist = self.checkBucketExists()
+        exist = self.s3.checkBucketExists()
         if exist == True:
-            self.s3.delete_bucket(Bucket = self.bucketName)
+            self.deleteBucket()
         else:
             self.s3.create_bucket(Bucket = "a2-bucket")
         
@@ -89,3 +89,10 @@ class s3:
             print(f"All files deleted successfully from '{self.bucketName}' bucket.")
         except Exception as e:
             print(f"Error deleting files from '{self.bucketName}' bucket: {e}")
+
+    def deleteBucket(self):
+        try:
+            self.s3.delete_bucket(Bucket=self.bucketName)
+            print(f"Bucket '{self.bucketName}' deleted successfully.")
+        except Exception as e:
+            print(f"Error deleting bucket '{self.bucketName}': {e}")
