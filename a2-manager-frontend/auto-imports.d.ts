@@ -11,7 +11,22 @@ declare global {
   const $ref: typeof import('vue/macros')['$ref']
   const $shallowRef: typeof import('vue/macros')['$shallowRef']
   const $toRef: typeof import('vue/macros')['$toRef']
+  const ERR_MSG_FORM_FILE_EMPTY: typeof import('./src/composables/constants')['ERR_MSG_FORM_FILE_EMPTY']
+  const ERR_MSG_FORM_KEY_EMPTY: typeof import('./src/composables/constants')['ERR_MSG_FORM_KEY_EMPTY']
+  const ERR_MSG_INCORRECT_FORMAT: typeof import('./src/composables/constants')['ERR_MSG_INCORRECT_FORMAT']
+  const ERR_MSG_UNKNOWN_ERROR: typeof import('./src/composables/constants')['ERR_MSG_UNKNOWN_ERROR']
   const EffectScope: typeof import('vue')['EffectScope']
+  const ID_TOAST_ERROR: typeof import('./src/composables/constants')['ID_TOAST_ERROR']
+  const ID_TOAST_SUCCESS: typeof import('./src/composables/constants')['ID_TOAST_SUCCESS']
+  const ID_TOAST_SUCCESS_EXTRA: typeof import('./src/composables/constants')['ID_TOAST_SUCCESS_EXTRA']
+  const PORT_FLASK_APP: typeof import('./src/composables/constants')['PORT_FLASK_APP']
+  const PORT_JSON_SERVER: typeof import('./src/composables/constants')['PORT_JSON_SERVER']
+  const SUCCESS_MSG_DELETE_KEYS: typeof import('./src/composables/constants')['SUCCESS_MSG_DELETE_KEYS']
+  const SUCCESS_MSG_GET_CONFIGS: typeof import('./src/composables/constants')['SUCCESS_MSG_GET_CONFIGS']
+  const SUCCESS_MSG_GET_KEYS: typeof import('./src/composables/constants')['SUCCESS_MSG_GET_KEYS']
+  const SUCCESS_MSG_PUT_CONFIGS: typeof import('./src/composables/constants')['SUCCESS_MSG_PUT_CONFIGS']
+  const SUCCESS_MSG_RETRIEVE_IMG: typeof import('./src/composables/constants')['SUCCESS_MSG_RETRIEVE_IMG']
+  const SUCCESS_MSG_UPLOAD_IMG: typeof import('./src/composables/constants')['SUCCESS_MSG_UPLOAD_IMG']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
   const autoResetRef: typeof import('@vueuse/core')['autoResetRef']
   const computed: typeof import('vue')['computed']
@@ -175,6 +190,7 @@ declare global {
   const useGeolocation: typeof import('@vueuse/core')['useGeolocation']
   const useIdle: typeof import('@vueuse/core')['useIdle']
   const useImage: typeof import('@vueuse/core')['useImage']
+  const useImageUpload: typeof import('./src/composables/useImageUpload')['useImageUpload']
   const useInfiniteScroll: typeof import('@vueuse/core')['useInfiniteScroll']
   const useIntersectionObserver: typeof import('@vueuse/core')['useIntersectionObserver']
   const useInterval: typeof import('@vueuse/core')['useInterval']
@@ -265,6 +281,7 @@ declare global {
   const useWindowFocus: typeof import('@vueuse/core')['useWindowFocus']
   const useWindowScroll: typeof import('@vueuse/core')['useWindowScroll']
   const useWindowSize: typeof import('@vueuse/core')['useWindowSize']
+  const utils: typeof import('./src/composables/utils.js')['default']
   const watch: typeof import('vue')['watch']
   const watchArray: typeof import('@vueuse/core')['watchArray']
   const watchAtMost: typeof import('@vueuse/core')['watchAtMost']
@@ -296,7 +313,22 @@ declare module 'vue' {
     readonly $ref: UnwrapRef<typeof import('vue/macros')['$ref']>
     readonly $shallowRef: UnwrapRef<typeof import('vue/macros')['$shallowRef']>
     readonly $toRef: UnwrapRef<typeof import('vue/macros')['$toRef']>
+    readonly ERR_MSG_FORM_FILE_EMPTY: UnwrapRef<typeof import('./src/composables/constants')['ERR_MSG_FORM_FILE_EMPTY']>
+    readonly ERR_MSG_FORM_KEY_EMPTY: UnwrapRef<typeof import('./src/composables/constants')['ERR_MSG_FORM_KEY_EMPTY']>
+    readonly ERR_MSG_INCORRECT_FORMAT: UnwrapRef<typeof import('./src/composables/constants')['ERR_MSG_INCORRECT_FORMAT']>
+    readonly ERR_MSG_UNKNOWN_ERROR: UnwrapRef<typeof import('./src/composables/constants')['ERR_MSG_UNKNOWN_ERROR']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
+    readonly ID_TOAST_ERROR: UnwrapRef<typeof import('./src/composables/constants')['ID_TOAST_ERROR']>
+    readonly ID_TOAST_SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['ID_TOAST_SUCCESS']>
+    readonly ID_TOAST_SUCCESS_EXTRA: UnwrapRef<typeof import('./src/composables/constants')['ID_TOAST_SUCCESS_EXTRA']>
+    readonly PORT_FLASK_APP: UnwrapRef<typeof import('./src/composables/constants')['PORT_FLASK_APP']>
+    readonly PORT_JSON_SERVER: UnwrapRef<typeof import('./src/composables/constants')['PORT_JSON_SERVER']>
+    readonly SUCCESS_MSG_DELETE_KEYS: UnwrapRef<typeof import('./src/composables/constants')['SUCCESS_MSG_DELETE_KEYS']>
+    readonly SUCCESS_MSG_GET_CONFIGS: UnwrapRef<typeof import('./src/composables/constants')['SUCCESS_MSG_GET_CONFIGS']>
+    readonly SUCCESS_MSG_GET_KEYS: UnwrapRef<typeof import('./src/composables/constants')['SUCCESS_MSG_GET_KEYS']>
+    readonly SUCCESS_MSG_PUT_CONFIGS: UnwrapRef<typeof import('./src/composables/constants')['SUCCESS_MSG_PUT_CONFIGS']>
+    readonly SUCCESS_MSG_RETRIEVE_IMG: UnwrapRef<typeof import('./src/composables/constants')['SUCCESS_MSG_RETRIEVE_IMG']>
+    readonly SUCCESS_MSG_UPLOAD_IMG: UnwrapRef<typeof import('./src/composables/constants')['SUCCESS_MSG_UPLOAD_IMG']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
@@ -460,6 +492,7 @@ declare module 'vue' {
     readonly useGeolocation: UnwrapRef<typeof import('@vueuse/core')['useGeolocation']>
     readonly useIdle: UnwrapRef<typeof import('@vueuse/core')['useIdle']>
     readonly useImage: UnwrapRef<typeof import('@vueuse/core')['useImage']>
+    readonly useImageUpload: UnwrapRef<typeof import('./src/composables/useImageUpload')['useImageUpload']>
     readonly useInfiniteScroll: UnwrapRef<typeof import('@vueuse/core')['useInfiniteScroll']>
     readonly useIntersectionObserver: UnwrapRef<typeof import('@vueuse/core')['useIntersectionObserver']>
     readonly useInterval: UnwrapRef<typeof import('@vueuse/core')['useInterval']>
@@ -550,6 +583,7 @@ declare module 'vue' {
     readonly useWindowFocus: UnwrapRef<typeof import('@vueuse/core')['useWindowFocus']>
     readonly useWindowScroll: UnwrapRef<typeof import('@vueuse/core')['useWindowScroll']>
     readonly useWindowSize: UnwrapRef<typeof import('@vueuse/core')['useWindowSize']>
+    readonly utils: UnwrapRef<typeof import('./src/composables/utils.js')['default']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchArray: UnwrapRef<typeof import('@vueuse/core')['watchArray']>
     readonly watchAtMost: UnwrapRef<typeof import('@vueuse/core')['watchAtMost']>

@@ -11,10 +11,15 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    TheCounter: typeof import('./src/components/TheCounter.vue')['default']
+    TheButton: typeof import('./src/components/TheButton.vue')['default']
+    TheFileInput: typeof import('./src/components/TheInputs/TheFileInput.vue')['default']
     TheFooter: typeof import('./src/components/TheFooter.vue')['default']
     TheHeader: typeof import('./src/components/TheHeader.vue')['default']
-    TheInput: typeof import('./src/components/TheInput.vue')['default']
-    TheTextInput: typeof import('./src/components/TheTextInput.vue')['default']
+    TheIconedTextInput: typeof import('./src/components/TheInputs/TheIconedTextInput.vue')['default']
+    TheImagePreview: typeof import('./src/components/TheImagePreview.vue')['default']
+    TheInput: typeof import('./src/components/TheInputs/TheInput.vue')['default']
+    TheLabeledInput: typeof import('./src/components/TheInputs/TheLabeledInput.vue')['default']
+    TheSpinner: typeof import('./src/components/TheSpinner.vue')['default']
+    TheTextInput: typeof import('./src/components/TheInputs/TheTextInput.vue')['default']
   }
 }

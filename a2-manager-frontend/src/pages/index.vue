@@ -20,6 +20,7 @@ const navigateToUpload = () => {
   <div mt-8>
     <TheTextInput
       v-model="api.ipAddr.addr"
+      input-id="api-ip-addr"
       text-center
       placeholder="Where to connect?"
       data-tooltip-target="tooltip-no-arrow"

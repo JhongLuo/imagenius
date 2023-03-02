@@ -1,15 +1,18 @@
 <script setup lang="ts">
+defineProps<{
+  inputId: string
+}>()
+
 const { modelValue } = defineModel<{
   modelValue: string
 }>()
 </script>
 
 <template>
-  <input
+  <TheInput
     v-model="modelValue"
-    v-bind="$attrs"
+    :input-id="inputId"
     type="text"
     my-text-input-style
-    autocomplete="false"
-  >
+  />
 </template>

@@ -3,7 +3,7 @@ const api = useAPIStore()
 </script>
 
 <template>
-  <div flex-col space-y-3>
+  <div flex-col space-y-3 mt-6>
     <div flex justify-center items-baseline>
       <span my-helper-text-style select-none>
         Currently connecting to&nbsp;

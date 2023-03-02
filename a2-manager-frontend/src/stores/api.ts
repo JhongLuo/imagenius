@@ -44,7 +44,7 @@ export const useAPIStore = defineStore('api', () => {
   //   }
   //
   //
-  const postImage = (data: { key: string; file: string }) => baseAxios.value.post('/api/upload', data)
+  const postImage = (data: FormData) => baseAxios.value.post('/api/upload', data)
 
   // RETRIEVE PAGE
   // ----------------------------------------------------------------

@@ -13,7 +13,7 @@ export default defineConfig({
     ['icon-btn', 'text-[0.9em] inline-block cursor-pointer select-none opacity-75 transition duration-2 ease-in-out hover:opacity-100 hover:text-teal-6 !outline-none'],
     ['icon-plain', 'text-[0.9em] inline-block cursor-default select-none opacity-75'],
     ['my-outline-none', 'outline-none focus:outline-none ring-none focus:ring-none'],
-    ['my-border', 'border border-1 border-rounded border-gray-4 dark:border-gray-5 border-op-20 dark:border-op-20 focus:border-gray-4 focus:dark:border-gray-5 focus:border-op-40 focus:dark:border-op-30 my-outline-none'],
+    ['my-border', 'border border-1.5 border-rounded border-gray-4 dark:border-gray-5 border-op-20 dark:border-op-20 focus:border-gray-4 focus:dark:border-gray-5 focus:border-op-40 focus:dark:border-op-30 my-outline-none'],
     ['my-text-color-primary', 'text-gray-8 placeholder-gray-6 dark:text-gray-2 dark:placeholder-gray-4'],
     ['my-text-color-secondary', 'text-gray-5 placeholder-gray-5 dark:text-gray-4'],
     ['my-text-color-tertiary', 'text-gray-4 placeholder-gray-5 dark:text-gray-6'],

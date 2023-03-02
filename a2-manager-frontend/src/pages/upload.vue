@@ -1,13 +1,46 @@
-<script setup lang="ts" generic="T extends any, O extends any">
+<script setup lang="ts">
 defineOptions({
   name: 'UploadPage',
 })
 
+const api = useAPIStore()
+const { imgStr, updateImgFile } = useImageUpload()
 const imgKey = ref('')
-const pressed = () => {
-  // if (name)
-  //   router.push(`/hi/${encodeURIComponent(name)}`)
-  console.warn(typeof imgKey.value)
+const isUploading = ref(false)
+const isUploaded = ref(false)
+
+const isInputValid = computed(() => {
+  return imgKey.value.trim() && imgStr.value
+})
+
+const onFileInputChanged = (event: Event) => {
+  isUploaded.value = false
+  updateImgFile(event)
+}
+
+const handleUpload = async () => {
+  // TODO: complete this
+  // <== input validation already done by button disabled state
+  isUploading.value = true
+  // fetch data
+  try {
+    // construct request form data
+    const fd = new FormData()
+    fd.append('key', imgKey.value.trim())
+    fd.append('file', imgStr.value)
+    const response = await api.postImage(fd)
+    utils.helperThrowIfNotSuccess(response)
+    // handle success
+    isUploaded.value = true
+    // reset states
+    isUploading.value = false
+    imgKey.value = ''
+    // imgStr.value = ''
+  }
+  catch (errMsg) {
+    // handle error
+    console.error(errMsg)
+  }
 }
 </script>
 
@@ -18,58 +51,69 @@ const pressed = () => {
   </h1>
 
   <!-- Page Content -->
-  <div w-lg flex flex-col items-center>
+  <div
+    w-sm
+    flex flex-col items-center
+  >
     <!-- Input group: -->
-    <div flex flex-col items-start>
-      <!-- Input: image key  -->
-      <label
-        for="input-image-key"
-        my-label-style
+    <form
+      w-full
+      flex flex-col items-start
+      @submit.prevent
+    >
+      <!-- input: image key  -->
+      <div
+        class="w-61.8%"
       >
-        Image Key
-      </label>
-      <div class="relative mb-4">
-        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-          <span icon-plain i-carbon:password />
-        </div>
-        <TheTextInput
-          id="input-image-key"
-          v-model="imgKey"
-          pl-10
-          placeholder="Your image key"
-        />
+        <TheLabeledInput
+          input-id="input-image-key"
+          label-text="Image Key"
+        >
+          <TheIconedTextInput
+            v-model="imgKey"
+            icon="i-carbon-password"
+            input-id="input-image-key"
+            placeholder="Your image key"
+          />
+        </TheLabeledInput>
       </div>
 
-      <!-- Input: image file -->
+      <!-- input: image file -->
+      <TheFileInput
+        accept="image/*"
+        label-text="Image File"
+        input-id="input-image-file"
+        helper-text-id="input-image-file-help"
+        helper-text="Image format only (e.g. PNG, JPG, GIF, etc.)"
+        @change="onFileInputChanged"
+      />
 
-      <label
-        for="input-image-file"
-        my-label-style
-      >
-        Image file
-      </label>
-      <input
-        id="input-image-file"
-        type="file"
-        my-input-style text-xs
-        block w-full cursor-pointer rounded-lg
-        aria-describedby="file_input_help"
-      >
-      <p
-        id="file_input_help"
-        my-helper-text-style
-      >
-        Image format only (e.g. PNG, JPG, GIF, etc.)
-      </p>
+      <!-- Button + Spinner -->
+      <div mt-5 flex items-center space-x-3>
+        <!-- button: upload -->
+        <TheButton
+          label="Upload"
+          :disabled="!isInputValid"
+          @click="handleUpload"
+        />
 
-      <!-- Button: upload -->
-      <button
-        my-btn-primary mt5
-        :disabled="!imgKey"
-        @click="pressed"
-      >
-        Upload
-      </button>
-    </div>
+        <!-- spinner -->
+        <TheSpinner
+          v-if="isUploading"
+          alt-text="Uploading..."
+        />
+      </div>
+    </form>
+
+    <!-- Image Preview: -->
+    <TheImagePreview
+      v-if="imgStr"
+      :src="imgStr"
+      :class="{ 'blur-sm': isUploaded }"
+      :caption-show="!isUploaded"
+      caption-pos="top-right"
+      caption-text="Image Preview"
+      alt="Preview: Image To Be Uploaded"
+    />
   </div>
 </template>
