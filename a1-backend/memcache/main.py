@@ -1,6 +1,6 @@
 from memcache import webapp, memcache
 from flask import jsonify, request
-
+import sys
 
 @webapp.route('/api/keys', methods=['GET'])
 def get_keys():
@@ -32,6 +32,11 @@ def get_key(key_value):
 @webapp.route('/api/key/<key_value>', methods=['POST'])
 def set_key(key_value):
     content = request.get_json()
+    if sys.getsizeof(content) > memcache.max_size:
+        return jsonify({
+            'success': 'false',
+            'error': 'Content too large'
+        })
     memcache[key_value] = content
     return jsonify({
         'success': 'true'
