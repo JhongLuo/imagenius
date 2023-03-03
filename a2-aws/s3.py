@@ -4,16 +4,18 @@ import os
 class s3:
     def __init__(self,client):
         self.s3 = client
-        self.bucketName = "a2-bucket"    
+        self.bucketName = "a2-bucket1779"
+        self.s3_resource = boto3.resource('s3')   
         
         
 
     def createBucket(self):
-        exist = self.s3.checkBucketExists()
+        exist = self.checkBucketExists()
         if exist == True:
-            self.s3.deleteBucket()
-        else:
-            self.s3.create_bucket(Bucket = "a2-bucket")
+            self.deleteAllFiles()
+            self.deleteBucket()
+     
+        self.s3.create_bucket(Bucket = self.bucketName)
         
         
     def checkBucketExists(self):
@@ -36,25 +38,20 @@ class s3:
             print(f"Error uploading file '{object_name}' to '{self.bucketName}' bucket: {e}")
 
 
-    def downloadFile(self, bucket_name, object_name, local_dir):
-        response = self.s3.list_objects_v2(Bucket=bucket_name)
-        object_list = response['Contents']
-
-        if not any(obj['Key'] == object_name for obj in object_list):
-            print(f"Error: File '{object_name}' not found in '{bucket_name}' bucket.")
-            return
-
-        object_name_parts = object_name.split('.')
-        file_name = object_name_parts[0]
-        file_ext = object_name_parts[1]
-
-        file_path = os.path.join(local_dir, f"{file_name}.{file_ext}")
-
+    def downloadFile(self, object_name, local_dir, local_file_name=None):
         try:
-            self.s3.download_file(bucket_name, object_name, file_path)
-            print(f"File '{object_name}' downloaded successfully to '{file_path}' on local machine.")
+            bucket = self.s3_resource.Bucket(self.bucketName)
+            for obj in bucket.objects.all():
+                if obj.key == object_name:
+                    if local_file_name is None:
+                        local_file_name = object_name
+                    file_path = os.path.join(local_dir, local_file_name)
+                    bucket.download_file(object_name, file_path)
+                    print(f"File '{object_name}' downloaded successfully to '{file_path}'.")
+                    return
+            print(f"Error: File '{object_name}' not found in '{self.bucketName}' bucket.")
         except Exception as e:
-            print(f"Error downloading file '{object_name}' from '{bucket_name}' bucket: {e}")
+            print(f"Error downloading file '{object_name}' from '{self.bucketName}' bucket: {e}")
 
     def deleteFile(self, object_name):
         response = self.s3.list_objects_v2(Bucket=self.bucketName)
