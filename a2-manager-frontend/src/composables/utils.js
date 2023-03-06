@@ -2,7 +2,7 @@ import * as Constants from '~/composables/constants'
 // import { Chart } from "chart.js/auto";
 
 export default {
-  helperThrowIfNotSuccess(response) {
+  validateResponse(response) {
     // wrong response format
     const noSuccessKey = !('success' in response.data)
     if (noSuccessKey)

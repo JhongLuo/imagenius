@@ -20,7 +20,7 @@ defineOptions({
   >
     <div
       absolute inset-y-0 left-0 pl-3
-      flex items-center pointer-events-none
+      flex items-center cursor-default
     >
       <span
         icon-plain
