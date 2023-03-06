@@ -5,7 +5,7 @@ defineOptions({
 
 const api = useAPIStore()
 const { imgStr, updateImgFile } = useImageUpload()
-const { toasts, blink, createToast } = useToasts()
+const { toastsArray, blink } = useToasts()
 
 const imgKey = ref('')
 const isUploading = ref(false)
@@ -28,11 +28,7 @@ const handleUpload = async () => {
     const response = await api.postImage(fd)
     utils.validateResponse(response)
     // handle success
-    blink(createToast(
-      'toast-image-upload-success',
-      'success',
-      'Image uploaded successfully.',
-    ))
+    blink('toast-image-upload-success', 'success', 'Image uploaded successfully.')
     isUploading.value = false
     imgKey.value = ''
     imgStr.value = '';
@@ -40,11 +36,7 @@ const handleUpload = async () => {
   }
   catch (errMsg) {
     // handle error
-    blink(createToast(
-      'toast-error',
-      'error',
-      errMsg as string,
-    ))
+    blink('toast-error', 'error', errMsg as string)
     isUploading.value = false
   }
 }
@@ -122,6 +114,6 @@ const handleUpload = async () => {
 
   <!-- Toasts, Alerts & Modals -->
   <TheToasts
-    :toasts="toasts"
+    :toasts-array="toastsArray"
   />
 </template>

@@ -11,19 +11,26 @@ export interface ToastModel {
 export type ToastType = 'success' | 'error' | 'warning' | 'info'
 
 export function useToasts() {
-  const toasts = ref<ToastModel[]>([])
+  const toastsArray = ref<ToastModel[]>([])
 
-  const blink = (toast: ToastModel) => {
-    // toast is hidde by default
-    toasts.value.push(toast)
+  const blink = (domId: string, type: 'success' | 'error' | 'warning', text: string) => {
+    // toast is hidden by default
+    const toast = {
+      uuid: uuidv4(),
+      domId,
+      isShown: false,
+      type,
+      text,
+    } as ToastModel
+    toastsArray.value.push(toast)
 
     const findAndShowToast = () => {
-      const theToast = toasts.value.find(t => t.uuid === toast.uuid)!
+      const theToast = toastsArray.value.find(t => t.uuid === toast.uuid)!
       theToast.isShown = true
     }
 
     const findAndHideToast = () => {
-      const theToast = toasts.value.find(t => t.uuid === toast.uuid)!
+      const theToast = toastsArray.value.find(t => t.uuid === toast.uuid)!
       theToast.isShown = false
     }
 
@@ -41,19 +48,8 @@ export function useToasts() {
     })
   }
 
-  const createToast = (domId: string, type: 'success' | 'error' | 'warning', text: string) => {
-    return {
-      uuid: uuidv4(),
-      domId,
-      isShown: false,
-      type,
-      text,
-    } as ToastModel
-  }
-
   return {
-    toasts,
+    toastsArray,
     blink,
-    createToast,
   }
 }

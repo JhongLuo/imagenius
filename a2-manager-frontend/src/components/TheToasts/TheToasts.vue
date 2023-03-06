@@ -2,7 +2,7 @@
 import type { ToastModel } from '~/composables/useToasts'
 
 defineProps<{
-  toasts: ToastModel[]
+  toastsArray: ToastModel[]
 }>()
 </script>
 
@@ -14,7 +14,7 @@ defineProps<{
     flex flex-col justify-center items-end
   >
     <TheToast
-      v-for="toast in toasts"
+      v-for="toast in toastsArray"
       :key="toast.uuid"
       v-model="toast.isShown"
       :toast-id="toast.domId"
