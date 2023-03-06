@@ -22,6 +22,6 @@ declare module '@vue/runtime-core' {
     TheSpinner: typeof import('./src/components/TheSpinner.vue')['default']
     TheTextInput: typeof import('./src/components/TheInputs/TheTextInput.vue')['default']
     TheToast: typeof import('./src/components/Toasts/TheToast.vue')['default']
-    TheToastContainer: typeof import('./src/components/Toasts/TheToastContainer.vue')['default']
+    TheToasts: typeof import('./src/components/Toasts/TheToasts.vue')['default']
   }
 }

@@ -1,41 +1,20 @@
 <script setup lang="ts">
+defineOptions({
+  name: 'UploadPage',
+})
+
 const api = useAPIStore()
 const { imgStr, updateImgFile } = useImageUpload()
+const { toasts, blink, createToast } = useToasts()
 
 const imgKey = ref('')
 const isUploading = ref(false)
-const isShownToastSuccess = ref(false)
-const isShownToastError = ref(false)
-const uploadErrorMsg = ref('')
 
 const onFileInputChanged = (event: Event) => {
   updateImgFile(event)
 }
 
-const isInputValid = computed(() => {
-  return imgKey.value.trim() && imgStr.value
-})
-
-const popToast = (toastSelection: string) => {
-  // bind toast selection
-  const setToastShownStatus = (status: boolean) => {
-    if (toastSelection === 'success')
-      isShownToastSuccess.value = status
-    else if (toastSelection === 'error')
-      isShownToastError.value = status
-  }
-
-  // show toast
-  setToastShownStatus(true)
-
-  // hide toast after 3 seconds
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      setToastShownStatus(false)
-      resolve('')
-    }, 4000)
-  })
-}
+const isInputValid = computed(() => imgKey.value.trim() && imgStr.value)
 
 const handleUpload = async () => {
   // < input validation already done by button disabled state >
@@ -49,7 +28,11 @@ const handleUpload = async () => {
     const response = await api.postImage(fd)
     utils.validateResponse(response)
     // handle success
-    popToast('success')
+    blink(createToast(
+      'toast-image-upload-success',
+      'success',
+      'Image uploaded successfully.',
+    ))
     isUploading.value = false
     imgKey.value = ''
     imgStr.value = '';
@@ -57,8 +40,11 @@ const handleUpload = async () => {
   }
   catch (errMsg) {
     // handle error
-    uploadErrorMsg.value = errMsg as string
-    popToast('error')
+    blink(createToast(
+      'toast-error',
+      'error',
+      errMsg as string,
+    ))
     isUploading.value = false
   }
 }
@@ -80,7 +66,7 @@ const handleUpload = async () => {
       w-full
       flex flex-col items-start
     >
-      <!-- input: image key  -->
+      <!-- input: image key -->
       <div
         class="w-61.8%"
       >
@@ -107,7 +93,7 @@ const handleUpload = async () => {
         @change="onFileInputChanged"
       />
 
-      <!-- Button + Spinner -->
+      <!-- Group <upload button + spinner> -->
       <div mt-5 flex items-center space-x-3>
         <!-- button: upload -->
         <TheButton
@@ -125,30 +111,17 @@ const handleUpload = async () => {
     </div>
 
     <!-- Image Preview: -->
-    <Transition>
-      <TheImagePreview
-        :src="imgStr"
-        :class="{ 'blur-sm grayscale': isUploading }"
-        caption-pos="top-right"
-        :caption-text="isUploading ? 'Uploading...' : 'Image Preview'"
-        alt="Preview: Image To Be Uploaded"
-      />
-    </Transition>
+    <TheImagePreview
+      :src="imgStr"
+      :class="{ 'blur-sm grayscale': isUploading }"
+      caption-pos="top-right"
+      :caption-text="isUploading ? 'Uploading...' : 'Image Preview'"
+      alt="Preview: Image To Be Uploaded"
+    />
   </div>
 
   <!-- Toasts, Alerts & Modals -->
-  <TheToastContainer>
-    <TheToast
-      v-model="isShownToastSuccess"
-      toast-id="toast-success"
-      toast-type="success"
-      toast-text="Image was uploaded successfully."
-    />
-    <TheToast
-      v-model="isShownToastError"
-      toast-id="toast-error"
-      toast-type="error"
-      :toast-text="uploadErrorMsg"
-    />
-  </TheToastContainer>
+  <TheToasts
+    :toasts="toasts"
+  />
 </template>
