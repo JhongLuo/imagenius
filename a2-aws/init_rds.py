@@ -26,6 +26,8 @@ create_statistics = '''CREATE TABLE IF NOT EXISTS Statistics (
 create_memcacheStatistics = '''CREATE TABLE IF NOT EXISTS MemcacheStatistics (
                                 node INT PRIMARY KEY AUTO_INCREMENT,
                                 timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+                                capacity INT NOT NULL DEFAULT 0,
+                                policy INT NOT NULL DEFAULT 0,
                                 hitRate DECIMAL(65, 3) NOT NULL DEFAULT 0,
                                 missRate DECIMAL(65, 3) NOT NULL DEFAULT 0,
                                 numOfItems INT NOT NULL DEFAULT 0,
@@ -62,6 +64,8 @@ init_stats = [
 
 #initial settings for memcache statistics
 init_memcacheStats = [
+    ('capacity', 100 * 1024 * 1024),
+    ('policy', 0),
     ('hitRate',0.0),
     ('missRate',0.0),
     ('numOfItems',0),
@@ -84,5 +88,7 @@ AutoConfig.init_AutoConfig(init_autoconfig)
 
 
 #test for mem stats ---->  MemcacheStats.update_MemcacheStatistics('totalSize', 10233188, 1)
+#test --->  print(MemcacheStats.get_MemcacheStaticstics(1, 'policy'))
+
 #test for auto config ---->  AutoConfig.update_AutoConfig('max_MissRate', 50.0)
 

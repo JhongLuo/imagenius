@@ -182,7 +182,7 @@ class MemcacheStats:
         sql_connector.close()
         
     @staticmethod
-    def get_MemcacheStaticstics(node, column):
+    def get_MemcacheStaticstics(column, node):
         sql_connector = mysql.connector.connect(
             user=KeyInfo.db['user'],
             password=KeyInfo.db['password'],
