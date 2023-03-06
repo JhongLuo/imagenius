@@ -1,13 +1,21 @@
 <template>
   <div flex flex-row justify-center>
+    <!-- icon -->
     <div i-carbon:cloud-services text-4xl inline-block />
+
+    <!-- spacer -->
     <div px-2 />
-    <div flex flex-col>
+
+    <!-- title -->
+    <div
+      flex flex-col
+      select-none
+    >
       <p text-lg>
         A2 Manager Web Frontend
       </p>
-      <p>
-        <em text-sm op75>
+      <p text-sm op75>
+        <em>
           Memcache Pool Management
         </em>
       </p>

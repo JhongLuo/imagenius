@@ -11,22 +11,15 @@ declare global {
   const $ref: typeof import('vue/macros')['$ref']
   const $shallowRef: typeof import('vue/macros')['$shallowRef']
   const $toRef: typeof import('vue/macros')['$toRef']
-  const ERR_MSG_FORM_FILE_EMPTY: typeof import('./src/composables/constants')['ERR_MSG_FORM_FILE_EMPTY']
-  const ERR_MSG_FORM_KEY_EMPTY: typeof import('./src/composables/constants')['ERR_MSG_FORM_KEY_EMPTY']
-  const ERR_MSG_INCORRECT_FORMAT: typeof import('./src/composables/constants')['ERR_MSG_INCORRECT_FORMAT']
-  const ERR_MSG_UNKNOWN_ERROR: typeof import('./src/composables/constants')['ERR_MSG_UNKNOWN_ERROR']
   const EffectScope: typeof import('vue')['EffectScope']
-  const ID_TOAST_ERROR: typeof import('./src/composables/constants')['ID_TOAST_ERROR']
-  const ID_TOAST_SUCCESS: typeof import('./src/composables/constants')['ID_TOAST_SUCCESS']
-  const ID_TOAST_SUCCESS_EXTRA: typeof import('./src/composables/constants')['ID_TOAST_SUCCESS_EXTRA']
-  const PORT_FLASK_APP: typeof import('./src/composables/constants')['PORT_FLASK_APP']
-  const PORT_JSON_SERVER: typeof import('./src/composables/constants')['PORT_JSON_SERVER']
-  const SUCCESS_MSG_DELETE_KEYS: typeof import('./src/composables/constants')['SUCCESS_MSG_DELETE_KEYS']
-  const SUCCESS_MSG_GET_CONFIGS: typeof import('./src/composables/constants')['SUCCESS_MSG_GET_CONFIGS']
-  const SUCCESS_MSG_GET_KEYS: typeof import('./src/composables/constants')['SUCCESS_MSG_GET_KEYS']
-  const SUCCESS_MSG_PUT_CONFIGS: typeof import('./src/composables/constants')['SUCCESS_MSG_PUT_CONFIGS']
-  const SUCCESS_MSG_RETRIEVE_IMG: typeof import('./src/composables/constants')['SUCCESS_MSG_RETRIEVE_IMG']
-  const SUCCESS_MSG_UPLOAD_IMG: typeof import('./src/composables/constants')['SUCCESS_MSG_UPLOAD_IMG']
+  const MSG_ERR_INCORRECT_FORMAT: typeof import('./src/composables/constants')['MSG_ERR_INCORRECT_FORMAT']
+  const MSG_ERR_UNKNOWN_ERROR: typeof import('./src/composables/constants')['MSG_ERR_UNKNOWN_ERROR']
+  const MSG_SUCCESS_IMG_RETRIEVE: typeof import('./src/composables/constants')['MSG_SUCCESS_IMG_RETRIEVE']
+  const MSG_SUCCESS_IMG_UPLOAD: typeof import('./src/composables/constants')['MSG_SUCCESS_IMG_UPLOAD']
+  const TOAST_ID_IMG_RETRIEVE_ERROR: typeof import('./src/composables/constants')['TOAST_ID_IMG_RETRIEVE_ERROR']
+  const TOAST_ID_IMG_RETRIEVE_SUCCESS: typeof import('./src/composables/constants')['TOAST_ID_IMG_RETRIEVE_SUCCESS']
+  const TOAST_ID_IMG_UPLOAD_ERROR: typeof import('./src/composables/constants')['TOAST_ID_IMG_UPLOAD_ERROR']
+  const TOAST_ID_IMG_UPLOAD_SUCCESS: typeof import('./src/composables/constants')['TOAST_ID_IMG_UPLOAD_SUCCESS']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
   const autoResetRef: typeof import('@vueuse/core')['autoResetRef']
   const computed: typeof import('vue')['computed']
@@ -314,22 +307,15 @@ declare module 'vue' {
     readonly $ref: UnwrapRef<typeof import('vue/macros')['$ref']>
     readonly $shallowRef: UnwrapRef<typeof import('vue/macros')['$shallowRef']>
     readonly $toRef: UnwrapRef<typeof import('vue/macros')['$toRef']>
-    readonly ERR_MSG_FORM_FILE_EMPTY: UnwrapRef<typeof import('./src/composables/constants')['ERR_MSG_FORM_FILE_EMPTY']>
-    readonly ERR_MSG_FORM_KEY_EMPTY: UnwrapRef<typeof import('./src/composables/constants')['ERR_MSG_FORM_KEY_EMPTY']>
-    readonly ERR_MSG_INCORRECT_FORMAT: UnwrapRef<typeof import('./src/composables/constants')['ERR_MSG_INCORRECT_FORMAT']>
-    readonly ERR_MSG_UNKNOWN_ERROR: UnwrapRef<typeof import('./src/composables/constants')['ERR_MSG_UNKNOWN_ERROR']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
-    readonly ID_TOAST_ERROR: UnwrapRef<typeof import('./src/composables/constants')['ID_TOAST_ERROR']>
-    readonly ID_TOAST_SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['ID_TOAST_SUCCESS']>
-    readonly ID_TOAST_SUCCESS_EXTRA: UnwrapRef<typeof import('./src/composables/constants')['ID_TOAST_SUCCESS_EXTRA']>
-    readonly PORT_FLASK_APP: UnwrapRef<typeof import('./src/composables/constants')['PORT_FLASK_APP']>
-    readonly PORT_JSON_SERVER: UnwrapRef<typeof import('./src/composables/constants')['PORT_JSON_SERVER']>
-    readonly SUCCESS_MSG_DELETE_KEYS: UnwrapRef<typeof import('./src/composables/constants')['SUCCESS_MSG_DELETE_KEYS']>
-    readonly SUCCESS_MSG_GET_CONFIGS: UnwrapRef<typeof import('./src/composables/constants')['SUCCESS_MSG_GET_CONFIGS']>
-    readonly SUCCESS_MSG_GET_KEYS: UnwrapRef<typeof import('./src/composables/constants')['SUCCESS_MSG_GET_KEYS']>
-    readonly SUCCESS_MSG_PUT_CONFIGS: UnwrapRef<typeof import('./src/composables/constants')['SUCCESS_MSG_PUT_CONFIGS']>
-    readonly SUCCESS_MSG_RETRIEVE_IMG: UnwrapRef<typeof import('./src/composables/constants')['SUCCESS_MSG_RETRIEVE_IMG']>
-    readonly SUCCESS_MSG_UPLOAD_IMG: UnwrapRef<typeof import('./src/composables/constants')['SUCCESS_MSG_UPLOAD_IMG']>
+    readonly MSG_ERR_INCORRECT_FORMAT: UnwrapRef<typeof import('./src/composables/constants')['MSG_ERR_INCORRECT_FORMAT']>
+    readonly MSG_ERR_UNKNOWN_ERROR: UnwrapRef<typeof import('./src/composables/constants')['MSG_ERR_UNKNOWN_ERROR']>
+    readonly MSG_SUCCESS_IMG_RETRIEVE: UnwrapRef<typeof import('./src/composables/constants')['MSG_SUCCESS_IMG_RETRIEVE']>
+    readonly MSG_SUCCESS_IMG_UPLOAD: UnwrapRef<typeof import('./src/composables/constants')['MSG_SUCCESS_IMG_UPLOAD']>
+    readonly TOAST_ID_IMG_RETRIEVE_ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_IMG_RETRIEVE_ERROR']>
+    readonly TOAST_ID_IMG_RETRIEVE_SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_IMG_RETRIEVE_SUCCESS']>
+    readonly TOAST_ID_IMG_UPLOAD_ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_IMG_UPLOAD_ERROR']>
+    readonly TOAST_ID_IMG_UPLOAD_SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_IMG_UPLOAD_SUCCESS']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>

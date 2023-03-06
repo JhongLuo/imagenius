@@ -26,13 +26,19 @@ const handleRetrieve = async () => {
     }, 100)
     setTimeout(() => {
       isDownloading.value = false
-      blinkToast('toast-image-retrieve-success', 'success', 'Image retrieved successfully.')
+      blinkToast(
+        TOAST_ID_IMG_RETRIEVE_SUCCESS,
+        'info',
+        MSG_SUCCESS_IMG_RETRIEVE)
     }, 100)
   }
   catch (errMsg) {
     // handle error
     imgStr.value = ''
-    blinkToast('toast-image-retrieve-error', 'error', errMsg as string)
+    blinkToast(
+      TOAST_ID_IMG_RETRIEVE_ERROR,
+      'error',
+      errMsg as string)
     isDownloading.value = false
   }
 }

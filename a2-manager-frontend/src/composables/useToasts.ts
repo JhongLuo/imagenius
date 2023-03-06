@@ -13,7 +13,7 @@ export type ToastType = 'success' | 'error' | 'warning' | 'info'
 export function useToasts() {
   const toastsArray = ref<ToastModel[]>([])
 
-  const blinkToast = (domId: string, type: 'success' | 'error' | 'warning', text: string) => {
+  const blinkToast = (domId: string, type: ToastType, text: string) => {
     // toast is hidden by default
     const toast = {
       uuid: uuidv4(),

@@ -28,7 +28,10 @@ const handleUpload = async () => {
     const response = await api.postImage(fd)
     utils.validateResponse(response)
     // handle success
-    blinkToast('toast-image-upload-success', 'success', 'Image uploaded successfully.')
+    blinkToast(
+      TOAST_ID_IMG_UPLOAD_SUCCESS,
+      'success',
+      MSG_SUCCESS_IMG_UPLOAD)
     isUploading.value = false
     imgKey.value = ''
     imgStr.value = '';
@@ -36,7 +39,10 @@ const handleUpload = async () => {
   }
   catch (errMsg) {
     // handle error
-    blinkToast('toast-image-upload-error', 'error', errMsg as string)
+    blinkToast(
+      TOAST_ID_IMG_UPLOAD_ERROR,
+      'error',
+      errMsg as string)
     isUploading.value = false
   }
 }

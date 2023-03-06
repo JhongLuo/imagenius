@@ -75,12 +75,13 @@ const { modelValue } = defineModel<{
       </div>
 
       <!-- toast message -->
-      <div
-        ml-3 text-xs font-normal text-start
+      <span
+        ml-3 text-start
+        text-sm font-black
         overflow-hidden text-ellipsis line-clamp-4
       >
         {{ toastText }}
-      </div>
+      </span>
 
       <!-- close button -->
       <button
