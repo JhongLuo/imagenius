@@ -16,7 +16,7 @@ defineOptions({
 <template>
   <div
     w-full
-    relative mb-4 flex justify-start
+    relative flex justify-start
   >
     <div
       absolute inset-y-0 left-0 pl-3

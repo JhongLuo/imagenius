@@ -5,7 +5,7 @@ defineOptions({
 
 const api = useAPIStore()
 const { imgStr, updateImgFile } = useImageUpload()
-const { toastsArray, blink } = useToasts()
+const { toastsArray, blinkToast } = useToasts()
 
 const imgKey = ref('')
 const isUploading = ref(false)
@@ -28,7 +28,7 @@ const handleUpload = async () => {
     const response = await api.postImage(fd)
     utils.validateResponse(response)
     // handle success
-    blink('toast-image-upload-success', 'success', 'Image uploaded successfully.')
+    blinkToast('toast-image-upload-success', 'success', 'Image uploaded successfully.')
     isUploading.value = false
     imgKey.value = ''
     imgStr.value = '';
@@ -36,7 +36,7 @@ const handleUpload = async () => {
   }
   catch (errMsg) {
     // handle error
-    blink('toast-error', 'error', errMsg as string)
+    blinkToast('toast-image-upload-error', 'error', errMsg as string)
     isUploading.value = false
   }
 }
@@ -61,6 +61,7 @@ const handleUpload = async () => {
       <!-- input: image key -->
       <div
         class="w-61.8%"
+        mb-4
       >
         <TheLabeledInput
           input-id="input-image-key"
@@ -86,7 +87,10 @@ const handleUpload = async () => {
       />
 
       <!-- Group <upload button + spinner> -->
-      <div mt-5 flex items-center space-x-3>
+      <div
+        mt-5
+        flex items-center space-x-3
+      >
         <!-- button: upload -->
         <TheButton
           label="Upload"
