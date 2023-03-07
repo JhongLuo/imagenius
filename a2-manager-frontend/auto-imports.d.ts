@@ -14,14 +14,18 @@ declare global {
   const EffectScope: typeof import('vue')['EffectScope']
   const MSG_ERR_INCORRECT_FORMAT: typeof import('./src/composables/constants')['MSG_ERR_INCORRECT_FORMAT']
   const MSG_ERR_UNKNOWN_ERROR: typeof import('./src/composables/constants')['MSG_ERR_UNKNOWN_ERROR']
-  const MSG_SUCCESS_IMG_RETRIEVE: typeof import('./src/composables/constants')['MSG_SUCCESS_IMG_RETRIEVE']
-  const MSG_SUCCESS_IMG_UPLOAD: typeof import('./src/composables/constants')['MSG_SUCCESS_IMG_UPLOAD']
-  const TOAST_ID_IMG_RETRIEVE_ERROR: typeof import('./src/composables/constants')['TOAST_ID_IMG_RETRIEVE_ERROR']
-  const TOAST_ID_IMG_RETRIEVE_SUCCESS: typeof import('./src/composables/constants')['TOAST_ID_IMG_RETRIEVE_SUCCESS']
-  const TOAST_ID_IMG_UPLOAD_ERROR: typeof import('./src/composables/constants')['TOAST_ID_IMG_UPLOAD_ERROR']
-  const TOAST_ID_IMG_UPLOAD_SUCCESS: typeof import('./src/composables/constants')['TOAST_ID_IMG_UPLOAD_SUCCESS']
+  const MSG_SUCCESS_GET_ALL_KEYS: typeof import('./src/composables/constants')['MSG_SUCCESS_GET_ALL_KEYS']
+  const MSG_SUCCESS_RETRIEVE_IMG: typeof import('./src/composables/constants')['MSG_SUCCESS_RETRIEVE_IMG']
+  const MSG_SUCCESS_UPLOAD_IMG: typeof import('./src/composables/constants')['MSG_SUCCESS_UPLOAD_IMG']
+  const TOAST_ID_GET_ALL_KEYS_ERROR: typeof import('./src/composables/constants')['TOAST_ID_GET_ALL_KEYS_ERROR']
+  const TOAST_ID_GET_ALL_KEYS_SUCCESS: typeof import('./src/composables/constants')['TOAST_ID_GET_ALL_KEYS_SUCCESS']
+  const TOAST_ID_RETRIEVE_IMG_ERROR: typeof import('./src/composables/constants')['TOAST_ID_RETRIEVE_IMG_ERROR']
+  const TOAST_ID_RETRIEVE_IMG_SUCCESS: typeof import('./src/composables/constants')['TOAST_ID_RETRIEVE_IMG_SUCCESS']
+  const TOAST_ID_UPLOAD_IMG_ERROR: typeof import('./src/composables/constants')['TOAST_ID_UPLOAD_IMG_ERROR']
+  const TOAST_ID_UPLOAD_IMG_SUCCESS: typeof import('./src/composables/constants')['TOAST_ID_UPLOAD_IMG_SUCCESS']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
   const autoResetRef: typeof import('@vueuse/core')['autoResetRef']
+  const axios: typeof import('axios')['default']
   const computed: typeof import('vue')['computed']
   const computedAsync: typeof import('@vueuse/core')['computedAsync']
   const computedEager: typeof import('@vueuse/core')['computedEager']
@@ -276,6 +280,7 @@ declare global {
   const useWindowScroll: typeof import('@vueuse/core')['useWindowScroll']
   const useWindowSize: typeof import('@vueuse/core')['useWindowSize']
   const utils: typeof import('./src/composables/utils.js')['default']
+  const uuidv4: typeof import('uuid')['v4']
   const watch: typeof import('vue')['watch']
   const watchArray: typeof import('@vueuse/core')['watchArray']
   const watchAtMost: typeof import('@vueuse/core')['watchAtMost']
@@ -295,6 +300,8 @@ declare global {
 declare global {
   // @ts-ignore
   export type { Component, ComponentPublicInstance, ComputedRef, InjectionKey, PropType, Ref, VNode } from 'vue'
+  // @ts-ignore
+  export type { ToastModel, ToastType } from '~/composables/useToasts'
 }
 // for vue template auto import
 import { UnwrapRef } from 'vue'
@@ -310,14 +317,18 @@ declare module 'vue' {
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly MSG_ERR_INCORRECT_FORMAT: UnwrapRef<typeof import('./src/composables/constants')['MSG_ERR_INCORRECT_FORMAT']>
     readonly MSG_ERR_UNKNOWN_ERROR: UnwrapRef<typeof import('./src/composables/constants')['MSG_ERR_UNKNOWN_ERROR']>
-    readonly MSG_SUCCESS_IMG_RETRIEVE: UnwrapRef<typeof import('./src/composables/constants')['MSG_SUCCESS_IMG_RETRIEVE']>
-    readonly MSG_SUCCESS_IMG_UPLOAD: UnwrapRef<typeof import('./src/composables/constants')['MSG_SUCCESS_IMG_UPLOAD']>
-    readonly TOAST_ID_IMG_RETRIEVE_ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_IMG_RETRIEVE_ERROR']>
-    readonly TOAST_ID_IMG_RETRIEVE_SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_IMG_RETRIEVE_SUCCESS']>
-    readonly TOAST_ID_IMG_UPLOAD_ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_IMG_UPLOAD_ERROR']>
-    readonly TOAST_ID_IMG_UPLOAD_SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_IMG_UPLOAD_SUCCESS']>
+    readonly MSG_SUCCESS_GET_ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['MSG_SUCCESS_GET_ALL_KEYS']>
+    readonly MSG_SUCCESS_RETRIEVE_IMG: UnwrapRef<typeof import('./src/composables/constants')['MSG_SUCCESS_RETRIEVE_IMG']>
+    readonly MSG_SUCCESS_UPLOAD_IMG: UnwrapRef<typeof import('./src/composables/constants')['MSG_SUCCESS_UPLOAD_IMG']>
+    readonly TOAST_ID_GET_ALL_KEYS_ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_GET_ALL_KEYS_ERROR']>
+    readonly TOAST_ID_GET_ALL_KEYS_SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_GET_ALL_KEYS_SUCCESS']>
+    readonly TOAST_ID_RETRIEVE_IMG_ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_RETRIEVE_IMG_ERROR']>
+    readonly TOAST_ID_RETRIEVE_IMG_SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_RETRIEVE_IMG_SUCCESS']>
+    readonly TOAST_ID_UPLOAD_IMG_ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_UPLOAD_IMG_ERROR']>
+    readonly TOAST_ID_UPLOAD_IMG_SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_UPLOAD_IMG_SUCCESS']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
+    readonly axios: UnwrapRef<typeof import('axios')['default']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly computedAsync: UnwrapRef<typeof import('@vueuse/core')['computedAsync']>
     readonly computedEager: UnwrapRef<typeof import('@vueuse/core')['computedEager']>
@@ -572,6 +583,7 @@ declare module 'vue' {
     readonly useWindowScroll: UnwrapRef<typeof import('@vueuse/core')['useWindowScroll']>
     readonly useWindowSize: UnwrapRef<typeof import('@vueuse/core')['useWindowSize']>
     readonly utils: UnwrapRef<typeof import('./src/composables/utils.js')['default']>
+    readonly uuidv4: UnwrapRef<typeof import('uuid')['v4']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchArray: UnwrapRef<typeof import('@vueuse/core')['watchArray']>
     readonly watchAtMost: UnwrapRef<typeof import('@vueuse/core')['watchAtMost']>

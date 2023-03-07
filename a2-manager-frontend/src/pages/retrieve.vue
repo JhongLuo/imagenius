@@ -22,21 +22,23 @@ const handleRetrieve = async () => {
     utils.validateResponse(response)
     // handle success
     setTimeout(() => {
+      // short delay to avoid image change before blur effect
       imgStr.value = response.data.content
-    }, 100)
+    }, 200)
     setTimeout(() => {
+      // short delay to show blur effect
       isDownloading.value = false
       blinkToast(
-        TOAST_ID_IMG_RETRIEVE_SUCCESS,
-        'info',
-        MSG_SUCCESS_IMG_RETRIEVE)
-    }, 100)
+        TOAST_ID_RETRIEVE_IMG_SUCCESS,
+        'success',
+        MSG_SUCCESS_RETRIEVE_IMG)
+    }, 200)
   }
   catch (errMsg) {
     // handle error
     imgStr.value = ''
     blinkToast(
-      TOAST_ID_IMG_RETRIEVE_ERROR,
+      TOAST_ID_RETRIEVE_IMG_ERROR,
       'error',
       errMsg as string)
     isDownloading.value = false
@@ -99,10 +101,11 @@ const handleRetrieve = async () => {
     <!-- Image Preview: -->
     <TheImagePreview
       :src="imgStr"
-      :class="{ 'blur-sm grayscale': isDownloading }"
       caption-pos="top-right"
       :caption-text="isDownloading ? 'Downloading...' : 'Image Result'"
       alt="Resulteview: Retrieved Image"
+      :class="{ 'blur-sm grayscale': isDownloading }"
+      transition-all duration-300
     />
   </div>
 

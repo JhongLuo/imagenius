@@ -29,9 +29,9 @@ const handleUpload = async () => {
     utils.validateResponse(response)
     // handle success
     blinkToast(
-      TOAST_ID_IMG_UPLOAD_SUCCESS,
+      TOAST_ID_UPLOAD_IMG_SUCCESS,
       'success',
-      MSG_SUCCESS_IMG_UPLOAD)
+      MSG_SUCCESS_UPLOAD_IMG)
     isUploading.value = false
     imgKey.value = ''
     imgStr.value = '';
@@ -40,7 +40,7 @@ const handleUpload = async () => {
   catch (errMsg) {
     // handle error
     blinkToast(
-      TOAST_ID_IMG_UPLOAD_ERROR,
+      TOAST_ID_UPLOAD_IMG_ERROR,
       'error',
       errMsg as string)
     isUploading.value = false
@@ -115,10 +115,11 @@ const handleUpload = async () => {
     <!-- Image Preview: -->
     <TheImagePreview
       :src="imgStr"
-      :class="{ 'blur-sm grayscale': isUploading }"
       caption-pos="top-right"
       :caption-text="isUploading ? 'Uploading...' : 'Image Preview'"
       alt="Preview: Image To Be Uploaded"
+      :class="{ 'blur-sm grayscale': isUploading }"
+      transition-all duration-300
     />
   </div>
 

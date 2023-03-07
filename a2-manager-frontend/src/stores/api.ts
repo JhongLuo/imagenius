@@ -1,5 +1,4 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
-import axios from 'axios'
 
 export const useAPIStore = defineStore('api', () => {
   const defaultAddr = 'localhost:5000'

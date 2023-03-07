@@ -20,7 +20,6 @@ defineOptions({
         <img
           w-100
           rounded-lg object-contain
-          transition-all duration-300
           shadow-xl shadow-gray-5 dark:shadow-gray-8 dark:shadow-op-60
           v-bind="$attrs"
         >

@@ -38,11 +38,30 @@ export default defineConfig({
         'vue/macros',
         'vue-router',
         '@vueuse/core',
+        // custom
+        {
+          // 'package-name': [
+          //   'import-name',    // import { import-name } from 'package-name',
+          //   ['from', 'alias'], // import { from as alias } from 'package-name',
+          // ],
+          axios: [
+            ['default', 'axios'],
+          ],
+          uuid: [
+            ['v4', 'uuidv4'],
+          ],
+        },
+        // custom types
+        {
+          from: '~/composables/useToasts',
+          imports: ['ToastModel', 'ToastType'],
+          type: true,
+        },
       ],
       dts: true,
       dirs: [
-        './src/composables',
-        './src/stores',
+        './src/composables/**',
+        './src/stores/**',
       ],
       vueTemplate: true,
     }),

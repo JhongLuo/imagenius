@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { ToastType } from '~/composables/useToasts'
-
 defineProps<{
   toastId: string
   toastType: ToastType

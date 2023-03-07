@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { ToastModel } from '~/composables/useToasts'
-
 defineProps<{
   toastsArray: ToastModel[]
 }>()

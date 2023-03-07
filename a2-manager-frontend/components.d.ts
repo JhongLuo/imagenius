@@ -18,6 +18,7 @@ declare module '@vue/runtime-core' {
     TheIconedTextInput: typeof import('./src/components/TheInputs/TheIconedTextInput.vue')['default']
     TheImagePreview: typeof import('./src/components/TheImagePreview.vue')['default']
     TheInput: typeof import('./src/components/TheInputs/TheInput.vue')['default']
+    TheKeyTable: typeof import('./src/components/TheKeyTable.vue')['default']
     TheLabeledInput: typeof import('./src/components/TheInputs/TheLabeledInput.vue')['default']
     TheSpinner: typeof import('./src/components/TheSpinner.vue')['default']
     TheTextInput: typeof import('./src/components/TheInputs/TheTextInput.vue')['default']
