@@ -19,8 +19,9 @@ defineOptions({
     <TheInput
       :input-id="inputId"
       type="file"
-      w-full block cursor-pointer rounded-lg
+      w-full block cursor-pointer
       text-xs
+      my-input-style
       :aria-describedby="helperTextId"
       v-bind="$attrs"
     />

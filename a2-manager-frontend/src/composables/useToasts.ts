@@ -36,8 +36,8 @@ export function useToasts() {
     await utils.sleep(1)
     findAndShowToast()
 
-    // hide toast after 3 seconds
-    await utils.sleep(3000)
+    // hide toast after 3.5 seconds
+    await utils.sleep(3500)
     findAndHideToast()
   }
 

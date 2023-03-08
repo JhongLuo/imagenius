@@ -6,17 +6,17 @@ defineOptions({
 const api = useAPIStore()
 const { toastsArray, blinkToast } = useToasts()
 
-const keys = ref([])
+const allKeys = ref([])
 const isDownloading = ref(false)
 
-const handleGetKeys = async (isReload = false) => {
+const handleGetAllKeys = async (isReload = false) => {
   isDownloading.value = true
   // fetch data
   try {
     const response = await api.getAllKeys()
     utils.validateResponse(response)
     // handle success
-    keys.value = response.data.keys
+    allKeys.value = response.data.keys
     await utils.sleep(150)
     isDownloading.value = false
     if (!isReload) {
@@ -28,7 +28,7 @@ const handleGetKeys = async (isReload = false) => {
   }
   catch (errMsg) {
     // handle error
-    keys.value = []
+    allKeys.value = []
     blinkToast(
       TOAST_ID_ERROR_GET_ALL_KEYS,
       'error',
@@ -44,22 +44,22 @@ const handleDeleteAll = async () => {
     utils.validateResponse(response)
     // handle success
     blinkToast(
-      TOAST_ID_SUCCESS_DELETE_ALL_KEYS,
+      TOAST_ID_SUCCESS_DELETE_ALL,
       'success',
-      MSG_SUCCESS_DELETE_ALL_KEYS)
-    await handleGetKeys(true)
+      MSG_SUCCESS_DELETE_ALL)
+    await handleGetAllKeys(true)
   }
   catch (errMsg) {
     // handle error
     blinkToast(
-      TOAST_ID_ERROR_DELETE_ALL_KEYS,
+      TOAST_ID_ERROR_DELETE_ALL,
       'error',
       errMsg as string)
   }
 }
 
 onMounted(() => {
-  handleGetKeys()
+  handleGetAllKeys()
 })
 </script>
 
@@ -73,12 +73,15 @@ onMounted(() => {
   <ThePageContent>
     <!-- Table: All Keys -->
     <TheKeyTable
-      :data="keys"
+      :data="allKeys"
       :table-title="TABLE_TITLE_ALL_KEYS"
       :table-description="TABLE_DESCRIPTION_ALL_KEYS"
-      :delete-text="TABLE_DELETE_TEXT_ALL_KEYS"
-      :delete-action="handleDeleteAll"
-      :class="{ 'blur-sm': isDownloading }"
+      :delete-button-text="TABLE_DELETE_BUTTON_TEXT_ALL_KEYS"
+      :delete-button-action="handleDeleteAll"
+      :modal-id="MODAL_ID_DELETE_ALL"
+      :modal-title="MODAL_TITLE_DELETE_ALL"
+      :modal-description="MODAL_DESCRIPTION_DELETE_ALL"
+      :class="{ 'blur-sm grayscale': isDownloading }"
       transition-all duration-300
     />
   </ThePageContent>

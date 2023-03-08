@@ -3,11 +3,14 @@ defineProps<{
   data: string[]
   tableTitle?: string
   tableDescription?: string
-  deleteText: string
-  deleteAction: Function
+  deleteButtonText: string
+  deleteButtonAction: Function
+  modalId: string
+  modalTitle: string
+  modalDescription: string
 }>()
 
-const isShown = ref(false)
+const isModalShown = ref(false)
 </script>
 
 <template>
@@ -40,19 +43,19 @@ const isShown = ref(false)
           <button
             v-if="data.length > 0"
             my-btn-danger text-sm px-2 mt-2
-            @click="isShown = true"
+            @click="isModalShown = true"
           >
-            Delete All
+            {{ deleteButtonText }}
           </button>
 
           <!-- Delete Modal Content -->
           <TheModal
-            v-model:is-shown="isShown"
-            :modal-id="MODAL_ID_DELETE_ALL_KEYS"
+            v-model:is-shown="isModalShown"
+            :modal-id="modalId"
             modal-type="delete"
-            :modal-title="MODAL_TITLE_DELETE_ALL_KEYS"
-            :modal-description="MODAL_DESCRIPTION_DELETE_ALL_KEYS"
-            :action="deleteAction"
+            :modal-title="modalTitle"
+            :modal-description="modalDescription"
+            :action="deleteButtonAction"
           />
         </caption>
         <!-- Table Header -->
@@ -82,7 +85,7 @@ const isShown = ref(false)
               px-6 py-3 font-medium
               scope="row"
             >
-              {{ MSG_ERROR_EMPTY_ALL_KEYS }}
+              {{ MSG_ERROR_KEYS_TABLE_EMPTY }}
             </td>
           </tr>
 

@@ -61,14 +61,10 @@ const handleUpload = async () => {
   <!-- Page Content -->
   <ThePageContent>
     <!-- Input group: -->
-    <div
-      w-full
-      flex flex-col items-start
-    >
+    <TheInputGroup>
       <!-- input: image key -->
       <div
         class="w-61.8%"
-        mb-4
       >
         <TheLabeledInput
           input-id="input-image-key"
@@ -95,7 +91,6 @@ const handleUpload = async () => {
 
       <!-- Group <upload button + spinner> -->
       <div
-        mt-5
         flex items-center space-x-3
       >
         <!-- button: upload -->
@@ -111,7 +106,7 @@ const handleUpload = async () => {
           alt-text="Uploading..."
         />
       </div>
-    </div>
+    </TheInputGroup>
 
     <!-- Image Preview: -->
     <TheImagePreview
