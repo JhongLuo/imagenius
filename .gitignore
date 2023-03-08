@@ -10,8 +10,8 @@ instance/
 .coverage
 htmlcov/
 
-dist/
-build/
+*.local
+**/build/
 *.egg-info/
 
 images/
@@ -28,4 +28,12 @@ images/
 **/test_jsons/test*.json
 
 # ignore vite build dist
-a1-frontend/dist
+**/dist
+
+# ignore vite config files
+**/.vite
+
+# ignore vite ssg
+**/.vite-ssg-dist
+**/.vite-ssg-temp
+**/dist-ssr
