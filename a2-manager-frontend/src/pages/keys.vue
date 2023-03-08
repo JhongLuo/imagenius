@@ -9,8 +9,7 @@ const { toastsArray, blinkToast } = useToasts()
 const keys = ref([])
 const isDownloading = ref(false)
 
-const handleGetKeys = async () => {
-  // < input validation already done by button disabled state >
+const handleGetKeys = async (isReload = false) => {
   isDownloading.value = true
   // fetch data
   try {
@@ -18,23 +17,44 @@ const handleGetKeys = async () => {
     utils.validateResponse(response)
     // handle success
     keys.value = response.data.keys
-    setTimeout(() => {
-      // short delay to show blur effect
-      isDownloading.value = false
+    await utils.sleep(150)
+    isDownloading.value = false
+    if (!isReload) {
       blinkToast(
-        TOAST_ID_GET_ALL_KEYS_SUCCESS,
+        TOAST_ID_SUCCESS_GET_ALL_KEYS,
         'info',
         MSG_SUCCESS_GET_ALL_KEYS)
-    }, 100)
+    }
   }
   catch (errMsg) {
     // handle error
     keys.value = []
     blinkToast(
-      TOAST_ID_GET_ALL_KEYS_ERROR,
+      TOAST_ID_ERROR_GET_ALL_KEYS,
       'error',
       errMsg as string)
     isDownloading.value = false
+  }
+}
+
+const handleDeleteAll = async () => {
+  // fetch data
+  try {
+    const response = await api.postDeleteAllData()
+    utils.validateResponse(response)
+    // handle success
+    blinkToast(
+      TOAST_ID_SUCCESS_DELETE_ALL_KEYS,
+      'success',
+      MSG_SUCCESS_DELETE_ALL_KEYS)
+    await handleGetKeys(true)
+  }
+  catch (errMsg) {
+    // handle error
+    blinkToast(
+      TOAST_ID_ERROR_DELETE_ALL_KEYS,
+      'error',
+      errMsg as string)
   }
 }
 
@@ -50,19 +70,18 @@ onMounted(() => {
   </h1>
 
   <!-- Page Content -->
-  <div
-    w-sm
-    flex flex-col items-center
-  >
+  <ThePageContent>
     <!-- Table: All Keys -->
     <TheKeyTable
       caption-title="All Keys"
       caption-content="from database + mem-cache"
       :keys="keys"
+      :delete-action="handleDeleteAll"
       :class="{ 'blur-sm': isDownloading }"
-      transition-all duration-400
+      transition-all duration-300
     />
-  </div>
+  </ThePageContent>
+
   <!-- Toasts, Alerts & Modals -->
   <TheToasts
     :toasts-array="toastsArray"

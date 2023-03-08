@@ -12,17 +12,21 @@ declare global {
   const $shallowRef: typeof import('vue/macros')['$shallowRef']
   const $toRef: typeof import('vue/macros')['$toRef']
   const EffectScope: typeof import('vue')['EffectScope']
-  const MSG_ERR_INCORRECT_FORMAT: typeof import('./src/composables/constants')['MSG_ERR_INCORRECT_FORMAT']
-  const MSG_ERR_UNKNOWN_ERROR: typeof import('./src/composables/constants')['MSG_ERR_UNKNOWN_ERROR']
+  const MSG_ERROR_EMPTY_ALL_KEYS: typeof import('./src/composables/constants')['MSG_ERROR_EMPTY_ALL_KEYS']
+  const MSG_ERROR_INCORRECT_FORMAT: typeof import('./src/composables/constants')['MSG_ERROR_INCORRECT_FORMAT']
+  const MSG_ERROR_UNKNOWN_ERR: typeof import('./src/composables/constants')['MSG_ERROR_UNKNOWN_ERR']
+  const MSG_SUCCESS_DELETE_ALL_KEYS: typeof import('./src/composables/constants')['MSG_SUCCESS_DELETE_ALL_KEYS']
   const MSG_SUCCESS_GET_ALL_KEYS: typeof import('./src/composables/constants')['MSG_SUCCESS_GET_ALL_KEYS']
   const MSG_SUCCESS_RETRIEVE_IMG: typeof import('./src/composables/constants')['MSG_SUCCESS_RETRIEVE_IMG']
   const MSG_SUCCESS_UPLOAD_IMG: typeof import('./src/composables/constants')['MSG_SUCCESS_UPLOAD_IMG']
-  const TOAST_ID_GET_ALL_KEYS_ERROR: typeof import('./src/composables/constants')['TOAST_ID_GET_ALL_KEYS_ERROR']
-  const TOAST_ID_GET_ALL_KEYS_SUCCESS: typeof import('./src/composables/constants')['TOAST_ID_GET_ALL_KEYS_SUCCESS']
-  const TOAST_ID_RETRIEVE_IMG_ERROR: typeof import('./src/composables/constants')['TOAST_ID_RETRIEVE_IMG_ERROR']
-  const TOAST_ID_RETRIEVE_IMG_SUCCESS: typeof import('./src/composables/constants')['TOAST_ID_RETRIEVE_IMG_SUCCESS']
-  const TOAST_ID_UPLOAD_IMG_ERROR: typeof import('./src/composables/constants')['TOAST_ID_UPLOAD_IMG_ERROR']
-  const TOAST_ID_UPLOAD_IMG_SUCCESS: typeof import('./src/composables/constants')['TOAST_ID_UPLOAD_IMG_SUCCESS']
+  const TOAST_ID_ERROR_DELETE_ALL_KEYS: typeof import('./src/composables/constants')['TOAST_ID_ERROR_DELETE_ALL_KEYS']
+  const TOAST_ID_ERROR_GET_ALL_KEYS: typeof import('./src/composables/constants')['TOAST_ID_ERROR_GET_ALL_KEYS']
+  const TOAST_ID_ERROR_RETRIEVE_IMG: typeof import('./src/composables/constants')['TOAST_ID_ERROR_RETRIEVE_IMG']
+  const TOAST_ID_ERROR_UPLOAD_IMG: typeof import('./src/composables/constants')['TOAST_ID_ERROR_UPLOAD_IMG']
+  const TOAST_ID_SUCCESS_DELETE_ALL_KEYS: typeof import('./src/composables/constants')['TOAST_ID_SUCCESS_DELETE_ALL_KEYS']
+  const TOAST_ID_SUCCESS_GET_ALL_KEYS: typeof import('./src/composables/constants')['TOAST_ID_SUCCESS_GET_ALL_KEYS']
+  const TOAST_ID_SUCCESS_RETRIEVE_IMG: typeof import('./src/composables/constants')['TOAST_ID_SUCCESS_RETRIEVE_IMG']
+  const TOAST_ID_SUCCESS_UPLOAD_IMG: typeof import('./src/composables/constants')['TOAST_ID_SUCCESS_UPLOAD_IMG']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
   const autoResetRef: typeof import('@vueuse/core')['autoResetRef']
   const axios: typeof import('axios')['default']
@@ -52,6 +56,7 @@ declare global {
   const getCurrentScope: typeof import('vue')['getCurrentScope']
   const h: typeof import('vue')['h']
   const ignorableWatch: typeof import('@vueuse/core')['ignorableWatch']
+  const initTooltips: typeof import('flowbite')['initTooltips']
   const inject: typeof import('vue')['inject']
   const isDark: typeof import('./src/composables/dark')['isDark']
   const isDefined: typeof import('@vueuse/core')['isDefined']
@@ -315,17 +320,21 @@ declare module 'vue' {
     readonly $shallowRef: UnwrapRef<typeof import('vue/macros')['$shallowRef']>
     readonly $toRef: UnwrapRef<typeof import('vue/macros')['$toRef']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
-    readonly MSG_ERR_INCORRECT_FORMAT: UnwrapRef<typeof import('./src/composables/constants')['MSG_ERR_INCORRECT_FORMAT']>
-    readonly MSG_ERR_UNKNOWN_ERROR: UnwrapRef<typeof import('./src/composables/constants')['MSG_ERR_UNKNOWN_ERROR']>
+    readonly MSG_ERROR_EMPTY_ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['MSG_ERROR_EMPTY_ALL_KEYS']>
+    readonly MSG_ERROR_INCORRECT_FORMAT: UnwrapRef<typeof import('./src/composables/constants')['MSG_ERROR_INCORRECT_FORMAT']>
+    readonly MSG_ERROR_UNKNOWN_ERR: UnwrapRef<typeof import('./src/composables/constants')['MSG_ERROR_UNKNOWN_ERR']>
+    readonly MSG_SUCCESS_DELETE_ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['MSG_SUCCESS_DELETE_ALL_KEYS']>
     readonly MSG_SUCCESS_GET_ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['MSG_SUCCESS_GET_ALL_KEYS']>
     readonly MSG_SUCCESS_RETRIEVE_IMG: UnwrapRef<typeof import('./src/composables/constants')['MSG_SUCCESS_RETRIEVE_IMG']>
     readonly MSG_SUCCESS_UPLOAD_IMG: UnwrapRef<typeof import('./src/composables/constants')['MSG_SUCCESS_UPLOAD_IMG']>
-    readonly TOAST_ID_GET_ALL_KEYS_ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_GET_ALL_KEYS_ERROR']>
-    readonly TOAST_ID_GET_ALL_KEYS_SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_GET_ALL_KEYS_SUCCESS']>
-    readonly TOAST_ID_RETRIEVE_IMG_ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_RETRIEVE_IMG_ERROR']>
-    readonly TOAST_ID_RETRIEVE_IMG_SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_RETRIEVE_IMG_SUCCESS']>
-    readonly TOAST_ID_UPLOAD_IMG_ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_UPLOAD_IMG_ERROR']>
-    readonly TOAST_ID_UPLOAD_IMG_SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_UPLOAD_IMG_SUCCESS']>
+    readonly TOAST_ID_ERROR_DELETE_ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_ERROR_DELETE_ALL_KEYS']>
+    readonly TOAST_ID_ERROR_GET_ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_ERROR_GET_ALL_KEYS']>
+    readonly TOAST_ID_ERROR_RETRIEVE_IMG: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_ERROR_RETRIEVE_IMG']>
+    readonly TOAST_ID_ERROR_UPLOAD_IMG: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_ERROR_UPLOAD_IMG']>
+    readonly TOAST_ID_SUCCESS_DELETE_ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_SUCCESS_DELETE_ALL_KEYS']>
+    readonly TOAST_ID_SUCCESS_GET_ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_SUCCESS_GET_ALL_KEYS']>
+    readonly TOAST_ID_SUCCESS_RETRIEVE_IMG: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_SUCCESS_RETRIEVE_IMG']>
+    readonly TOAST_ID_SUCCESS_UPLOAD_IMG: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_SUCCESS_UPLOAD_IMG']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
     readonly axios: UnwrapRef<typeof import('axios')['default']>
@@ -355,6 +364,7 @@ declare module 'vue' {
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
     readonly ignorableWatch: UnwrapRef<typeof import('@vueuse/core')['ignorableWatch']>
+    readonly initTooltips: UnwrapRef<typeof import('flowbite')['initTooltips']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
     readonly isDark: UnwrapRef<typeof import('./src/composables/dark')['isDark']>
     readonly isDefined: UnwrapRef<typeof import('@vueuse/core')['isDefined']>

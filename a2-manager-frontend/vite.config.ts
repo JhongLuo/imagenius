@@ -50,6 +50,9 @@ export default defineConfig({
           uuid: [
             ['v4', 'uuidv4'],
           ],
+          flowbite: [
+            'initTooltips',
+          ],
         },
         // custom types
         {

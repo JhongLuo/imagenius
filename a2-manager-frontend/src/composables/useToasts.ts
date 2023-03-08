@@ -11,39 +11,34 @@ export type ToastType = 'success' | 'error' | 'warning' | 'info'
 export function useToasts() {
   const toastsArray = ref<ToastModel[]>([])
 
-  const blinkToast = (domId: string, type: ToastType, text: string) => {
+  const blinkToast = async (domId: string, type: ToastType, text: string) => {
     // toast is hidden by default
-    const toast = {
+    const newToast = {
       uuid: uuidv4(),
       domId,
       isShown: false,
       type,
       text,
     } as ToastModel
-    toastsArray.value.push(toast)
+    toastsArray.value.push(newToast)
 
     const findAndShowToast = () => {
-      const theToast = toastsArray.value.find(t => t.uuid === toast.uuid)!
+      const theToast = toastsArray.value.find(t => t.uuid === newToast.uuid)!
       theToast.isShown = true
     }
 
     const findAndHideToast = () => {
-      const theToast = toastsArray.value.find(t => t.uuid === toast.uuid)!
+      const theToast = toastsArray.value.find(t => t.uuid === newToast.uuid)!
       theToast.isShown = false
     }
 
-    // manually show toast with delay, for the animation to work
-    setTimeout(() => {
-      findAndShowToast()
-    }, 1)
+    // show toast with delay, for the animation to work
+    await utils.sleep(1)
+    findAndShowToast()
 
-    // hide toast after 4 seconds
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        findAndHideToast()
-        resolve('')
-      }, 4000)
-    })
+    // hide toast after 3 seconds
+    await utils.sleep(3000)
+    findAndHideToast()
   }
 
   return {

@@ -25,7 +25,9 @@ export default defineConfig({
     ['my-title-style', 'block mb-5 text-xl font-extrabold my-text-color-primary select-none'],
     ['my-label-style', 'block mb-2 text-sm font-medium my-text-color-primary'],
     ['my-helper-text-style', 'mt-1 text-xs font-medium my-text-color-secondary'],
-    ['my-btn-primary', 'px-4 py-1 rounded inline-block bg-teal-6 text-white cursor-pointer hover:bg-teal-7 disabled:cursor-default disabled:bg-gray-6 disabled:opacity-50 my-border'],
+    ['my-btn', 'px-3 py-1 rounded inline-block text-white cursor-pointer disabled:cursor-default disabled:bg-gray-6 disabled:opacity-50 my-border'],
+    ['my-btn-primary', 'my-btn bg-teal-6 hover:bg-teal-7 dark:bg-teal-7 dark:hover:bg-teal-8'],
+    ['my-btn-danger', 'my-btn bg-red-6 hover:bg-red-7 dark:bg-red-7 dark:hover:bg-red-8'],
   ],
   presets: [
     presetUno(),

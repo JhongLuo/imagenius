@@ -14,7 +14,7 @@ const onFileInputChanged = (event: Event) => {
   updateImgFile(event)
 }
 
-const isInputValid = computed(() => imgKey.value.trim() && imgStr.value)
+const isInputValid = computed(() => imgKey.value && imgStr.value)
 
 const handleUpload = async () => {
   // < input validation already done by button disabled state >
@@ -23,13 +23,13 @@ const handleUpload = async () => {
   try {
     // construct request form data
     const fd = new FormData()
-    fd.append('key', imgKey.value.trim())
+    fd.append('key', imgKey.value)
     fd.append('file', imgStr.value)
     const response = await api.postImage(fd)
     utils.validateResponse(response)
     // handle success
     blinkToast(
-      TOAST_ID_UPLOAD_IMG_SUCCESS,
+      TOAST_ID_SUCCESS_UPLOAD_IMG,
       'success',
       MSG_SUCCESS_UPLOAD_IMG)
     isUploading.value = false
@@ -40,7 +40,7 @@ const handleUpload = async () => {
   catch (errMsg) {
     // handle error
     blinkToast(
-      TOAST_ID_UPLOAD_IMG_ERROR,
+      TOAST_ID_ERROR_UPLOAD_IMG,
       'error',
       errMsg as string)
     isUploading.value = false
@@ -55,10 +55,7 @@ const handleUpload = async () => {
   </h1>
 
   <!-- Page Content -->
-  <div
-    w-sm
-    flex flex-col items-center
-  >
+  <ThePageContent>
     <!-- Input group: -->
     <div
       w-full
@@ -74,7 +71,7 @@ const handleUpload = async () => {
           label-text="Image Key"
         >
           <TheIconedTextInput
-            v-model="imgKey"
+            v-model.trim="imgKey"
             icon="i-carbon-password"
             input-id="input-image-key"
             placeholder="Your image key"
@@ -121,7 +118,7 @@ const handleUpload = async () => {
       :class="{ 'blur-sm grayscale': isUploading }"
       transition-all duration-300
     />
-  </div>
+  </ThePageContent>
 
   <!-- Toasts, Alerts & Modals -->
   <TheToasts

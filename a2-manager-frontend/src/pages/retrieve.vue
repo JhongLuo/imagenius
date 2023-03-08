@@ -9,36 +9,36 @@ const { toastsArray, blinkToast } = useToasts()
 const imgKey = ref('')
 const imgStr = ref('')
 const isDownloading = ref(false)
+const lastKey = ref('')
 
-const isInputValid = computed(() => imgKey.value.trim())
+const isInputValid = computed(() => imgKey.value)
 
 const handleRetrieve = async () => {
   // < input validation already done by button disabled state >
   isDownloading.value = true
   // fetch data
   try {
-    const key = imgKey.value.trim()
+    const key = imgKey.value
     const response = await api.getImage(key)
     utils.validateResponse(response)
     // handle success
-    setTimeout(() => {
-      // short delay to avoid image change before blur effect
-      imgStr.value = response.data.content
-    }, 200)
-    setTimeout(() => {
-      // short delay to show blur effect
-      isDownloading.value = false
-      blinkToast(
-        TOAST_ID_RETRIEVE_IMG_SUCCESS,
-        'success',
-        MSG_SUCCESS_RETRIEVE_IMG)
-    }, 200)
+    // update lastKey + img src, show blurred img
+    await utils.sleep(50)
+    lastKey.value = key
+    imgStr.value = response.data.content
+    // unblur img and show toast
+    await utils.sleep(50)
+    isDownloading.value = false
+    blinkToast(
+      TOAST_ID_SUCCESS_RETRIEVE_IMG,
+      'success',
+      MSG_SUCCESS_RETRIEVE_IMG)
   }
   catch (errMsg) {
     // handle error
     imgStr.value = ''
     blinkToast(
-      TOAST_ID_RETRIEVE_IMG_ERROR,
+      TOAST_ID_ERROR_RETRIEVE_IMG,
       'error',
       errMsg as string)
     isDownloading.value = false
@@ -53,10 +53,7 @@ const handleRetrieve = async () => {
   </h1>
 
   <!-- Page Content -->
-  <div
-    w-sm
-    flex flex-col items-center
-  >
+  <ThePageContent>
     <!-- Input group: -->
     <div
       w-full
@@ -71,7 +68,7 @@ const handleRetrieve = async () => {
           label-text="Image Key"
         >
           <TheIconedTextInput
-            v-model="imgKey"
+            v-model.trim="imgKey"
             icon="i-carbon-password"
             input-id="input-image-key"
             placeholder="Your image key"
@@ -102,12 +99,12 @@ const handleRetrieve = async () => {
     <TheImagePreview
       :src="imgStr"
       caption-pos="top-right"
-      :caption-text="isDownloading ? 'Downloading...' : 'Image Result'"
+      :caption-text="isDownloading ? 'Requesting...' : `Image <${lastKey}>`"
       alt="Resulteview: Retrieved Image"
       :class="{ 'blur-sm grayscale': isDownloading }"
       transition-all duration-300
     />
-  </div>
+  </ThePageContent>
 
   <!-- Toasts, Alerts & Modals -->
   <TheToasts

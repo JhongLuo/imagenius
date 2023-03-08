@@ -1,6 +1,4 @@
 <script setup lang="ts" generic="T extends any, O extends any">
-import { initTooltips } from 'flowbite'
-
 defineOptions({
   name: 'IndexPage',
 })
@@ -23,39 +21,33 @@ onMounted(() => {
   </h1>
 
   <!-- Page Content -->
-  <div mt-12>
+  <ThePageContent
+    mt-12
+  >
     <!-- input: connection target -->
     <TheTextInput
       v-model="api.ipAddr.addr"
       input-id="api-ip-addr"
-      text-center
       placeholder="Where to connect?"
-      data-tooltip-target="tooltip-no-arrow"
+      data-tooltip-target="tooltip-connect"
       data-tooltip-trigger="hover"
+      w-64 text-center
       @keydown.enter="navigateToUpload"
     />
 
     <!-- tooltip -->
-    <div
-      id="tooltip-no-arrow"
-      role="tooltip"
-      class="invisible"
-      inline-block z-10
-      px-3 py-2
-      text-xs font-medium
-      rounded-lg shadow-lg shadow-gray-400 shadow-op-80 dark:shadow-gray-700 dark:shadow-op-30
-      text-white bg-gray-400 dark:bg-gray-800
-    >
-      Where to connect?
-    </div>
+    <TheTooltip
+      id="tooltip-connect"
+      label="Where to connect?"
+    />
 
     <!-- button: go -->
     <button
-      my-btn-primary m-3 text-sm
+      my-btn-primary m-4 text-sm
       :disabled="!api.ipAddr.addr"
       @click="navigateToUpload"
     >
       Go
     </button>
-  </div>
+  </ThePageContent>
 </template>

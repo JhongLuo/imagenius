@@ -14,7 +14,7 @@ defineProps<{
     <TheToast
       v-for="toast in toastsArray"
       :key="toast.uuid"
-      v-model="toast.isShown"
+      v-model:isShown="toast.isShown"
       :toast-id="toast.domId"
       :toast-type="toast.type"
       :toast-text="toast.text"
