@@ -17,7 +17,11 @@ const onFileInputChanged = (event: Event) => {
 const isInputValid = computed(() => imgKey.value && imgStr.value)
 
 const handleUpload = async () => {
-  // < input validation already done by button disabled state >
+  // input validation
+  if (!isInputValid.value)
+    return
+
+  // start upload
   isUploading.value = true
   // fetch data
   try {

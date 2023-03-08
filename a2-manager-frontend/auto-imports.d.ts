@@ -12,6 +12,15 @@ declare global {
   const $shallowRef: typeof import('vue/macros')['$shallowRef']
   const $toRef: typeof import('vue/macros')['$toRef']
   const EffectScope: typeof import('vue')['EffectScope']
+  const MODAL_DESCRIPTION_CLEAR_CACHE: typeof import('./src/composables/constants')['MODAL_DESCRIPTION_CLEAR_CACHE']
+  const MODAL_DESCRIPTION_DELETE_ALL_KEYS: typeof import('./src/composables/constants')['MODAL_DESCRIPTION_DELETE_ALL_KEYS']
+  const MODAL_DESCRIPTION_PUT_CONFIG: typeof import('./src/composables/constants')['MODAL_DESCRIPTION_PUT_CONFIG']
+  const MODAL_ID_CLEAR_CACHE: typeof import('./src/composables/constants')['MODAL_ID_CLEAR_CACHE']
+  const MODAL_ID_DELETE_ALL_KEYS: typeof import('./src/composables/constants')['MODAL_ID_DELETE_ALL_KEYS']
+  const MODAL_ID_PUT_CONFIG: typeof import('./src/composables/constants')['MODAL_ID_PUT_CONFIG']
+  const MODAL_TITLE_CLEAR_CACHE: typeof import('./src/composables/constants')['MODAL_TITLE_CLEAR_CACHE']
+  const MODAL_TITLE_DELETE_ALL_KEYS: typeof import('./src/composables/constants')['MODAL_TITLE_DELETE_ALL_KEYS']
+  const MODAL_TITLE_PUT_CONFIG: typeof import('./src/composables/constants')['MODAL_TITLE_PUT_CONFIG']
   const MSG_ERROR_EMPTY_ALL_KEYS: typeof import('./src/composables/constants')['MSG_ERROR_EMPTY_ALL_KEYS']
   const MSG_ERROR_INCORRECT_FORMAT: typeof import('./src/composables/constants')['MSG_ERROR_INCORRECT_FORMAT']
   const MSG_ERROR_UNKNOWN_ERR: typeof import('./src/composables/constants')['MSG_ERROR_UNKNOWN_ERR']
@@ -19,6 +28,12 @@ declare global {
   const MSG_SUCCESS_GET_ALL_KEYS: typeof import('./src/composables/constants')['MSG_SUCCESS_GET_ALL_KEYS']
   const MSG_SUCCESS_RETRIEVE_IMG: typeof import('./src/composables/constants')['MSG_SUCCESS_RETRIEVE_IMG']
   const MSG_SUCCESS_UPLOAD_IMG: typeof import('./src/composables/constants')['MSG_SUCCESS_UPLOAD_IMG']
+  const TABLE_DELETE_TEXT_ALL_KEYS: typeof import('./src/composables/constants')['TABLE_DELETE_TEXT_ALL_KEYS']
+  const TABLE_DELETE_TEXT_CACHE_KEYS: typeof import('./src/composables/constants')['TABLE_DELETE_TEXT_CACHE_KEYS']
+  const TABLE_DESCRIPTION_ALL_KEYS: typeof import('./src/composables/constants')['TABLE_DESCRIPTION_ALL_KEYS']
+  const TABLE_DESCRIPTION_CACHE_KEYS: typeof import('./src/composables/constants')['TABLE_DESCRIPTION_CACHE_KEYS']
+  const TABLE_TITLE_ALL_KEYS: typeof import('./src/composables/constants')['TABLE_TITLE_ALL_KEYS']
+  const TABLE_TITLE_CACHE_KEYS: typeof import('./src/composables/constants')['TABLE_TITLE_CACHE_KEYS']
   const TOAST_ID_ERROR_DELETE_ALL_KEYS: typeof import('./src/composables/constants')['TOAST_ID_ERROR_DELETE_ALL_KEYS']
   const TOAST_ID_ERROR_GET_ALL_KEYS: typeof import('./src/composables/constants')['TOAST_ID_ERROR_GET_ALL_KEYS']
   const TOAST_ID_ERROR_RETRIEVE_IMG: typeof import('./src/composables/constants')['TOAST_ID_ERROR_RETRIEVE_IMG']
@@ -320,6 +335,15 @@ declare module 'vue' {
     readonly $shallowRef: UnwrapRef<typeof import('vue/macros')['$shallowRef']>
     readonly $toRef: UnwrapRef<typeof import('vue/macros')['$toRef']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
+    readonly MODAL_DESCRIPTION_CLEAR_CACHE: UnwrapRef<typeof import('./src/composables/constants')['MODAL_DESCRIPTION_CLEAR_CACHE']>
+    readonly MODAL_DESCRIPTION_DELETE_ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['MODAL_DESCRIPTION_DELETE_ALL_KEYS']>
+    readonly MODAL_DESCRIPTION_PUT_CONFIG: UnwrapRef<typeof import('./src/composables/constants')['MODAL_DESCRIPTION_PUT_CONFIG']>
+    readonly MODAL_ID_CLEAR_CACHE: UnwrapRef<typeof import('./src/composables/constants')['MODAL_ID_CLEAR_CACHE']>
+    readonly MODAL_ID_DELETE_ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['MODAL_ID_DELETE_ALL_KEYS']>
+    readonly MODAL_ID_PUT_CONFIG: UnwrapRef<typeof import('./src/composables/constants')['MODAL_ID_PUT_CONFIG']>
+    readonly MODAL_TITLE_CLEAR_CACHE: UnwrapRef<typeof import('./src/composables/constants')['MODAL_TITLE_CLEAR_CACHE']>
+    readonly MODAL_TITLE_DELETE_ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['MODAL_TITLE_DELETE_ALL_KEYS']>
+    readonly MODAL_TITLE_PUT_CONFIG: UnwrapRef<typeof import('./src/composables/constants')['MODAL_TITLE_PUT_CONFIG']>
     readonly MSG_ERROR_EMPTY_ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['MSG_ERROR_EMPTY_ALL_KEYS']>
     readonly MSG_ERROR_INCORRECT_FORMAT: UnwrapRef<typeof import('./src/composables/constants')['MSG_ERROR_INCORRECT_FORMAT']>
     readonly MSG_ERROR_UNKNOWN_ERR: UnwrapRef<typeof import('./src/composables/constants')['MSG_ERROR_UNKNOWN_ERR']>
@@ -327,6 +351,12 @@ declare module 'vue' {
     readonly MSG_SUCCESS_GET_ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['MSG_SUCCESS_GET_ALL_KEYS']>
     readonly MSG_SUCCESS_RETRIEVE_IMG: UnwrapRef<typeof import('./src/composables/constants')['MSG_SUCCESS_RETRIEVE_IMG']>
     readonly MSG_SUCCESS_UPLOAD_IMG: UnwrapRef<typeof import('./src/composables/constants')['MSG_SUCCESS_UPLOAD_IMG']>
+    readonly TABLE_DELETE_TEXT_ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TABLE_DELETE_TEXT_ALL_KEYS']>
+    readonly TABLE_DELETE_TEXT_CACHE_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TABLE_DELETE_TEXT_CACHE_KEYS']>
+    readonly TABLE_DESCRIPTION_ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TABLE_DESCRIPTION_ALL_KEYS']>
+    readonly TABLE_DESCRIPTION_CACHE_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TABLE_DESCRIPTION_CACHE_KEYS']>
+    readonly TABLE_TITLE_ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TABLE_TITLE_ALL_KEYS']>
+    readonly TABLE_TITLE_CACHE_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TABLE_TITLE_CACHE_KEYS']>
     readonly TOAST_ID_ERROR_DELETE_ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_ERROR_DELETE_ALL_KEYS']>
     readonly TOAST_ID_ERROR_GET_ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_ERROR_GET_ALL_KEYS']>
     readonly TOAST_ID_ERROR_RETRIEVE_IMG: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_ERROR_RETRIEVE_IMG']>

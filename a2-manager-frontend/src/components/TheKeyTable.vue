@@ -1,8 +1,9 @@
 <script setup lang="ts">
 defineProps<{
-  captionTitle?: string
-  captionContent?: string
-  keys: string[]
+  data: string[]
+  tableTitle?: string
+  tableDescription?: string
+  deleteText: string
   deleteAction: Function
 }>()
 
@@ -26,18 +27,18 @@ const isShown = ref(false)
           p-5 text-lg font-semibold text-left
           bg-white text-gray-900 dark:bg-gray-800 dark:text-white select-none
         >
-          {{ captionTitle }}
+          {{ tableTitle }}
           <p
-            v-if="captionContent"
+            v-if="tableDescription"
             mt-1 text-sm font-normal
             text-gray-500 dark:text-gray-400 select-none
           >
-            {{ captionContent }}
+            {{ tableDescription }}
           </p>
 
           <!-- Delete Modal toggle -->
           <button
-            v-if="keys.length > 0"
+            v-if="data.length > 0"
             my-btn-danger text-sm px-2 mt-2
             @click="isShown = true"
           >
@@ -47,10 +48,10 @@ const isShown = ref(false)
           <!-- Delete Modal Content -->
           <TheModal
             v-model:is-shown="isShown"
-            modal-id="modal-delete-all-keys"
+            :modal-id="MODAL_ID_DELETE_ALL_KEYS"
             modal-type="delete"
-            modal-title="Delete All Keys and Images"
-            modal-description="Are you sure you want to delete all keys and associated images? All of the data will be permanently removed. This action cannot be undone."
+            :modal-title="MODAL_TITLE_DELETE_ALL_KEYS"
+            :modal-description="MODAL_DESCRIPTION_DELETE_ALL_KEYS"
             :action="deleteAction"
           />
         </caption>
@@ -73,7 +74,7 @@ const isShown = ref(false)
         <tbody>
           <!-- if keys empty -->
           <tr
-            v-if="keys.length === 0"
+            v-if="data.length === 0"
             class="bg-white dark:bg-gray-900"
           >
             <td
@@ -87,13 +88,13 @@ const isShown = ref(false)
 
           <!-- if keys not empty: row for each key -->
           <tr
-            v-for="(key, index) in keys"
+            v-for="(key, index) in data"
             :key="key"
             dark:border-gray-700
             :class="{
               'bg-white dark:bg-gray-900': index % 2 === 0,
               'bg-gray-200 dark:bg-gray-800': index % 2 !== 0,
-              'border-b': index !== keys.length - 1,
+              'border-b': index !== data.length - 1,
             }"
           >
             <td

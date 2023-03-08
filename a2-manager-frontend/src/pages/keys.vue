@@ -73,9 +73,10 @@ onMounted(() => {
   <ThePageContent>
     <!-- Table: All Keys -->
     <TheKeyTable
-      caption-title="All Keys"
-      caption-content="from database + mem-cache"
-      :keys="keys"
+      :data="keys"
+      :table-title="TABLE_TITLE_ALL_KEYS"
+      :table-description="TABLE_DESCRIPTION_ALL_KEYS"
+      :delete-text="TABLE_DELETE_TEXT_ALL_KEYS"
       :delete-action="handleDeleteAll"
       :class="{ 'blur-sm': isDownloading }"
       transition-all duration-300

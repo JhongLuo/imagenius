@@ -14,7 +14,11 @@ const lastKey = ref('')
 const isInputValid = computed(() => imgKey.value)
 
 const handleRetrieve = async () => {
-  // < input validation already done by button disabled state >
+  // input validation
+  if (!isInputValid.value)
+    return
+
+  // start retrieval
   isDownloading.value = true
   // fetch data
   try {
@@ -72,6 +76,7 @@ const handleRetrieve = async () => {
             icon="i-carbon-password"
             input-id="input-image-key"
             placeholder="Your image key"
+            @keydown.enter="handleRetrieve"
           />
         </TheLabeledInput>
       </div>
