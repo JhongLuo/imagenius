@@ -1,5 +1,5 @@
 import mysql.connector
-from ReplacementPolicies import ReplacementPolicies
+from utils.ReplacementPolicies import ReplacementPolicies
 from enum import Enum
 
 class StatsNames(Enum):
@@ -80,10 +80,7 @@ def reset_stats(cursor):
 def get_replacement_policy(cursor):
     cursor.execute(f"SELECT value FROM stats WHERE name = '{StatsNames.replacement_policy.value}'")
     res = cursor.fetchone()
-    if res[0] == ReplacementPolicies.LRU.value:
-        return ReplacementPolicies.LRU
-    else:
-        return ReplacementPolicies.RANDOM
+    return ReplacementPolicies.int2policy(res[0])
 
 @cursor_operation
 def set_replacement_policy(cursor, policy):
@@ -94,7 +91,7 @@ def set_replacement_policy(cursor, policy):
 def get_stat(cursor, name : StatsNames):
     cursor.execute(f"SELECT value FROM stats WHERE name = '{name.value}'")
     res = cursor.fetchone()
-    return res[0]
+    return int(res[0])
 
 @cursor_operation
 def add_stat(cursor, name : StatsNames, value):

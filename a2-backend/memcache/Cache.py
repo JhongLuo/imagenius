@@ -1,7 +1,7 @@
 import sys
 from utils.ReplacementPolicies import ReplacementPolicies
 import threading
-from utils import rds
+from utils.rds import get_stat, get_replacement_policy, add_stat, StatsNames
 from sortedcontainers import SortedDict
 from random import randint
 import time
@@ -41,11 +41,21 @@ class Cache():
     def get_time(self):
         return time.time()
     
-    # TODO 
     def syncDB(self):
-        self.set_max_size(int(rds.select_statistics('max_size')))
-        self.set_policy(ReplacementPolicies.int2policy(rds.select_statistics('replacement_policy')))
-     
+        # read config from DB and set to self
+        self.set_max_size(get_stat(StatsNames.max_size))
+        self.set_policy(get_replacement_policy())
+        # add stats to DB
+        if self.total_requests:
+            add_stat(StatsNames.total_requests, self.total_requests)
+            self.total_requests = 0
+        if self.read_requests:
+            add_stat(StatsNames.read_requests, self.read_requests)
+            self.read_requests = 0
+        if self.missed_requests:
+            add_stat(StatsNames.missed_requests, self.missed_requests)
+            self.missed_requests = 0
+
     def _pop(self):
         if len(self.bst) > 0:
             if self.policy == ReplacementPolicies.LRU:                
