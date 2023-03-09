@@ -1,18 +1,29 @@
 import sys
 from utils.ReplacementPolicies import ReplacementPolicies
 import threading
-from utils.DBConnector import DBConnector
+from utils import rds
 from sortedcontainers import SortedDict
 from random import randint
 import time
 
 class Node:
-    def __init__(self, key, value, hash_hex, time) -> None:
+    def __init__(self, key, value, hash, time) -> None:
         self.key = key
-        self.hash_hex = hash_hex
+        self.hash = hash
         self.value = value
         self.time = time
-
+        
+    @staticmethod
+    def from_json(json):
+        return Node(json['key'], json['value'], json['hash'], json['time'])
+        
+    def to_json(self):
+        return {
+            'key': self.key,
+            'value': self.value,
+            'hash': self.hash,
+            'time': self.time,
+        }
 class Cache():
     def __init__(self) -> None:
         self.bst = SortedDict()
@@ -21,6 +32,10 @@ class Cache():
         self.bytes = 0
         self.policy = ReplacementPolicies.RANDOM
         self.writeLock = threading.Lock()
+        # total requests >= read requests >= missed requests
+        self.total_requests = 0
+        self.read_requests = 0
+        self.missed_requests = 0
         self.syncDB()
         
     def get_time(self):
@@ -28,9 +43,8 @@ class Cache():
     
     # TODO 
     def syncDB(self):
-        DBConnector.set_statistics([('items_len', len(self)), ('items_bytes', self.bytes)])
-        self.set_max_size(int(DBConnector.select_statistics('max_size')))
-        self.set_policy(ReplacementPolicies.int2policy(DBConnector.select_statistics('replacement_policy')))
+        self.set_max_size(int(rds.select_statistics('max_size')))
+        self.set_policy(ReplacementPolicies.int2policy(rds.select_statistics('replacement_policy')))
      
     def _pop(self):
         if len(self.bst) > 0:
@@ -45,8 +59,14 @@ class Cache():
             return node
         else:
             return None
-            
-    def __getitem__(self, key):
+    
+    def keys(self):
+        return self.dict.keys()
+    
+    def has(self, key):
+        return key in self.dict
+    
+    def get(self, key):
         with self.writeLock:
             node = self.dict[key]
             if self.policy == ReplacementPolicies.LRU:
@@ -55,11 +75,11 @@ class Cache():
                 self.bst[node.time] = node
             return node.value
         
-    def __setitem__(self, key, value, hash_hex):
+    def set(self, key, value, hash):
         if key in self.dict:
-            self.__delitem__(key)
+            self.delete(key)
         with self.writeLock:
-            node = Node(key, value, hash_hex, time.time())
+            node = Node(key, value, hash, time.time())
             self.dict[node.key] = node
             self.bst[node.time] = node
             self.bytes += sys.getsizeof(value)
@@ -67,7 +87,7 @@ class Cache():
                 self._pop()
             return node
     
-    def __delitem__(self, key) -> None:
+    def delete(self, key) -> None:
         with self.writeLock:
             node = self.dict[key]
             self.dict.pop(key)
@@ -79,7 +99,7 @@ class Cache():
     def get_range(self, lower, upper):
             node_list = []
             for _, node in self.dict.items():
-                if node.hash_hex < lower or node.hash_hex >= upper:
+                if node.hash < lower or node.hash >= upper:
                     continue
                 node_list.append(node)
             return node_list
@@ -87,9 +107,9 @@ class Cache():
     # [lower, upper)
     def delete_range(self, lower, upper):
         for _, node in self.dict.items():
-            if node.hash_hex < lower or node.hash_hex >= upper:
+            if node.hash < lower or node.hash >= upper:
                 continue
-            self.__delitem__(node.key)
+            self.delete(node.key)
 
     # [lower, upper)
     def merge_range(self, node_list):
@@ -110,6 +130,9 @@ class Cache():
         
     def get_bytes(self):
         return self.bytes
+    
+    def get_len(self):
+        return len(self.dict)
     
     def set_policy(self, policy):
         with self.writeLock:

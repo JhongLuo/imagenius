@@ -1,5 +1,12 @@
 import hashlib
 
+"""
+return the hash value of key
+"""
+
+def key2hash(key : str) -> int:
+    return int(hashlib.md5(key.encode('utf-8')).hexdigest(), 16)
+
 class Instruction:
     def __init__(self, lower, upper, old_cache, new_cache) -> None:
         self.lower = lower
@@ -52,59 +59,63 @@ class CacheRing:
             partition2cache[i] = i % self.cache_num
         return partition2cache
     
-    """
-    return the hash value of key
-    """
-    @staticmethod
-    def key2hash(key : str) -> int:
-        return int(hashlib.md5(key.encode('utf-8')).hexdigest(), 16)
+
         
+    """
+    return the partition the hash value belongs to
+    """
     def hash2partition(self, hash):
         return hash >> 124
     
+    """
+    return the server id the partition belongs to
+    """
     def partition2server(self, partition):
         return self.partitions[partition]
     
+    """
+    return the server id the key belongs to
+    """
     def key2server(self, key):
-        return self.partition2server(self.hash2partition(self.key2hash(key)))
+        return self.partition2server(self.hash2partition(key2hash(key)))
+
 """
 test code
 """   
-
-def ring_test(ring):
-    print([hex(v) for v in ring.boundaries])
-    for _ in range(7):
-        print("\nadd")
-        ins = ring.add()
-        for i in ins:
-            print(i) 
-        print(ring.cache_num)
-        print(ring.get_partitions())
-    for _ in range(7):
-        print("\nremove")
-        ins = ring.remove()
-        for i in ins:
-            print(i)
-        print(ring.cache_num)
-        print(ring.get_partitions())
-
-def hash_test(ring):
-    hash_list = []
-    for i in range(10):
-        hash_list.append(ring.key2hash(str(i)))
-    print(hash_list)
-    print([hex(v) for v in hash_list])
-    partition_count = [0] * ring.partition_num
-    right_count = 0
-    for i in range(10000):
-        hash = ring.key2hash(str(i))
-        partition = ring.hash2partition(hash)
-        partition_count[partition] += 1
-        right_count += (hash >= ring.boundaries[partition] and hash < ring.boundaries[partition + 1])
-    print(right_count / 10000) # should be 1.0
-    print(partition_count) # should be evenly distributed
-    
 if __name__ == '__main__':
+    def ring_test(ring):
+        print([hex(v) for v in ring.boundaries])
+        for _ in range(7):
+            print("\nadd")
+            ins = ring.add()
+            for i in ins:
+                print(i) 
+            print(ring.cache_num)
+            print(ring.get_partitions())
+        for _ in range(7):
+            print("\nremove")
+            ins = ring.remove()
+            for i in ins:
+                print(i)
+            print(ring.cache_num)
+            print(ring.get_partitions())
+
+    def hash_test(ring):
+        hash_list = []
+        for i in range(10):
+            hash_list.append(key2hash(str(i)))
+        print(hash_list)
+        print([hex(v) for v in hash_list])
+        partition_count = [0] * ring.partition_num
+        right_count = 0
+        for i in range(10000):
+            hash = key2hash(str(i))
+            partition = ring.hash2partition(hash)
+            partition_count[partition] += 1
+            right_count += (hash >= ring.boundaries[partition] and hash < ring.boundaries[partition + 1])
+        print(right_count / 10000) # should be 1.0
+        print(partition_count) # should be evenly distributed
+        
     ring = CacheRing()
     # ring_test(ring)
     hash_test(ring)
