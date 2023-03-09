@@ -30,12 +30,12 @@ const handleUpload = async () => {
     fd.append('key', imgKey.value)
     fd.append('file', imgStr.value)
     const response = await api.postImage(fd)
-    utils.validateResponse(response)
+    utilsJS.validateResponse(response)
     // handle success
     blinkToast(
-      TOAST_ID_SUCCESS_UPLOAD_IMG,
+      TOAST_ID__UPLOAD_IMG__SUCCESS,
       'success',
-      MSG_SUCCESS_UPLOAD_IMG)
+      TOAST_MSG__UPLOAD_IMG__SUCCESS)
     isUploading.value = false
     imgKey.value = ''
     imgStr.value = '';
@@ -44,7 +44,7 @@ const handleUpload = async () => {
   catch (errMsg) {
     // handle error
     blinkToast(
-      TOAST_ID_ERROR_UPLOAD_IMG,
+      TOAST_ID__UPLOAD_IMG__ERROR,
       'error',
       errMsg as string)
     isUploading.value = false
@@ -54,7 +54,7 @@ const handleUpload = async () => {
 
 <template>
   <!-- Page Title -->
-  <h1 my-title-style>
+  <h1 my-title>
     Upload
   </h1>
 

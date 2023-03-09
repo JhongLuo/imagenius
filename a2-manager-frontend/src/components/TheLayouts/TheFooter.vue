@@ -5,12 +5,14 @@ const api = useAPIStore()
 <template>
   <div flex-col space-y-3 mt-6>
     <div flex justify-center items-baseline>
-      <span my-helper-text-style select-none>
+      <span
+        my-helper-text select-none
+      >
         Currently connecting to&nbsp;
       </span>
       <span
-        my-helper-text-style font-mono my-text-color-primary
         px-1.5 py-1 rounded bg-gray-4 bg-op-15
+        my-helper-text font-mono my-text-color-primary
       >
         {{ api.baseURLShort }}
       </span>

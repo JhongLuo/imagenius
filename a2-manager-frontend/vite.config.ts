@@ -54,10 +54,20 @@ export default defineConfig({
             'initTooltips',
           ],
         },
+        {
+          from: 'apexcharts',
+          imports: ['ApexOptions'],
+          type: true,
+        },
         // custom types
         {
           from: '~/composables/useToasts',
           imports: ['ToastModel', 'ToastType'],
+          type: true,
+        },
+        {
+          from: '~/composables/utils',
+          imports: ['StatsData', 'RawStatsData'],
           type: true,
         },
       ],

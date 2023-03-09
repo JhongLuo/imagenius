@@ -1,0 +1,133 @@
+<script setup lang="ts">
+const props = defineProps<{
+  id: string
+  title: string
+  series: ApexAxisChartSeries
+}>()
+
+const isDark = useDark()
+
+const chartOptions = computed(() => {
+  return {
+    chart: {
+      id: props.id,
+      type: 'line',
+      fontFamily: 'DM Sans',
+      foreColor: isDark.value ? 'white' : 'black',
+      redrawOnWindowResize: false,
+      toolbar: {
+        show: false,
+      },
+      zoom: {
+        enabled: false,
+      },
+    },
+
+    dataLabels: {
+      enabled: false,
+    },
+
+    grid: {
+      borderColor: isDark.value ? '#444444' : '#dddddd',
+      row: {
+        colors: [isDark.value ? '#444444' : '#dddddd',
+          'transparent'],
+        opacity: 0.1,
+      },
+    },
+
+    legend: {
+      show: false,
+      showForSingleSeries: true,
+      floating: true,
+      fontSize: '16px',
+      fontFamily: 'DM Sans',
+      fontWeight: 1000,
+      onItemClick: {
+        toggleDataSeries: false,
+      },
+      onItemHover: {
+        highlightDataSeries: true,
+      },
+    },
+
+    markers: {
+      size: 0,
+      colors: undefined,
+      strokeWidth: 1,
+      strokeOpacity: 0.5,
+      shape: 'circle',
+      showNullDataPoints: true,
+      hover: {
+        size: 5,
+      },
+    },
+
+    stroke: {
+      show: true,
+      curve: 'straight',
+      lineCap: 'round',
+      colors: [isDark.value ? '#82E0AA' : '#73C797'],
+      width: 4,
+    },
+
+    title: {
+      text: props.title,
+      style: {
+        color: isDark.value ? 'white' : 'black',
+        fontSize: '18px',
+        fontFamily: 'DM Sans',
+        fontWeight: 1000,
+      },
+    },
+
+    tooltip: {
+      enabled: true,
+      followCursor: true,
+      intersect: false,
+      fillSeriesColor: false,
+      theme: isDark.value ? 'dark' : 'light',
+      style: {
+        fontSize: '14px',
+        fontFamily: 'DM Sans',
+      },
+    },
+
+    xaxis: {
+      labels: {
+        show: false,
+      },
+      axisTicks: {
+        show: false,
+      },
+      crosshairs: {
+        show: false,
+      },
+      tooltip: {
+        enabled: false,
+      },
+    },
+
+    yaxis: {
+      min: utils.computeYAxisMin(props.series[0].data as number[]), // Forces ideal scale, but results in losing
+      max: utils.computeYAxisMax(props.series[0].data as number[]), // update animation for some reason :(
+      forceNiceScale: false,
+      tickAmount: 5,
+      decimalsInFloat: 0,
+      labels: {
+        show: true,
+        formatter: undefined,
+      },
+    },
+  } as ApexOptions
+})
+</script>
+
+<template>
+  <div>
+    <apexchart
+      :options="chartOptions"
+      :series="series"
+    />
+  </div>
+</template>

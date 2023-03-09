@@ -19,8 +19,7 @@ defineOptions({
         <!-- img -->
         <img
           w-100
-          rounded-lg object-contain
-          shadow-xl shadow-gray-5 dark:shadow-gray-8 dark:shadow-op-60
+          my-card my-shadow-heavy object-contain
           v-bind="$attrs"
         >
 

@@ -18,7 +18,7 @@ const isModalShown = ref(false)
     <!-- Table wrapper -->
     <div
       overflow-x-auto
-      shadow-md rounded-lg
+      my-card
     >
       <!-- Table -->
       <table
@@ -85,7 +85,7 @@ const isModalShown = ref(false)
               px-6 py-3 font-medium
               scope="row"
             >
-              {{ MSG_ERROR_KEYS_TABLE_EMPTY }}
+              {{ ERROR_MSG__KEYS_TABLE_EMPTY }}
             </td>
           </tr>
 

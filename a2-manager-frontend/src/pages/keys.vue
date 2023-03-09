@@ -14,23 +14,23 @@ const handleGetAllKeys = async (isReload = false) => {
   // fetch data
   try {
     const response = await api.getAllKeys()
-    utils.validateResponse(response)
+    utilsJS.validateResponse(response)
     // handle success
     allKeys.value = response.data.keys
     await utils.sleep(150)
     isDownloading.value = false
     if (!isReload) {
       blinkToast(
-        TOAST_ID_SUCCESS_GET_ALL_KEYS,
+        TOAST_ID__GET_ALL_KEYS__SUCCESS,
         'info',
-        MSG_SUCCESS_GET_ALL_KEYS)
+        TOAST_MSG__GET_ALL_KEYS__SUCCESS)
     }
   }
   catch (errMsg) {
     // handle error
     allKeys.value = []
     blinkToast(
-      TOAST_ID_ERROR_GET_ALL_KEYS,
+      TOAST_ID__GET_ALL_KEYS__ERROR,
       'error',
       errMsg as string)
     isDownloading.value = false
@@ -41,18 +41,18 @@ const handleDeleteAll = async () => {
   // fetch data
   try {
     const response = await api.postDeleteAllData()
-    utils.validateResponse(response)
+    utilsJS.validateResponse(response)
     // handle success
     blinkToast(
-      TOAST_ID_SUCCESS_DELETE_ALL,
+      TOAST_ID__DELETE_ALL__SUCCESS,
       'success',
-      MSG_SUCCESS_DELETE_ALL)
+      TOAST_MSG__DELETE_ALL__SUCCESS)
     await handleGetAllKeys(true)
   }
   catch (errMsg) {
     // handle error
     blinkToast(
-      TOAST_ID_ERROR_DELETE_ALL,
+      TOAST_ID__DELETE_ALL__ERROR,
       'error',
       errMsg as string)
   }
@@ -65,7 +65,7 @@ onMounted(() => {
 
 <template>
   <!-- Page Title -->
-  <h1 my-title-style>
+  <h1 my-title>
     Keys
   </h1>
 
@@ -74,13 +74,13 @@ onMounted(() => {
     <!-- Table: All Keys -->
     <TheKeyTable
       :data="allKeys"
-      :table-title="TABLE_TITLE_ALL_KEYS"
-      :table-description="TABLE_DESCRIPTION_ALL_KEYS"
-      :delete-button-text="TABLE_DELETE_BUTTON_TEXT_ALL_KEYS"
+      :table-title="TABLE_TITLE__ALL_KEYS"
+      :table-description="TABLE_DESCRIPTION__ALL_KEYS"
+      :delete-button-text="TABLE_DELETE_BUTTON_TEXT__ALL_KEYS"
       :delete-button-action="handleDeleteAll"
-      :modal-id="MODAL_ID_DELETE_ALL"
-      :modal-title="MODAL_TITLE_DELETE_ALL"
-      :modal-description="MODAL_DESCRIPTION_DELETE_ALL"
+      :modal-id="MODAL_ID__DELETE_ALL"
+      :modal-title="MODAL_TITLE__DELETE_ALL"
+      :modal-description="MODAL_DESCRIPTION__DELETE_ALL"
       :class="{ 'blur-sm grayscale': isDownloading }"
       transition-all duration-300
     />

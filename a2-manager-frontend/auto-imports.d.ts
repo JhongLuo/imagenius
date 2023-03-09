@@ -11,49 +11,72 @@ declare global {
   const $ref: typeof import('vue/macros')['$ref']
   const $shallowRef: typeof import('vue/macros')['$shallowRef']
   const $toRef: typeof import('vue/macros')['$toRef']
+  const CHART_ID__HIT_RATES: typeof import('./src/composables/constants')['CHART_ID__HIT_RATES']
+  const CHART_ID__MISS_RATES: typeof import('./src/composables/constants')['CHART_ID__MISS_RATES']
+  const CHART_ID__NUMS_ITEMS: typeof import('./src/composables/constants')['CHART_ID__NUMS_ITEMS']
+  const CHART_ID__NUMS_REQUESTS: typeof import('./src/composables/constants')['CHART_ID__NUMS_REQUESTS']
+  const CHART_ID__USAGES_PERCENT: typeof import('./src/composables/constants')['CHART_ID__USAGES_PERCENT']
+  const CHART_ID__USAGES_SIZE: typeof import('./src/composables/constants')['CHART_ID__USAGES_SIZE']
+  const CHART_TITLE__HIT_RATES: typeof import('./src/composables/constants')['CHART_TITLE__HIT_RATES']
+  const CHART_TITLE__MISS_RATES: typeof import('./src/composables/constants')['CHART_TITLE__MISS_RATES']
+  const CHART_TITLE__NUMS_ITEMS: typeof import('./src/composables/constants')['CHART_TITLE__NUMS_ITEMS']
+  const CHART_TITLE__NUMS_REQUESTS: typeof import('./src/composables/constants')['CHART_TITLE__NUMS_REQUESTS']
+  const CHART_TITLE__USAGES_PERCENT: typeof import('./src/composables/constants')['CHART_TITLE__USAGES_PERCENT']
+  const CHART_TITLE__USAGES_SIZE: typeof import('./src/composables/constants')['CHART_TITLE__USAGES_SIZE']
+  const ERROR_MSG__INCORRECT_FORMAT: typeof import('./src/composables/constants')['ERROR_MSG__INCORRECT_FORMAT']
+  const ERROR_MSG__KEYS_TABLE_EMPTY: typeof import('./src/composables/constants')['ERROR_MSG__KEYS_TABLE_EMPTY']
+  const ERROR_MSG__UNKNOWN_ERR: typeof import('./src/composables/constants')['ERROR_MSG__UNKNOWN_ERR']
   const EffectScope: typeof import('vue')['EffectScope']
-  const MODAL_DESCRIPTION_CLEAR_CACHE: typeof import('./src/composables/constants')['MODAL_DESCRIPTION_CLEAR_CACHE']
-  const MODAL_DESCRIPTION_DELETE_ALL: typeof import('./src/composables/constants')['MODAL_DESCRIPTION_DELETE_ALL']
-  const MODAL_DESCRIPTION_PUT_CACHE_CONFIGS: typeof import('./src/composables/constants')['MODAL_DESCRIPTION_PUT_CACHE_CONFIGS']
-  const MODAL_ID_CLEAR_CACHE: typeof import('./src/composables/constants')['MODAL_ID_CLEAR_CACHE']
-  const MODAL_ID_DELETE_ALL: typeof import('./src/composables/constants')['MODAL_ID_DELETE_ALL']
-  const MODAL_ID_PUT_CACHE_CONFIGS: typeof import('./src/composables/constants')['MODAL_ID_PUT_CACHE_CONFIGS']
-  const MODAL_TITLE_CLEAR_CACHE: typeof import('./src/composables/constants')['MODAL_TITLE_CLEAR_CACHE']
-  const MODAL_TITLE_DELETE_ALL: typeof import('./src/composables/constants')['MODAL_TITLE_DELETE_ALL']
-  const MODAL_TITLE_PUT_CACHE_CONFIGS: typeof import('./src/composables/constants')['MODAL_TITLE_PUT_CACHE_CONFIGS']
-  const MSG_ERROR_INCORRECT_FORMAT: typeof import('./src/composables/constants')['MSG_ERROR_INCORRECT_FORMAT']
-  const MSG_ERROR_KEYS_TABLE_EMPTY: typeof import('./src/composables/constants')['MSG_ERROR_KEYS_TABLE_EMPTY']
-  const MSG_ERROR_UNKNOWN_ERR: typeof import('./src/composables/constants')['MSG_ERROR_UNKNOWN_ERR']
-  const MSG_SUCCESS_CLEAR_CACHE: typeof import('./src/composables/constants')['MSG_SUCCESS_CLEAR_CACHE']
-  const MSG_SUCCESS_DELETE_ALL: typeof import('./src/composables/constants')['MSG_SUCCESS_DELETE_ALL']
-  const MSG_SUCCESS_GET_ALL_KEYS: typeof import('./src/composables/constants')['MSG_SUCCESS_GET_ALL_KEYS']
-  const MSG_SUCCESS_GET_CACHE_CONFIGS: typeof import('./src/composables/constants')['MSG_SUCCESS_GET_CACHE_CONFIGS']
-  const MSG_SUCCESS_GET_CACHE_KEYS: typeof import('./src/composables/constants')['MSG_SUCCESS_GET_CACHE_KEYS']
-  const MSG_SUCCESS_PUT_CACHE_CONFIGS: typeof import('./src/composables/constants')['MSG_SUCCESS_PUT_CACHE_CONFIGS']
-  const MSG_SUCCESS_RETRIEVE_IMG: typeof import('./src/composables/constants')['MSG_SUCCESS_RETRIEVE_IMG']
-  const MSG_SUCCESS_UPLOAD_IMG: typeof import('./src/composables/constants')['MSG_SUCCESS_UPLOAD_IMG']
-  const TABLE_DELETE_BUTTON_TEXT_ALL_KEYS: typeof import('./src/composables/constants')['TABLE_DELETE_BUTTON_TEXT_ALL_KEYS']
-  const TABLE_DELETE_BUTTON_TEXT_CACHE_KEYS: typeof import('./src/composables/constants')['TABLE_DELETE_BUTTON_TEXT_CACHE_KEYS']
-  const TABLE_DESCRIPTION_ALL_KEYS: typeof import('./src/composables/constants')['TABLE_DESCRIPTION_ALL_KEYS']
-  const TABLE_DESCRIPTION_CACHE_KEYS: typeof import('./src/composables/constants')['TABLE_DESCRIPTION_CACHE_KEYS']
-  const TABLE_TITLE_ALL_KEYS: typeof import('./src/composables/constants')['TABLE_TITLE_ALL_KEYS']
-  const TABLE_TITLE_CACHE_KEYS: typeof import('./src/composables/constants')['TABLE_TITLE_CACHE_KEYS']
-  const TOAST_ID_ERROR_CLEAR_CACHE: typeof import('./src/composables/constants')['TOAST_ID_ERROR_CLEAR_CACHE']
-  const TOAST_ID_ERROR_DELETE_ALL: typeof import('./src/composables/constants')['TOAST_ID_ERROR_DELETE_ALL']
-  const TOAST_ID_ERROR_GET_ALL_KEYS: typeof import('./src/composables/constants')['TOAST_ID_ERROR_GET_ALL_KEYS']
-  const TOAST_ID_ERROR_GET_CACHE_CONFIGS: typeof import('./src/composables/constants')['TOAST_ID_ERROR_GET_CACHE_CONFIGS']
-  const TOAST_ID_ERROR_GET_CACHE_KEYS: typeof import('./src/composables/constants')['TOAST_ID_ERROR_GET_CACHE_KEYS']
-  const TOAST_ID_ERROR_PUT_CACHE_CONFIGS: typeof import('./src/composables/constants')['TOAST_ID_ERROR_PUT_CACHE_CONFIGS']
-  const TOAST_ID_ERROR_RETRIEVE_IMG: typeof import('./src/composables/constants')['TOAST_ID_ERROR_RETRIEVE_IMG']
-  const TOAST_ID_ERROR_UPLOAD_IMG: typeof import('./src/composables/constants')['TOAST_ID_ERROR_UPLOAD_IMG']
-  const TOAST_ID_SUCCESS_CLEAR_CACHE: typeof import('./src/composables/constants')['TOAST_ID_SUCCESS_CLEAR_CACHE']
-  const TOAST_ID_SUCCESS_DELETE_ALL: typeof import('./src/composables/constants')['TOAST_ID_SUCCESS_DELETE_ALL']
-  const TOAST_ID_SUCCESS_GET_ALL_KEYS: typeof import('./src/composables/constants')['TOAST_ID_SUCCESS_GET_ALL_KEYS']
-  const TOAST_ID_SUCCESS_GET_CACHE_CONFIGS: typeof import('./src/composables/constants')['TOAST_ID_SUCCESS_GET_CACHE_CONFIGS']
-  const TOAST_ID_SUCCESS_GET_CACHE_KEYS: typeof import('./src/composables/constants')['TOAST_ID_SUCCESS_GET_CACHE_KEYS']
-  const TOAST_ID_SUCCESS_PUT_CACHE_CONFIGS: typeof import('./src/composables/constants')['TOAST_ID_SUCCESS_PUT_CACHE_CONFIGS']
-  const TOAST_ID_SUCCESS_RETRIEVE_IMG: typeof import('./src/composables/constants')['TOAST_ID_SUCCESS_RETRIEVE_IMG']
-  const TOAST_ID_SUCCESS_UPLOAD_IMG: typeof import('./src/composables/constants')['TOAST_ID_SUCCESS_UPLOAD_IMG']
+  const MODAL_DESCRIPTION__CLEAR_CACHE: typeof import('./src/composables/constants')['MODAL_DESCRIPTION__CLEAR_CACHE']
+  const MODAL_DESCRIPTION__DELETE_ALL: typeof import('./src/composables/constants')['MODAL_DESCRIPTION__DELETE_ALL']
+  const MODAL_DESCRIPTION__PUT_CACHE_CONFIGS: typeof import('./src/composables/constants')['MODAL_DESCRIPTION__PUT_CACHE_CONFIGS']
+  const MODAL_ID__CLEAR_CACHE: typeof import('./src/composables/constants')['MODAL_ID__CLEAR_CACHE']
+  const MODAL_ID__DELETE_ALL: typeof import('./src/composables/constants')['MODAL_ID__DELETE_ALL']
+  const MODAL_ID__PUT_CACHE_CONFIGS: typeof import('./src/composables/constants')['MODAL_ID__PUT_CACHE_CONFIGS']
+  const MODAL_TITLE__CLEAR_CACHE: typeof import('./src/composables/constants')['MODAL_TITLE__CLEAR_CACHE']
+  const MODAL_TITLE__DELETE_ALL: typeof import('./src/composables/constants')['MODAL_TITLE__DELETE_ALL']
+  const MODAL_TITLE__PUT_CACHE_CONFIGS: typeof import('./src/composables/constants')['MODAL_TITLE__PUT_CACHE_CONFIGS']
+  const STATS_LABEL__HIT_RATES: typeof import('./src/composables/constants')['STATS_LABEL__HIT_RATES']
+  const STATS_LABEL__MISS_RATES: typeof import('./src/composables/constants')['STATS_LABEL__MISS_RATES']
+  const STATS_LABEL__NUMS_ITEMS: typeof import('./src/composables/constants')['STATS_LABEL__NUMS_ITEMS']
+  const STATS_LABEL__NUMS_REQUESTS: typeof import('./src/composables/constants')['STATS_LABEL__NUMS_REQUESTS']
+  const STATS_LABEL__USAGES_PERCENT: typeof import('./src/composables/constants')['STATS_LABEL__USAGES_PERCENT']
+  const STATS_LABEL__USAGES_SIZE: typeof import('./src/composables/constants')['STATS_LABEL__USAGES_SIZE']
+  const TABLE_DELETE_BUTTON_TEXT__ALL_KEYS: typeof import('./src/composables/constants')['TABLE_DELETE_BUTTON_TEXT__ALL_KEYS']
+  const TABLE_DELETE_BUTTON_TEXT__CACHE_KEYS: typeof import('./src/composables/constants')['TABLE_DELETE_BUTTON_TEXT__CACHE_KEYS']
+  const TABLE_DESCRIPTION__ALL_KEYS: typeof import('./src/composables/constants')['TABLE_DESCRIPTION__ALL_KEYS']
+  const TABLE_DESCRIPTION__CACHE_KEYS: typeof import('./src/composables/constants')['TABLE_DESCRIPTION__CACHE_KEYS']
+  const TABLE_TITLE__ALL_KEYS: typeof import('./src/composables/constants')['TABLE_TITLE__ALL_KEYS']
+  const TABLE_TITLE__CACHE_KEYS: typeof import('./src/composables/constants')['TABLE_TITLE__CACHE_KEYS']
+  const TOAST_ID__CLEAR_CACHE__ERROR: typeof import('./src/composables/constants')['TOAST_ID__CLEAR_CACHE__ERROR']
+  const TOAST_ID__CLEAR_CACHE__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__CLEAR_CACHE__SUCCESS']
+  const TOAST_ID__DELETE_ALL__ERROR: typeof import('./src/composables/constants')['TOAST_ID__DELETE_ALL__ERROR']
+  const TOAST_ID__DELETE_ALL__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__DELETE_ALL__SUCCESS']
+  const TOAST_ID__GET_ALL_KEYS__ERROR: typeof import('./src/composables/constants')['TOAST_ID__GET_ALL_KEYS__ERROR']
+  const TOAST_ID__GET_ALL_KEYS__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__GET_ALL_KEYS__SUCCESS']
+  const TOAST_ID__GET_CACHE_CONFIGS__ERROR: typeof import('./src/composables/constants')['TOAST_ID__GET_CACHE_CONFIGS__ERROR']
+  const TOAST_ID__GET_CACHE_CONFIGS__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__GET_CACHE_CONFIGS__SUCCESS']
+  const TOAST_ID__GET_CACHE_KEYS__ERROR: typeof import('./src/composables/constants')['TOAST_ID__GET_CACHE_KEYS__ERROR']
+  const TOAST_ID__GET_CACHE_KEYS__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__GET_CACHE_KEYS__SUCCESS']
+  const TOAST_ID__GET_STATS__ERROR: typeof import('./src/composables/constants')['TOAST_ID__GET_STATS__ERROR']
+  const TOAST_ID__GET_STATS__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__GET_STATS__SUCCESS']
+  const TOAST_ID__PUT_CACHE_CONFIGS__ERROR: typeof import('./src/composables/constants')['TOAST_ID__PUT_CACHE_CONFIGS__ERROR']
+  const TOAST_ID__PUT_CACHE_CONFIGS__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__PUT_CACHE_CONFIGS__SUCCESS']
+  const TOAST_ID__REFRESH_STATS__INFO: typeof import('./src/composables/constants')['TOAST_ID__REFRESH_STATS__INFO']
+  const TOAST_ID__RETRIEVE_IMG__ERROR: typeof import('./src/composables/constants')['TOAST_ID__RETRIEVE_IMG__ERROR']
+  const TOAST_ID__RETRIEVE_IMG__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__RETRIEVE_IMG__SUCCESS']
+  const TOAST_ID__UPLOAD_IMG__ERROR: typeof import('./src/composables/constants')['TOAST_ID__UPLOAD_IMG__ERROR']
+  const TOAST_ID__UPLOAD_IMG__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__UPLOAD_IMG__SUCCESS']
+  const TOAST_MSG__CLEAR_CACHE__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__CLEAR_CACHE__SUCCESS']
+  const TOAST_MSG__DELETE_ALL__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__DELETE_ALL__SUCCESS']
+  const TOAST_MSG__GET_ALL_KEYS__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__GET_ALL_KEYS__SUCCESS']
+  const TOAST_MSG__GET_CACHE_CONFIGS__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__GET_CACHE_CONFIGS__SUCCESS']
+  const TOAST_MSG__GET_CACHE_KEYS__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__GET_CACHE_KEYS__SUCCESS']
+  const TOAST_MSG__GET_STATS__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__GET_STATS__SUCCESS']
+  const TOAST_MSG__PUT_CACHE_CONFIGS__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__PUT_CACHE_CONFIGS__SUCCESS']
+  const TOAST_MSG__REFRESH_STATS__INFO: typeof import('./src/composables/constants')['TOAST_MSG__REFRESH_STATS__INFO']
+  const TOAST_MSG__RETRIEVE_IMG__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__RETRIEVE_IMG__SUCCESS']
+  const TOAST_MSG__UPLOAD_IMG__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__UPLOAD_IMG__SUCCESS']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
   const autoResetRef: typeof import('@vueuse/core')['autoResetRef']
   const axios: typeof import('axios')['default']
@@ -311,7 +334,8 @@ declare global {
   const useWindowFocus: typeof import('@vueuse/core')['useWindowFocus']
   const useWindowScroll: typeof import('@vueuse/core')['useWindowScroll']
   const useWindowSize: typeof import('@vueuse/core')['useWindowSize']
-  const utils: typeof import('./src/composables/utils.js')['default']
+  const utils: typeof import('./src/composables/utils')['default']
+  const utilsJS: typeof import('./src/composables/utilsJS.js')['default']
   const uuidv4: typeof import('uuid')['v4']
   const watch: typeof import('vue')['watch']
   const watchArray: typeof import('@vueuse/core')['watchArray']
@@ -333,7 +357,11 @@ declare global {
   // @ts-ignore
   export type { Component, ComponentPublicInstance, ComputedRef, InjectionKey, PropType, Ref, VNode } from 'vue'
   // @ts-ignore
+  export type { ApexOptions } from 'apexcharts'
+  // @ts-ignore
   export type { ToastModel, ToastType } from '~/composables/useToasts'
+  // @ts-ignore
+  export type { StatsData, RawStatsData } from '~/composables/utils'
 }
 // for vue template auto import
 import { UnwrapRef } from 'vue'
@@ -346,49 +374,72 @@ declare module 'vue' {
     readonly $ref: UnwrapRef<typeof import('vue/macros')['$ref']>
     readonly $shallowRef: UnwrapRef<typeof import('vue/macros')['$shallowRef']>
     readonly $toRef: UnwrapRef<typeof import('vue/macros')['$toRef']>
+    readonly CHART_ID__HIT_RATES: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__HIT_RATES']>
+    readonly CHART_ID__MISS_RATES: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__MISS_RATES']>
+    readonly CHART_ID__NUMS_ITEMS: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__NUMS_ITEMS']>
+    readonly CHART_ID__NUMS_REQUESTS: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__NUMS_REQUESTS']>
+    readonly CHART_ID__USAGES_PERCENT: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__USAGES_PERCENT']>
+    readonly CHART_ID__USAGES_SIZE: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__USAGES_SIZE']>
+    readonly CHART_TITLE__HIT_RATES: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__HIT_RATES']>
+    readonly CHART_TITLE__MISS_RATES: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__MISS_RATES']>
+    readonly CHART_TITLE__NUMS_ITEMS: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__NUMS_ITEMS']>
+    readonly CHART_TITLE__NUMS_REQUESTS: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__NUMS_REQUESTS']>
+    readonly CHART_TITLE__USAGES_PERCENT: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__USAGES_PERCENT']>
+    readonly CHART_TITLE__USAGES_SIZE: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__USAGES_SIZE']>
+    readonly ERROR_MSG__INCORRECT_FORMAT: UnwrapRef<typeof import('./src/composables/constants')['ERROR_MSG__INCORRECT_FORMAT']>
+    readonly ERROR_MSG__KEYS_TABLE_EMPTY: UnwrapRef<typeof import('./src/composables/constants')['ERROR_MSG__KEYS_TABLE_EMPTY']>
+    readonly ERROR_MSG__UNKNOWN_ERR: UnwrapRef<typeof import('./src/composables/constants')['ERROR_MSG__UNKNOWN_ERR']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
-    readonly MODAL_DESCRIPTION_CLEAR_CACHE: UnwrapRef<typeof import('./src/composables/constants')['MODAL_DESCRIPTION_CLEAR_CACHE']>
-    readonly MODAL_DESCRIPTION_DELETE_ALL: UnwrapRef<typeof import('./src/composables/constants')['MODAL_DESCRIPTION_DELETE_ALL']>
-    readonly MODAL_DESCRIPTION_PUT_CACHE_CONFIGS: UnwrapRef<typeof import('./src/composables/constants')['MODAL_DESCRIPTION_PUT_CACHE_CONFIGS']>
-    readonly MODAL_ID_CLEAR_CACHE: UnwrapRef<typeof import('./src/composables/constants')['MODAL_ID_CLEAR_CACHE']>
-    readonly MODAL_ID_DELETE_ALL: UnwrapRef<typeof import('./src/composables/constants')['MODAL_ID_DELETE_ALL']>
-    readonly MODAL_ID_PUT_CACHE_CONFIGS: UnwrapRef<typeof import('./src/composables/constants')['MODAL_ID_PUT_CACHE_CONFIGS']>
-    readonly MODAL_TITLE_CLEAR_CACHE: UnwrapRef<typeof import('./src/composables/constants')['MODAL_TITLE_CLEAR_CACHE']>
-    readonly MODAL_TITLE_DELETE_ALL: UnwrapRef<typeof import('./src/composables/constants')['MODAL_TITLE_DELETE_ALL']>
-    readonly MODAL_TITLE_PUT_CACHE_CONFIGS: UnwrapRef<typeof import('./src/composables/constants')['MODAL_TITLE_PUT_CACHE_CONFIGS']>
-    readonly MSG_ERROR_INCORRECT_FORMAT: UnwrapRef<typeof import('./src/composables/constants')['MSG_ERROR_INCORRECT_FORMAT']>
-    readonly MSG_ERROR_KEYS_TABLE_EMPTY: UnwrapRef<typeof import('./src/composables/constants')['MSG_ERROR_KEYS_TABLE_EMPTY']>
-    readonly MSG_ERROR_UNKNOWN_ERR: UnwrapRef<typeof import('./src/composables/constants')['MSG_ERROR_UNKNOWN_ERR']>
-    readonly MSG_SUCCESS_CLEAR_CACHE: UnwrapRef<typeof import('./src/composables/constants')['MSG_SUCCESS_CLEAR_CACHE']>
-    readonly MSG_SUCCESS_DELETE_ALL: UnwrapRef<typeof import('./src/composables/constants')['MSG_SUCCESS_DELETE_ALL']>
-    readonly MSG_SUCCESS_GET_ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['MSG_SUCCESS_GET_ALL_KEYS']>
-    readonly MSG_SUCCESS_GET_CACHE_CONFIGS: UnwrapRef<typeof import('./src/composables/constants')['MSG_SUCCESS_GET_CACHE_CONFIGS']>
-    readonly MSG_SUCCESS_GET_CACHE_KEYS: UnwrapRef<typeof import('./src/composables/constants')['MSG_SUCCESS_GET_CACHE_KEYS']>
-    readonly MSG_SUCCESS_PUT_CACHE_CONFIGS: UnwrapRef<typeof import('./src/composables/constants')['MSG_SUCCESS_PUT_CACHE_CONFIGS']>
-    readonly MSG_SUCCESS_RETRIEVE_IMG: UnwrapRef<typeof import('./src/composables/constants')['MSG_SUCCESS_RETRIEVE_IMG']>
-    readonly MSG_SUCCESS_UPLOAD_IMG: UnwrapRef<typeof import('./src/composables/constants')['MSG_SUCCESS_UPLOAD_IMG']>
-    readonly TABLE_DELETE_BUTTON_TEXT_ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TABLE_DELETE_BUTTON_TEXT_ALL_KEYS']>
-    readonly TABLE_DELETE_BUTTON_TEXT_CACHE_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TABLE_DELETE_BUTTON_TEXT_CACHE_KEYS']>
-    readonly TABLE_DESCRIPTION_ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TABLE_DESCRIPTION_ALL_KEYS']>
-    readonly TABLE_DESCRIPTION_CACHE_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TABLE_DESCRIPTION_CACHE_KEYS']>
-    readonly TABLE_TITLE_ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TABLE_TITLE_ALL_KEYS']>
-    readonly TABLE_TITLE_CACHE_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TABLE_TITLE_CACHE_KEYS']>
-    readonly TOAST_ID_ERROR_CLEAR_CACHE: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_ERROR_CLEAR_CACHE']>
-    readonly TOAST_ID_ERROR_DELETE_ALL: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_ERROR_DELETE_ALL']>
-    readonly TOAST_ID_ERROR_GET_ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_ERROR_GET_ALL_KEYS']>
-    readonly TOAST_ID_ERROR_GET_CACHE_CONFIGS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_ERROR_GET_CACHE_CONFIGS']>
-    readonly TOAST_ID_ERROR_GET_CACHE_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_ERROR_GET_CACHE_KEYS']>
-    readonly TOAST_ID_ERROR_PUT_CACHE_CONFIGS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_ERROR_PUT_CACHE_CONFIGS']>
-    readonly TOAST_ID_ERROR_RETRIEVE_IMG: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_ERROR_RETRIEVE_IMG']>
-    readonly TOAST_ID_ERROR_UPLOAD_IMG: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_ERROR_UPLOAD_IMG']>
-    readonly TOAST_ID_SUCCESS_CLEAR_CACHE: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_SUCCESS_CLEAR_CACHE']>
-    readonly TOAST_ID_SUCCESS_DELETE_ALL: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_SUCCESS_DELETE_ALL']>
-    readonly TOAST_ID_SUCCESS_GET_ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_SUCCESS_GET_ALL_KEYS']>
-    readonly TOAST_ID_SUCCESS_GET_CACHE_CONFIGS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_SUCCESS_GET_CACHE_CONFIGS']>
-    readonly TOAST_ID_SUCCESS_GET_CACHE_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_SUCCESS_GET_CACHE_KEYS']>
-    readonly TOAST_ID_SUCCESS_PUT_CACHE_CONFIGS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_SUCCESS_PUT_CACHE_CONFIGS']>
-    readonly TOAST_ID_SUCCESS_RETRIEVE_IMG: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_SUCCESS_RETRIEVE_IMG']>
-    readonly TOAST_ID_SUCCESS_UPLOAD_IMG: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID_SUCCESS_UPLOAD_IMG']>
+    readonly MODAL_DESCRIPTION__CLEAR_CACHE: UnwrapRef<typeof import('./src/composables/constants')['MODAL_DESCRIPTION__CLEAR_CACHE']>
+    readonly MODAL_DESCRIPTION__DELETE_ALL: UnwrapRef<typeof import('./src/composables/constants')['MODAL_DESCRIPTION__DELETE_ALL']>
+    readonly MODAL_DESCRIPTION__PUT_CACHE_CONFIGS: UnwrapRef<typeof import('./src/composables/constants')['MODAL_DESCRIPTION__PUT_CACHE_CONFIGS']>
+    readonly MODAL_ID__CLEAR_CACHE: UnwrapRef<typeof import('./src/composables/constants')['MODAL_ID__CLEAR_CACHE']>
+    readonly MODAL_ID__DELETE_ALL: UnwrapRef<typeof import('./src/composables/constants')['MODAL_ID__DELETE_ALL']>
+    readonly MODAL_ID__PUT_CACHE_CONFIGS: UnwrapRef<typeof import('./src/composables/constants')['MODAL_ID__PUT_CACHE_CONFIGS']>
+    readonly MODAL_TITLE__CLEAR_CACHE: UnwrapRef<typeof import('./src/composables/constants')['MODAL_TITLE__CLEAR_CACHE']>
+    readonly MODAL_TITLE__DELETE_ALL: UnwrapRef<typeof import('./src/composables/constants')['MODAL_TITLE__DELETE_ALL']>
+    readonly MODAL_TITLE__PUT_CACHE_CONFIGS: UnwrapRef<typeof import('./src/composables/constants')['MODAL_TITLE__PUT_CACHE_CONFIGS']>
+    readonly STATS_LABEL__HIT_RATES: UnwrapRef<typeof import('./src/composables/constants')['STATS_LABEL__HIT_RATES']>
+    readonly STATS_LABEL__MISS_RATES: UnwrapRef<typeof import('./src/composables/constants')['STATS_LABEL__MISS_RATES']>
+    readonly STATS_LABEL__NUMS_ITEMS: UnwrapRef<typeof import('./src/composables/constants')['STATS_LABEL__NUMS_ITEMS']>
+    readonly STATS_LABEL__NUMS_REQUESTS: UnwrapRef<typeof import('./src/composables/constants')['STATS_LABEL__NUMS_REQUESTS']>
+    readonly STATS_LABEL__USAGES_PERCENT: UnwrapRef<typeof import('./src/composables/constants')['STATS_LABEL__USAGES_PERCENT']>
+    readonly STATS_LABEL__USAGES_SIZE: UnwrapRef<typeof import('./src/composables/constants')['STATS_LABEL__USAGES_SIZE']>
+    readonly TABLE_DELETE_BUTTON_TEXT__ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TABLE_DELETE_BUTTON_TEXT__ALL_KEYS']>
+    readonly TABLE_DELETE_BUTTON_TEXT__CACHE_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TABLE_DELETE_BUTTON_TEXT__CACHE_KEYS']>
+    readonly TABLE_DESCRIPTION__ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TABLE_DESCRIPTION__ALL_KEYS']>
+    readonly TABLE_DESCRIPTION__CACHE_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TABLE_DESCRIPTION__CACHE_KEYS']>
+    readonly TABLE_TITLE__ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TABLE_TITLE__ALL_KEYS']>
+    readonly TABLE_TITLE__CACHE_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TABLE_TITLE__CACHE_KEYS']>
+    readonly TOAST_ID__CLEAR_CACHE__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__CLEAR_CACHE__ERROR']>
+    readonly TOAST_ID__CLEAR_CACHE__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__CLEAR_CACHE__SUCCESS']>
+    readonly TOAST_ID__DELETE_ALL__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__DELETE_ALL__ERROR']>
+    readonly TOAST_ID__DELETE_ALL__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__DELETE_ALL__SUCCESS']>
+    readonly TOAST_ID__GET_ALL_KEYS__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GET_ALL_KEYS__ERROR']>
+    readonly TOAST_ID__GET_ALL_KEYS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GET_ALL_KEYS__SUCCESS']>
+    readonly TOAST_ID__GET_CACHE_CONFIGS__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GET_CACHE_CONFIGS__ERROR']>
+    readonly TOAST_ID__GET_CACHE_CONFIGS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GET_CACHE_CONFIGS__SUCCESS']>
+    readonly TOAST_ID__GET_CACHE_KEYS__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GET_CACHE_KEYS__ERROR']>
+    readonly TOAST_ID__GET_CACHE_KEYS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GET_CACHE_KEYS__SUCCESS']>
+    readonly TOAST_ID__GET_STATS__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GET_STATS__ERROR']>
+    readonly TOAST_ID__GET_STATS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GET_STATS__SUCCESS']>
+    readonly TOAST_ID__PUT_CACHE_CONFIGS__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__PUT_CACHE_CONFIGS__ERROR']>
+    readonly TOAST_ID__PUT_CACHE_CONFIGS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__PUT_CACHE_CONFIGS__SUCCESS']>
+    readonly TOAST_ID__REFRESH_STATS__INFO: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__REFRESH_STATS__INFO']>
+    readonly TOAST_ID__RETRIEVE_IMG__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__RETRIEVE_IMG__ERROR']>
+    readonly TOAST_ID__RETRIEVE_IMG__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__RETRIEVE_IMG__SUCCESS']>
+    readonly TOAST_ID__UPLOAD_IMG__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__UPLOAD_IMG__ERROR']>
+    readonly TOAST_ID__UPLOAD_IMG__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__UPLOAD_IMG__SUCCESS']>
+    readonly TOAST_MSG__CLEAR_CACHE__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__CLEAR_CACHE__SUCCESS']>
+    readonly TOAST_MSG__DELETE_ALL__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__DELETE_ALL__SUCCESS']>
+    readonly TOAST_MSG__GET_ALL_KEYS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__GET_ALL_KEYS__SUCCESS']>
+    readonly TOAST_MSG__GET_CACHE_CONFIGS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__GET_CACHE_CONFIGS__SUCCESS']>
+    readonly TOAST_MSG__GET_CACHE_KEYS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__GET_CACHE_KEYS__SUCCESS']>
+    readonly TOAST_MSG__GET_STATS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__GET_STATS__SUCCESS']>
+    readonly TOAST_MSG__PUT_CACHE_CONFIGS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__PUT_CACHE_CONFIGS__SUCCESS']>
+    readonly TOAST_MSG__REFRESH_STATS__INFO: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__REFRESH_STATS__INFO']>
+    readonly TOAST_MSG__RETRIEVE_IMG__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__RETRIEVE_IMG__SUCCESS']>
+    readonly TOAST_MSG__UPLOAD_IMG__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__UPLOAD_IMG__SUCCESS']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
     readonly axios: UnwrapRef<typeof import('axios')['default']>
@@ -646,7 +697,8 @@ declare module 'vue' {
     readonly useWindowFocus: UnwrapRef<typeof import('@vueuse/core')['useWindowFocus']>
     readonly useWindowScroll: UnwrapRef<typeof import('@vueuse/core')['useWindowScroll']>
     readonly useWindowSize: UnwrapRef<typeof import('@vueuse/core')['useWindowSize']>
-    readonly utils: UnwrapRef<typeof import('./src/composables/utils.js')['default']>
+    readonly utils: UnwrapRef<typeof import('./src/composables/utils')['default']>
+    readonly utilsJS: UnwrapRef<typeof import('./src/composables/utilsJS.js')['default']>
     readonly uuidv4: UnwrapRef<typeof import('uuid')['v4']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchArray: UnwrapRef<typeof import('@vueuse/core')['watchArray']>

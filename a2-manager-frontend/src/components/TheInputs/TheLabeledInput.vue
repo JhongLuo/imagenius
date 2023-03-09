@@ -20,7 +20,7 @@ defineOptions({
   >
     <label
       :for="inputId"
-      my-label-style
+      my-label
     >
       {{ labelText }}
     </label>

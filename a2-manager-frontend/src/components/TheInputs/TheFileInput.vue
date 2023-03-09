@@ -21,14 +21,14 @@ defineOptions({
       type="file"
       w-full block cursor-pointer
       text-xs
-      my-input-style
+      my-input
       :aria-describedby="helperTextId"
       v-bind="$attrs"
     />
     <p
       v-if="helperText"
       :id="helperTextId"
-      my-helper-text-style
+      my-helper-text
     >
       {{ helperText }}
     </p>

@@ -24,7 +24,7 @@ const handleRetrieve = async () => {
   try {
     const key = imgKey.value
     const response = await api.getImage(key)
-    utils.validateResponse(response)
+    utilsJS.validateResponse(response)
     // handle success
     // update lastKey + img src, show blurred img
     await utils.sleep(50)
@@ -34,15 +34,15 @@ const handleRetrieve = async () => {
     await utils.sleep(50)
     isDownloading.value = false
     blinkToast(
-      TOAST_ID_SUCCESS_RETRIEVE_IMG,
+      TOAST_ID__RETRIEVE_IMG__SUCCESS,
       'success',
-      MSG_SUCCESS_RETRIEVE_IMG)
+      TOAST_MSG__RETRIEVE_IMG__SUCCESS)
   }
   catch (errMsg) {
     // handle error
     imgStr.value = ''
     blinkToast(
-      TOAST_ID_ERROR_RETRIEVE_IMG,
+      TOAST_ID__RETRIEVE_IMG__ERROR,
       'error',
       errMsg as string)
     isDownloading.value = false
@@ -52,7 +52,7 @@ const handleRetrieve = async () => {
 
 <template>
   <!-- Page Title -->
-  <h1 my-title-style>
+  <h1 my-title>
     Retrieve
   </h1>
 

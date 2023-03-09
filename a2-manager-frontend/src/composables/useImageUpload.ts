@@ -4,7 +4,7 @@
  *            updateImgFile: (e: Event) => void}}
  */
 export function useImageUpload() {
-  const imgFile = ref(new File([], '')) // empty file
+  const imgFile = ref<File>() // empty file
   const imgStr = ref('')
 
   const updateImgFile = (event: Event) => {

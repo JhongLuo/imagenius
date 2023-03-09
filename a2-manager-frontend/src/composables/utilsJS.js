@@ -1,11 +1,11 @@
+// utilJS.js
+//
+// This file contains some utility functions for non-typed
+// scenarios.
+//
 import * as Constants from '~/composables/constants'
-// import { Chart } from "chart.js/auto";
 
 export default {
-  sleep(ms = 500) {
-    return new Promise(resolve => setTimeout(resolve, ms))
-  },
-
   validateResponse(response) {
     // wrong response format
     const noSuccessKey = !('success' in response.data)
@@ -57,75 +57,5 @@ export default {
     })
 
     return statsData
-  },
-
-  generateChartConfig(title, array, numOrPercent = 'NUM') {
-    let scaleOptions
-    if (numOrPercent === 'NUM') {
-      scaleOptions = {
-        x: {
-          display: false,
-        },
-        y: {
-          beginAtZero: true,
-          grid: {
-            tickLength: 2,
-          },
-          ticks: {
-            precision: 0,
-          },
-        },
-      }
-    }
-    else {
-      scaleOptions = {
-        x: {
-          display: false,
-        },
-        y: {
-          beginAtZero: true,
-          suggestedMax: 1,
-          grid: {
-            tickLength: 2,
-          },
-          ticks: {
-            stepSize: 0.25,
-            callback: (value) => {
-              return `${(value * 100).toFixed(0)}%` // convert it to percentage
-            },
-          },
-        },
-      }
-    }
-
-    const config = {
-      type: 'line',
-      data: {
-        labels: array,
-        datasets: [
-          {
-            label: '',
-            data: array,
-            borderColor: '#82E0AA',
-            borderWidth: 2,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          title: {
-            display: true,
-            text: title,
-          },
-          legend: {
-            display: false,
-          },
-        },
-        scales: scaleOptions,
-      },
-    }
-
-    return config
   },
 }

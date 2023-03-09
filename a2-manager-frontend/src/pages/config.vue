@@ -22,20 +22,20 @@ const handleGetCacheConfigs = async () => {
   // fetch data
   try {
     const response = await api.getCacheConfigs()
-    utils.validateResponse(response)
+    utilsJS.validateResponse(response)
     // handle success
     cacheConfigs.replacementPolicy = response.data.replacement_policy
     cacheConfigs.maxSize
           = response.data.max_size / (1024 ** 2) // convert to MB
     blinkToast(
-      TOAST_ID_SUCCESS_GET_CACHE_CONFIGS,
+      TOAST_ID__GET_CACHE_CONFIGS__SUCCESS,
       'info',
-      MSG_SUCCESS_GET_CACHE_CONFIGS)
+      TOAST_MSG__GET_CACHE_CONFIGS__SUCCESS)
   }
   catch (errMsg) {
     // handle error
     blinkToast(
-      TOAST_ID_ERROR_GET_CACHE_CONFIGS,
+      TOAST_ID__GET_CACHE_CONFIGS__ERROR,
       'error',
       errMsg as string)
   }
@@ -50,20 +50,20 @@ const handlePutCacheConfigs = async () => {
       max_size: cacheConfigs.maxSize * (1024 ** 2), // convert to bytes
     }
     const response = await api.putCacheConfigs(data)
-    utils.validateResponse(response)
+    utilsJS.validateResponse(response)
     // handle success
     cacheConfigs.replacementPolicy = response.data.replacement_policy
     cacheConfigs.maxSize
           = response.data.max_size / (1024 ** 2) // convert to MB
     blinkToast(
-      TOAST_ID_SUCCESS_PUT_CACHE_CONFIGS,
+      TOAST_ID__PUT_CACHE_CONFIGS__SUCCESS,
       'success',
-      MSG_SUCCESS_PUT_CACHE_CONFIGS)
+      TOAST_MSG__PUT_CACHE_CONFIGS__SUCCESS)
   }
   catch (errMsg) {
     // handle error
     blinkToast(
-      TOAST_ID_ERROR_PUT_CACHE_CONFIGS,
+      TOAST_ID__PUT_CACHE_CONFIGS__ERROR,
       'error',
       errMsg as string)
   }
@@ -74,23 +74,23 @@ const handleGetCacheKeys = async (isReload = false) => {
   // fetch data
   try {
     const response = await api.getCacheKeys()
-    utils.validateResponse(response)
+    utilsJS.validateResponse(response)
     // handle success
     cacheKeys.value = response.data.keys
     await utils.sleep(150)
     isDownloading.value = false
     if (!isReload) {
       blinkToast(
-        TOAST_ID_SUCCESS_GET_CACHE_KEYS,
+        TOAST_ID__GET_CACHE_KEYS__SUCCESS,
         'info',
-        MSG_SUCCESS_GET_CACHE_KEYS)
+        TOAST_MSG__GET_CACHE_KEYS__SUCCESS)
     }
   }
   catch (errMsg) {
     // handle error
     cacheKeys.value = []
     blinkToast(
-      TOAST_ID_ERROR_GET_CACHE_KEYS,
+      TOAST_ID__GET_CACHE_KEYS__ERROR,
       'error',
       errMsg as string)
     isDownloading.value = false
@@ -101,18 +101,18 @@ const handleDeleteCache = async () => {
   // fetch data
   try {
     const response = await api.postClearCache()
-    utils.validateResponse(response)
+    utilsJS.validateResponse(response)
     // handle success
     blinkToast(
-      TOAST_ID_SUCCESS_CLEAR_CACHE,
+      TOAST_ID__CLEAR_CACHE__SUCCESS,
       'success',
-      MSG_SUCCESS_CLEAR_CACHE)
+      TOAST_MSG__CLEAR_CACHE__SUCCESS)
     await handleGetCacheKeys(true)
   }
   catch (errMsg) {
     // handle error
     blinkToast(
-      TOAST_ID_ERROR_CLEAR_CACHE,
+      TOAST_ID__CLEAR_CACHE__ERROR,
       'error',
       errMsg as string)
   }
@@ -126,7 +126,7 @@ onMounted(() => {
 
 <template>
   <!-- Page Title -->
-  <h1 my-title-style>
+  <h1 my-title>
     Config
   </h1>
 
@@ -135,6 +135,9 @@ onMounted(() => {
     <!-- Input Group -->
     <TheInputGroup
       w-xs
+      px-8 py-6
+      my-bg-secondary
+      my-card my-shadow-light
     >
       <!-- Replacement Policy -->
       <TheLabeledInput
@@ -147,15 +150,15 @@ onMounted(() => {
           v-model="cacheConfigs.replacementPolicy"
           w-full p-2.5
           text-sm my-text-color-primary
-          my-input-style
+          my-input
         >
           <option disabled>
             Choose one of the following:
           </option>
-          <option value="random">
+          <option value="LRU">
             Least Recently Used
           </option>
-          <option value="LRU">
+          <option value="random">
             Random Replacement
           </option>
         </select>
@@ -175,13 +178,13 @@ onMounted(() => {
             type="number"
             flex-grow-1
             my-border rounded-r-none
-            my-input-style
+            my-input
             placeholder="Enter a number"
           >
           <span
             inline-flex items-center px-3
             my-border rounded-l-none border-l-0
-            my-input-style
+            my-input
           >
             MB
           </span>
@@ -198,10 +201,10 @@ onMounted(() => {
       <!-- Modal: Put Cache Configs -->
       <TheModal
         v-model:is-shown="isModalPutCacheConfigsShown"
-        :modal-id="MODAL_ID_PUT_CACHE_CONFIGS"
+        :modal-id="MODAL_ID__PUT_CACHE_CONFIGS"
         modal-type="submit"
-        :modal-title="MODAL_TITLE_PUT_CACHE_CONFIGS"
-        :modal-description="MODAL_DESCRIPTION_PUT_CACHE_CONFIGS(cacheConfigs.replacementPolicy, cacheConfigs.maxSize)"
+        :modal-title="MODAL_TITLE__PUT_CACHE_CONFIGS"
+        :modal-description="MODAL_DESCRIPTION__PUT_CACHE_CONFIGS(cacheConfigs.replacementPolicy, cacheConfigs.maxSize)"
         :action="handlePutCacheConfigs"
       />
     </TheInputGroup>
@@ -212,13 +215,13 @@ onMounted(() => {
     <!-- Table: All Keys -->
     <TheKeyTable
       :data="cacheKeys"
-      :table-title="TABLE_TITLE_CACHE_KEYS"
-      :table-description="TABLE_DESCRIPTION_CACHE_KEYS"
-      :delete-button-text="TABLE_DELETE_BUTTON_TEXT_CACHE_KEYS"
+      :table-title="TABLE_TITLE__CACHE_KEYS"
+      :table-description="TABLE_DESCRIPTION__CACHE_KEYS"
+      :delete-button-text="TABLE_DELETE_BUTTON_TEXT__CACHE_KEYS"
       :delete-button-action="handleDeleteCache"
-      :modal-id="MODAL_ID_CLEAR_CACHE"
-      :modal-title="MODAL_TITLE_CLEAR_CACHE"
-      :modal-description="MODAL_DESCRIPTION_CLEAR_CACHE"
+      :modal-id="MODAL_ID__CLEAR_CACHE"
+      :modal-title="MODAL_TITLE__CLEAR_CACHE"
+      :modal-description="MODAL_DESCRIPTION__CLEAR_CACHE"
       :class="{ 'blur-sm grayscale': isDownloading }"
       transition-all duration-300
     />
