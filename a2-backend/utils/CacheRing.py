@@ -62,7 +62,11 @@ class CacheRing:
     def hash2partition(self, hash):
         return hash >> 124
     
+    def partition2server(self, partition):
+        return self.partitions[partition]
     
+    def key2server(self, key):
+        return self.partition2server(self.hash2partition(self.key2hash(key)))
 """
 test code
 """   
