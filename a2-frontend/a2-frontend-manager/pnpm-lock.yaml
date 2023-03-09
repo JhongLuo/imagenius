@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@antfu/eslint-config': ^0.35.3
+  '@antfu/ni': ^0.20.0
   '@headlessui/vue': ^1.7.12
   '@iconify-json/carbon': ^1.1.16
   '@types/node': ^18.14.6
@@ -45,6 +46,7 @@ dependencies:
 
 devDependencies:
   '@antfu/eslint-config': 0.35.3_ycpbpc6yetojsgtrx3mwntkhsu
+  '@antfu/ni': 0.20.0
   '@headlessui/vue': 1.7.12_vue@3.2.47
   '@iconify-json/carbon': 1.1.16
   '@types/node': 18.14.6
@@ -191,6 +193,11 @@ packages:
 
   /@antfu/ni/0.18.8:
     resolution: {integrity: sha512-0m++AudwQq+wWAz/Ax7g+sh/wFW51HHQ6BtPLsuTAsFIzWB/bv/0COwZE7BRS+u0nqMb6Ks6nlk6cY1TpPDwHg==}
+    hasBin: true
+    dev: true
+
+  /@antfu/ni/0.20.0:
+    resolution: {integrity: sha512-mBgAuq2b0daSA/14LMyjEjaInD7/Zd7KVXZge7bQPKmtQJFqy9/pWBml6DMkMreeHQEomMtIbbeqReNJ/74kjA==}
     hasBin: true
     dev: true
 

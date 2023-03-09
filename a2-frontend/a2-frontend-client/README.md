@@ -1,8 +1,46 @@
-# A2 Manager Web Frontend
+# A2 Client Web Frontend
 
-This is the web frontend for the A2 Manager Console.
+Web frontend for the A2 Client Application.
+
+Supports uploading and downloading image files.
 
 It is built on top of Vue 3 Composition API with Vite and UnoCSS.
+
+## Usage
+
+Run the following commands to start the development server:
+
+```bash
+npm install   # if using npm
+pnpm install  # if using pnpm
+```
+
+and then
+
+```bash
+npm run dev   # or
+pnpm run dev
+```
+
+Or, if having [`ni`](https://www.npmjs.com/package/@antfu/ni) installed, run the following command:
+
+```bash
+ni
+```
+
+and
+
+```bash
+nr dev
+```
+
+### Default Port
+
+The default port is `5175`. You can change it by passing the `--port` flag to the `dev` script.
+
+```bash
+nr dev --port 2333
+```
 
 ## Features
 
