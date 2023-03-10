@@ -2,12 +2,19 @@ from flask import Flask
 from . import Cache
 from apscheduler.schedulers.background import BackgroundScheduler
 import time
-
+import datetime
 def start_scheduler(memcache):
     def syncStats(memcache):
-        memcache.syncDB()
+        last_sync_time = datetime.datetime.utcnow()
+        while True:
+            if memcache.is_started and datetime.datetime.utcnow() - last_sync_time > datetime.timedelta(seconds=5):
+                print("syncing...")
+                memcache.syncDB()
+                last_sync_time = datetime.datetime.utcnow()
+                print("synced")
+            time.sleep(1)
     scheduler = BackgroundScheduler()
-    scheduler.add_job(func=syncStats, trigger='interval', args=(memcache,), seconds=5)
+    scheduler.add_job(func=syncStats, args=(memcache,))
     scheduler.start()
 
 webapp = Flask(__name__)

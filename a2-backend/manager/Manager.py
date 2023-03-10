@@ -1,6 +1,10 @@
 from utils import rds, s3, cloudwatch, cachering, memcachop
 from utils.url import id2url, scaler_url
+import datetime
+import time
 import requests
+from collections import deque
+
 class Manager:
     def __init__(self) -> None:
         self.watcher = cloudwatch.Watcher()
@@ -10,7 +14,13 @@ class Manager:
         self.shrink_ration = 1
         self.max_missed_rate = 1
         self.min_missed_rate = 0
-    
+        self.last_record_time = datetime.datetime.utcnow()
+        self.records = deque(maxlen=60)
+        # init memcache
+        for i in range(8):
+            memcachop.set_id(id2url(i), i)
+        memcachop.start(id2url(0))
+        
     def key2url(self, key):
         return id2url(self.ring.key2server(key))
         
@@ -148,7 +158,7 @@ class Manager:
                 memcachop.clear_cache(i)
     
     def get_stats(self):
-        pass
+        return list(self.records)
     
     def get_replacement_policy(self):
         return rds.get_replacement_policy()
@@ -158,3 +168,33 @@ class Manager:
     
     def is_manual_mode(self):
         return not rds.get_autoscaler_status()
+    
+    def get_cache_items_len(self):
+        total = 0
+        for i in range(8):
+            if rds.get_memcache_status(i):
+                total += memcachop.get_len(i)
+        return total
+    
+    def get_cache_items_size(self):
+        total = 0
+        for i in range(8):
+            if rds.get_memcache_status(i):
+                total += memcachop.get_bytes(i)
+        return total
+    
+    def record(self):
+        while True:
+            if datetime.datetime.utcnow() - self.last_record_time > datetime.timedelta(seconds=60):
+                self.last_record_time = datetime.datetime.utcnow()
+                record = {
+                    'timestamp' : self.last_record_time,
+                    'miss_rate' : self.watcher.get_missed_rate(),
+                    'hit_rate' : (1 - self.watcher.get_missed_rate()),
+                    'nodes_num' : self.get_num_nodes(),
+                    'items_len' : self.get_cache_items_len(),
+                    'items_bytes' : int(float(self.get_cache_items_size()) / 1024 / 1024),
+                    'requests_count' : self.watcher.get_request_count(),
+                }
+                self.records.append(record)
+            time.sleep(1)
