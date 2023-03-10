@@ -7,8 +7,14 @@ const api = useAPIStore()
 const { toastsArray, blinkToast } = useToasts()
 
 const cacheConfigs = reactive({
-  replacementPolicy: '',
-  maxSize: 0,
+  mode: 'auto',
+  numNodes: 1,
+  cacheSize: 0,
+  policy: 'LRU',
+  expRatio: 2,
+  shrinkRatio: 0.5,
+  maxMiss: 0,
+  minMiss: 0,
 })
 const cacheKeys = ref([])
 const isDownloading = ref(false)
@@ -21,12 +27,17 @@ const showModalPutCacheConfigs = () => {
 const handleGetCacheConfigs = async () => {
   // fetch data
   try {
-    const response = await api.getCacheConfigs()
+    const response = await api.getCacheConfigsNew()
     utilsJS.validateResponse(response)
     // handle success
-    cacheConfigs.replacementPolicy = response.data.replacement_policy
-    cacheConfigs.maxSize
-          = response.data.max_size / (1024 ** 2) // convert to MB
+    cacheConfigs.mode = response.data.mode[0]
+    cacheConfigs.numNodes = response.data.numNodes[0]
+    cacheConfigs.cacheSize = response.data.cacheSize[0]
+    cacheConfigs.policy = response.data.policy[0]
+    cacheConfigs.expRatio = response.data.expRatio[0]
+    cacheConfigs.shrinkRatio = response.data.shrinkRatio[0]
+    cacheConfigs.maxMiss = response.data.maxMiss[0]
+    cacheConfigs.minMiss = response.data.minMiss[0]
     blinkToast(
       TOAST_ID__GET_CACHE_CONFIGS__SUCCESS,
       'info',
@@ -46,15 +57,19 @@ const handlePutCacheConfigs = async () => {
   try {
     // construct request data
     const data = {
-      replacement_policy: cacheConfigs.replacementPolicy,
-      max_size: cacheConfigs.maxSize * (1024 ** 2), // convert to bytes
-    }
-    const response = await api.putCacheConfigs(data)
+      mode: cacheConfigs.mode,
+      numNodes: cacheConfigs.numNodes,
+      cacheSize: cacheConfigs.cacheSize,
+      policy: cacheConfigs.policy,
+      expRatio: cacheConfigs.expRatio,
+      shrinkRatio: cacheConfigs.shrinkRatio,
+      maxMiss: cacheConfigs.maxMiss,
+      minMiss: cacheConfigs.minMiss,
+    } as CacheConfigOptions
+    const response = await api.putCacheConfigsNew(data)
     utilsJS.validateResponse(response)
     // handle success
-    cacheConfigs.replacementPolicy = response.data.replacement_policy
-    cacheConfigs.maxSize
-          = response.data.max_size / (1024 ** 2) // convert to MB
+    console.warn(response.data)
     blinkToast(
       TOAST_ID__PUT_CACHE_CONFIGS__SUCCESS,
       'success',
@@ -139,6 +154,85 @@ onMounted(() => {
       my-bg-secondary
       my-card my-shadow-light
     >
+      <!-- Mode: manual / auto -->
+      <TheLabeledInput
+        input-id="input-manual-auto-mode"
+        label-text="Mode"
+        mb-3
+      >
+        <select
+          id="input-manual-auto-mode"
+          v-model="cacheConfigs.mode"
+          w-full p-2.5
+          text-sm my-text-color-primary
+          my-input
+        >
+          <option disabled>
+            Choose one of the following:
+          </option>
+          <option value="manual">
+            Manual
+          </option>
+          <option value="auto">
+            Auto
+          </option>
+        </select>
+      </TheLabeledInput>
+
+      <!-- Num Nodes: Manual Change -->
+      <TheLabeledInput
+        input-id="input-num-nodes"
+        label-text="# of Nodes"
+      >
+        <input
+          id="input-num-nodes"
+          v-model="cacheConfigs.numNodes"
+          type="number"
+          min="1"
+          max="8"
+          step="1"
+          class="w-61.8%"
+          flex-grow-1
+          my-border
+          my-input disabled:pointer-events-none
+          placeholder="Enter a number"
+          onkeydown="return false"
+          :disabled="cacheConfigs.mode !== 'manual'"
+        >
+        <TheInputHelperText
+          helper-text="Manual mode only, between 1 and 8"
+        />
+      </TheLabeledInput>
+
+      <!-- Max Cache Size -->
+      <TheLabeledInput
+        input-id="input-max-cache-size"
+        label-text="Max Cache Size"
+      >
+        <div
+          flex w-full
+        >
+          <input
+            id="input-max-cache-size"
+            v-model="cacheConfigs.cacheSize"
+            type="number"
+            min="0"
+            oninput="this.value|=0"
+            flex-grow-1
+            my-border rounded-r-none
+            my-input
+            placeholder="Enter a number"
+          >
+          <span
+            inline-flex items-center px-3
+            my-border rounded-l-none border-l-0
+            my-input select-none
+          >
+            MB
+          </span>
+        </div>
+      </TheLabeledInput>
+
       <!-- Replacement Policy -->
       <TheLabeledInput
         input-id="input-replacement-policy"
@@ -147,7 +241,7 @@ onMounted(() => {
       >
         <select
           id="input-replacement-policy"
-          v-model="cacheConfigs.replacementPolicy"
+          v-model="cacheConfigs.policy"
           w-full p-2.5
           text-sm my-text-color-primary
           my-input
@@ -164,30 +258,132 @@ onMounted(() => {
         </select>
       </TheLabeledInput>
 
-      <!-- Max Cache Size -->
+      <!-- Expand / Shrink Ratio -->
       <TheLabeledInput
-        input-id="input-max-cache-size"
-        label-text="Max Cache Size"
+        input-id="input-ratio"
+        label-text="Expand/Shrink Ratio"
       >
+        <!-- row -->
         <div
-          flex w-full
+          flex justify-between w-full
         >
-          <input
-            id="input-max-cache-size"
-            v-model="cacheConfigs.maxSize"
-            type="number"
-            flex-grow-1
-            my-border rounded-r-none
-            my-input
-            placeholder="Enter a number"
+          <!-- col: expRatio -->
+          <div
+            class="w-45%"
+            flex flex-col items-center
           >
-          <span
-            inline-flex items-center px-3
-            my-border rounded-l-none border-l-0
-            my-input select-none
+            <input
+              id="input-ratio-expand"
+              v-model="cacheConfigs.expRatio"
+              type="number"
+              min="0"
+              oninput="this.value = this.value < 1 ? 1 : this.value"
+              w-full
+              my-border
+              my-input text-center
+              placeholder="Enter a number"
+              :disabled="cacheConfigs.mode !== 'auto'"
+            >
+            <TheInputHelperText
+              helper-text="expand ratio > 1"
+            />
+          </div>
+          <!-- col: shrinkRatio -->
+          <div
+            class="w-45%"
+            flex flex-col items-center
           >
-            MB
-          </span>
+            <input
+              id="input-ratio-shrink"
+              v-model="cacheConfigs.shrinkRatio"
+              type="number"
+              min="0"
+              oninput="this.value|=0"
+              w-full
+              my-border
+              my-input text-center
+              placeholder="Enter a number"
+              :disabled="cacheConfigs.mode !== 'auto'"
+            >
+            <TheInputHelperText
+              helper-text="1 > shrink ratio > 0"
+            />
+          </div>
+        </div>
+      </TheLabeledInput>
+
+      <!-- Max / Min Miss -->
+      <TheLabeledInput
+        input-id="input-miss-rate"
+        label-text="Max/Min Miss Rate"
+      >
+        <!-- row -->
+        <div
+          flex justify-between w-full
+        >
+          <!-- col: maxMiss -->
+          <div
+            class="w-45%"
+            flex flex-col items-center
+          >
+            <div
+              flex w-full
+            >
+              <input
+                id="input-miss-rate-max"
+                v-model="cacheConfigs.maxMiss"
+                type="number"
+                oninput="this.value = this.value > 100 ? 100 : Math.floor(this.value)"
+                w-full
+                my-border rounded-r-none
+                my-input text-center
+                placeholder="Enter a number"
+                :disabled="cacheConfigs.mode !== 'auto'"
+              >
+              <span
+                inline-flex items-center px-3
+                my-border rounded-l-none border-l-0
+                my-input select-none
+              >
+                %
+              </span>
+            </div>
+
+            <TheInputHelperText
+              helper-text="integers only"
+            />
+          </div>
+          <!-- col: minMiss -->
+          <div
+            class="w-45%"
+            flex flex-col items-center
+          >
+            <div
+              flex w-full
+            >
+              <input
+                id="input-miss-rate-min"
+                v-model="cacheConfigs.minMiss"
+                type="number"
+                oninput="this.value = this.value > 100 ? 100 : Math.floor(this.value)"
+                w-full
+                my-border rounded-r-none
+                my-input text-center
+                placeholder="Enter a number"
+                :disabled="cacheConfigs.mode !== 'auto'"
+              >
+              <span
+                inline-flex items-center px-3
+                my-border rounded-l-none border-l-0
+                my-input select-none
+              >
+                %
+              </span>
+            </div>
+            <TheInputHelperText
+              helper-text="integers only"
+            />
+          </div>
         </div>
       </TheLabeledInput>
 
@@ -204,7 +400,16 @@ onMounted(() => {
         modal-type="submit"
         :modal-id="MODAL_ID__PUT_CACHE_CONFIGS"
         :modal-title="MODAL_TITLE__PUT_CACHE_CONFIGS"
-        :modal-description="MODAL_DESCRIPTION__PUT_CACHE_CONFIGS(cacheConfigs.replacementPolicy, cacheConfigs.maxSize)"
+        :modal-description="MODAL_DESCRIPTION__PUT_CACHE_CONFIGS({
+          mode: cacheConfigs.mode,
+          numNodes: cacheConfigs.numNodes,
+          cacheSize: cacheConfigs.cacheSize,
+          policy: cacheConfigs.policy,
+          expRatio: cacheConfigs.expRatio,
+          shrinkRatio: cacheConfigs.shrinkRatio,
+          maxMiss: cacheConfigs.maxMiss,
+          minMiss: cacheConfigs.minMiss,
+        } as CacheConfigOptions)"
         :action="handlePutCacheConfigs"
       />
     </TheInputGroup>
@@ -232,3 +437,27 @@ onMounted(() => {
     :toasts-array="toastsArray"
   />
 </template>
+
+<style scoped>
+#input-max-cache-size::-webkit-outer-spin-button,
+#input-ratio-expand::-webkit-outer-spin-button,
+#input-ratio-shrink::-webkit-outer-spin-button,
+#input-max-cache-size::-webkit-inner-spin-button,
+#input-ratio-expand::-webkit-inner-spin-button,
+#input-ratio-shrink::-webkit-inner-spin-button,
+#input-miss-rate-max::-webkit-inner-spin-button,
+#input-miss-rate-min::-webkit-inner-spin-button
+{
+  -webkit-appearance: none;
+    margin: 0;
+}
+
+#input-max-cache-size,
+#input-ratio-expand,
+#input-ratio-shrink,
+#input-miss-rate-max,
+#input-miss-rate-min
+{
+  -moz-appearance: textfield;
+}
+</style>

@@ -40,7 +40,30 @@ export const MODAL_TITLE__PUT_CACHE_CONFIGS = 'Update Cache Configurations'
 export const MODAL_TITLE__CLEAR_CACHE = 'Clear Cache Data'
 
 export const MODAL_DESCRIPTION__DELETE_ALL = 'Are you sure you want to delete all keys and their associated images? All data will be permanently removed. This action cannot be undone.'
-export const MODAL_DESCRIPTION__PUT_CACHE_CONFIGS = (replacementPolicy: string, maxSize: number) => `The new configurations will be: \nReplacement Policy: ${replacementPolicy}, \nMax Cache Size = ${maxSize} MB.`
+export const MODAL_DESCRIPTION__PUT_CACHE_CONFIGS = (data: CacheConfigOptions) => {
+  return data.mode === 'manual'
+    // sd
+    ? `The following configurations will be set:
+
+    mode: ${data.mode},
+    num of nodes: ${data.numNodes},
+    max cache size: ${data.cacheSize} MB,
+    replacement policy: ${data.policy}.
+
+    Proceed to submit?`
+    : `The following configurations will be set:
+
+    mode: ${data.mode},
+    max cache size: ${data.cacheSize} MB,
+    replacement policy: ${data.policy}.
+    expand ratio: ${data.expRatio},
+    shrink ratio: ${data.shrinkRatio},
+    max miss: ${data.maxMiss},
+    min miss: ${data.minMiss}.
+
+    Proceed to submit?`
+  // return `The new configurations will be: \nReplacement Policy: ${replacementPolicy}, \nMax Cache Size = ${maxSize} MB.`
+}
 export const MODAL_DESCRIPTION__CLEAR_CACHE = 'Are you sure you want to erase the cache data? \nData will be permanently removed, and the configuration will be reset. This action cannot be undone.'
 
 // keys table: titles + descriptions + delete button texts

@@ -25,12 +25,10 @@ defineOptions({
       :aria-describedby="helperTextId"
       v-bind="$attrs"
     />
-    <p
+    <TheInputHelperText
       v-if="helperText"
-      :id="helperTextId"
-      my-helper-text
-    >
-      {{ helperText }}
-    </p>
+      :helper-text-id="helperTextId"
+      :helper-text="helperText"
+    />
   </TheLabeledInput>
 </template>

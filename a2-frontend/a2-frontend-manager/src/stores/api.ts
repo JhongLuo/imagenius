@@ -178,41 +178,32 @@ export const useAPIStore = defineStore('api', () => {
 
   const getNumNodes = () => baseAxios.value.post('/api/getNumNodes')
 
-  const getRate = (rate: 'hit' | 'miss') => {
+  const getRate = (rate: string) => {
     const pathStr = '/api/getRate'
     const queryStr = `?rate=${rate}`
     const fullPathStr = pathStr + queryStr
     return baseAxios.value.post(fullPathStr)
   }
 
-  const putCacheConfigsNew = (
-    mode: 'manual' | 'auto',
-    numNodes: number,
-    cacheSize: number,
-    policy: 'LRU' | 'RR',
-    expRatio: number,
-    shrinkRatio: number,
-    maxMiss: number,
-    minMiss: number,
-  ) => {
+  const putCacheConfigsNew = (data: CacheConfigOptions) => {
     const pathStr = '/api/configure_cache'
     const queryStr = '?'
-    if (mode !== undefined)
-      queryStr.concat(`mode=${mode}&`)
-    if (numNodes !== undefined)
-      queryStr.concat(`numNodes=${numNodes}&`)
-    if (cacheSize !== undefined)
-      queryStr.concat(`cacheSize=${cacheSize}&`)
-    if (policy !== undefined)
-      queryStr.concat(`policy=${policy}&`)
-    if (expRatio !== undefined)
-      queryStr.concat(`expRatio=${expRatio}&`)
-    if (shrinkRatio !== undefined)
-      queryStr.concat(`shrinkRatio=${shrinkRatio}&`)
-    if (maxMiss !== undefined)
-      queryStr.concat(`maxMiss=${maxMiss}&`)
-    if (minMiss !== undefined)
-      queryStr.concat(`minMiss=${minMiss}`)
+    if (data.mode !== undefined)
+      queryStr.concat(`mode=${data.mode}&`)
+    if (data.numNodes !== undefined)
+      queryStr.concat(`numNodes=${data.numNodes}&`)
+    if (data.cacheSize !== undefined)
+      queryStr.concat(`cacheSize=${data.cacheSize}&`)
+    if (data.policy !== undefined)
+      queryStr.concat(`policy=${data.policy}&`)
+    if (data.expRatio !== undefined)
+      queryStr.concat(`expRatio=${data.expRatio}&`)
+    if (data.shrinkRatio !== undefined)
+      queryStr.concat(`shrinkRatio=${data.shrinkRatio}&`)
+    if (data.maxMiss !== undefined)
+      queryStr.concat(`maxMiss=${data.maxMiss}&`)
+    if (data.minMiss !== undefined)
+      queryStr.concat(`minMiss=${data.minMiss}`)
 
     const fullPathStr = pathStr + queryStr
     return baseAxios.value.post(fullPathStr)

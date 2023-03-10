@@ -22,6 +22,17 @@ export interface StatsData {
   miss_rates: number[]
 }
 
+export interface CacheConfigOptions {
+  mode: string
+  numNodes: number
+  cacheSize: number
+  policy: string
+  expRatio: number
+  shrinkRatio: number
+  maxMiss: number
+  minMiss: number
+}
+
 export default {
   sleep(ms = 500) {
     return new Promise(resolve => setTimeout(resolve, ms))

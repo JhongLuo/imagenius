@@ -67,7 +67,7 @@ export default defineConfig({
         },
         {
           from: '~/composables/utils',
-          imports: ['StatsData', 'RawStatsData'],
+          imports: ['StatsData', 'RawStatsData', 'CacheConfigOptions'],
           type: true,
         },
       ],
