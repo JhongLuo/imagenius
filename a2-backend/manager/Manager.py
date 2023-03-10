@@ -4,6 +4,7 @@ import datetime
 import time
 import requests
 from collections import deque
+import threading
 
 class Manager:
     def __init__(self) -> None:
@@ -15,11 +16,14 @@ class Manager:
         self.max_missed_rate = 1
         self.min_missed_rate = 0
         self.last_record_time = datetime.datetime.utcnow()
+        self.record_lock = threading.Lock()
         self.records = deque(maxlen=60)
+        print('Initiating manager ...')
         # init memcache
         for i in range(8):
             memcachop.set_id(id2url(i), i)
         memcachop.start(id2url(0))
+        self.delete_all_images()
         
     def key2url(self, key):
         return id2url(self.ring.key2server(key))
@@ -32,6 +36,8 @@ class Manager:
         for i in range(8):
             if rds.get_memcache_status(i):
                 total += 1
+            else:
+                break
         return total
     
     def start_scaler(self):
@@ -121,9 +127,14 @@ class Manager:
         self.config_scaler()
         
     def delete_all_images(self):
+        print('deleting all images ...')
         rds.delete_keys()
+        print('    rds cleared')
         self.clear_cache()
+        print('    cache cleared')
         self.s3.clear_images()
+        print('    s3 cleared')
+        print('all images deleted')
     
     def put_image(self, key, content):
         memcachop.delete(self.key2url(key), key)
@@ -149,16 +160,22 @@ class Manager:
         all_keys = []
         for i in range(8):
             if rds.get_memcache_status(i):
-                all_keys += memcachop.get_keys(i)
+                all_keys += memcachop.get_keys(id2url(i))
+            else:
+                break
         return all_keys
     
     def clear_cache(self):
         for i in range(8):
             if rds.get_memcache_status(i):
-                memcachop.clear_cache(i)
+                memcachop.clear_cache(id2url(i))
+            else:
+                break
     
     def get_stats(self):
-        return list(self.records)
+        with self.record_lock:
+            rtn = list(self.records)
+        return rtn
     
     def get_replacement_policy(self):
         return rds.get_replacement_policy()
@@ -173,14 +190,18 @@ class Manager:
         total = 0
         for i in range(8):
             if rds.get_memcache_status(i):
-                total += memcachop.get_len(i)
+                total += memcachop.get_len(id2url(i))
+            else:
+                break
         return total
     
     def get_cache_items_size(self):
         total = 0
         for i in range(8):
             if rds.get_memcache_status(i):
-                total += memcachop.get_bytes(i)
+                total += memcachop.get_bytes(id2url(i))
+            else:
+                break
         return total
     
     def record(self):
@@ -196,5 +217,6 @@ class Manager:
                     'items_bytes' : int(float(self.get_cache_items_size()) / 1024 / 1024),
                     'requests_count' : self.watcher.get_request_count(),
                 }
-                self.records.append(record)
+                with self.record_lock:
+                    self.records.append(record)
             time.sleep(1)

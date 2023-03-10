@@ -152,7 +152,7 @@ def get_len():
         })
     return jsonify({
         'success': 'true',
-        'length': len(memcache.get_len())
+        'length': memcache.get_len()
     })
     
 @webapp.route('/api/start', methods=['POST'])
@@ -181,8 +181,6 @@ def set_id():
             'success': 'false',
             'error': 'ID already set'
         })
-    print(request.get_json())
-    print(request.get_json()['id'])
     id = int(request.get_json()['id'])
     memcache.id = id
     return jsonify({

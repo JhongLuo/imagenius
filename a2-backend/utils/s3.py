@@ -29,7 +29,6 @@ class S3:
             for obj in objects:
                 self.client.delete_object(Bucket=self.bucketName, Key=obj['Key'])
             self.file_counter = 0
-            print(f"All files deleted successfully from '{self.bucketName}' bucket.")
         except Exception as e:
             print(f"Error deleting files from '{self.bucketName}' bucket: {e}")
 

@@ -8,10 +8,6 @@ import base64
 A1 Endpoints
 """
 
-@webapp.route('/api/key/<key_value>', methods=['POST'])
-def get_image_alt_post(key_value):
-    return retrieve(key_value)
-
 @webapp.route('/api/list_keys', methods=['GET'])
 def list_keys():
     try:
@@ -156,7 +152,7 @@ def get_rate():
         return jsonify({
             'success': "true",
             'rate': [rate],
-            'value': [value]
+            'value': [int(value)]
         })
     except Exception as e:
         return jsonify({
@@ -282,7 +278,9 @@ def upload():
             file = request.files.get('file')
         if not key or key == '' or not file:
             raise Exception('Invalid key or file')
-        content = base64.b64encode(file.read()).decode()
+        content = file
+        if type(file) != str:
+            content = base64.b64encode(file.read()).decode()
         man.put_image(key, content)
         return jsonify({
             'success': "true",
@@ -323,3 +321,7 @@ def retrieve(key_value):
                 "message": str(e)
                 }
         })
+  
+@webapp.route('/api/key/<key_value>', methods=['GET'])
+def get_image_alt_post(key_value):
+    return retrieve(key_value)

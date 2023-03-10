@@ -3,9 +3,9 @@ from utils.ReplacementPolicies import ReplacementPolicies
 from enum import Enum
 
 class StatsNames(Enum):
-    # total_requests = "total_requests"
-    # read_requests = "read_requests"
-    # missed_requests = "missed_requests"
+    total_requests = "total_requests"
+    read_requests = "read_requests"
+    missed_requests = "missed_requests"
     replacement_policy = "replacement_policy"
     max_size = "max_size"
         
@@ -137,9 +137,12 @@ def set_replacement_policy(cursor, policy):
 
 @cursor_operation
 def get_stat(cursor, name : StatsNames):
-    cursor.execute(f"SELECT value FROM stats WHERE name = '{name.value}'")
-    res = cursor.fetchone()
-    return int(res[0])
+    if name == StatsNames.max_size:
+        cursor.execute(f"SELECT value FROM stats WHERE name = '{name.value}'")
+        res = cursor.fetchone()
+        return int(res[0])
+    else:
+        raise Exception("Cannot get this stat")
 
 # @cursor_operation
 # def add_stat(cursor, name : StatsNames, value):

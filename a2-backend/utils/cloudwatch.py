@@ -26,7 +26,6 @@ class Watcher:
             Period=60,
             Statistics=["Sum"]
         )
-        print(response)
         if (len(response['Datapoints']) == 0):
             return 0
         return int(response['Datapoints'][0]['Sum'])

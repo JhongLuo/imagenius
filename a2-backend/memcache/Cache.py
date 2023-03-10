@@ -12,7 +12,6 @@ class Node:
         self.hash = hash
         self.value = value
         self.time = time
-        self.watcher = Watcher()
     @staticmethod
     def from_json(json):
         return Node(json['key'], json['value'], json['hash'], json['time'])
@@ -34,6 +33,7 @@ class Cache():
         self.bytes = 0
         self.policy = ReplacementPolicies.RANDOM
         self.writeLock = threading.Lock()
+        self.watcher = Watcher()
         # total requests >= read requests >= missed requests
         self.total_requests = 0
         self.read_requests = 0

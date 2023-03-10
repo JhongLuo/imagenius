@@ -38,14 +38,15 @@ def start(url):
     requests.post(url + '/start')
     
 def get_bytes(url):
-    return requests.get(url + '/bytes').json()['bytes']
+    return int(requests.get(url + '/bytes').json()['bytes'])
 
 def get_len(url):
-    return requests.get(url + '/len').json()['length']
+    return int(requests.get(url + '/length').json()['length'])
     
 def stop(url):
     requests.post(url + '/stop')
     
 def set_id(url, id):
+    print('setting id to memcache' + str(id))
     requests.post(url + '/id', json={'id': id})
     
