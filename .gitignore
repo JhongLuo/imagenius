@@ -1,25 +1,25 @@
-__pycache__/
-myenv/
-venv*/
-**.DS_Store
-*.pyc
+**/__pycache__/
+**/myenv/
+**/venv*/
+**/.DS_Store
+**/*.pyc
 
-instance/
+**/instance/
 
-.pytest_cache/
-.coverage
-htmlcov/
+**/.pytest_cache/
+**/.coverage
+**/htmlcov/
 
-*.local
+**/*.local
 **/build/
-*.egg-info/
+**/*.egg-info/
 
-images/
-*.log
+**/images/
+**/*.log
 
 # ignore IDE configs
-**.idea
-**.vscode
+**/.idea
+**/.vscode
 
 # ignore node.js pkgs
 **/node_modules
