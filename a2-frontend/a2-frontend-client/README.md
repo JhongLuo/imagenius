@@ -44,15 +44,13 @@ nr dev --port 2333
 
 ## Features
 
-- ⚡️ [Vue 3](https://github.com/vuejs/core) + [Vite 4](https://github.com/vitejs/vite) + [pnpm](https://pnpm.io/)
+- [Vue 3](https://github.com/vuejs/core) + [Vite 4](https://github.com/vitejs/vite) + [pnpm](https://pnpm.io/)
 
-- 🦾 [TypeScript](https://www.typescriptlang.org/)
+- [TypeScript](https://www.typescriptlang.org/)
 
-- 🗂 [File based routing](./src/pages) and [Components auto importing](./src/components)
+- [File based routing](./src/pages) and [Components auto importing](./src/components)
 
-- 🎨 [UnoCSS](https://github.com/antfu/unocss) - The instant on-demand atomic CSS engine.
-
-Inspired by [Vitesse Lite](https://github.com/antfu/vitesse-lite) from [@antfu](https://github.com/antfu/).
+- [UnoCSS](https://github.com/antfu/unocss) - The instant on-demand atomic CSS engine.
 
 ## Pre-packed
 
@@ -73,3 +71,7 @@ Inspired by [Vitesse Lite](https://github.com/antfu/vitesse-lite) from [@antfu](
 - [`unplugin-vue-components`](https://github.com/antfu/unplugin-vue-components) - components auto import
 - [`unplugin-vue-macros`](https://github.com/sxzz/unplugin-vue-macros) - Explore and extend more macros and syntax sugar to Vue.
 - [VueUse](https://github.com/antfu/vueuse) - collection of useful composition APIs
+
+## Acknowledgements
+
+Inspired by [Vitesse Lite](https://github.com/antfu/vitesse-lite) from [@antfu](https://github.com/antfu/).
