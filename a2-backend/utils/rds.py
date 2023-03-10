@@ -12,8 +12,8 @@ class StatsNames(Enum):
 database_name = "ece1779a2"
 
 config = {
-    "pool_name" : "group18a2_pool",
-    "pool_size" : 1,
+    # "pool_name" : "group18a2_pool",
+    # "pool_size" : 1,
     "user" : "root",
     "password" : "ece1779pass",
     "host" : "ece1779a2.cvtl8zx5dggi.us-east-1.rds.amazonaws.com",
@@ -41,8 +41,8 @@ def cursor_operation(func):
 def create_database():
     new_config = config.copy()
     new_config.pop("database")
-    new_config.pop("pool_size")
-    new_config.pop("pool_name")
+    # new_config.pop("pool_size")
+    # new_config.pop("pool_name")
     conn = mysql.connector.connect(**new_config)
     cursor = conn.cursor()
     cursor.execute(f"CREATE DATABASE IF NOT EXISTS {database_name}")
@@ -110,7 +110,6 @@ def get_autoscaler_status(cursor):
     cursor.execute(f"SELECT is_started FROM memcache WHERE id = 8")
     return bool(cursor.fetchone()[0])
 
-
 # stats operations
 
 @cursor_operation
@@ -149,12 +148,12 @@ def get_stat(cursor, name : StatsNames):
 #     else:
 #         raise Exception("Cannot add to this stat")
 
-# @cursor_operation
-# def set_stat(cursor, name : StatsNames, value):
-#     if name == StatsNames.max_size or name == StatsNames.replacement_policy:
-#         cursor.execute(f"UPDATE stats SET value = {str(value)} WHERE name = '{name.value}'")
-#     else:
-#         raise Exception("Cannot set this stat")
+@cursor_operation
+def set_stat(cursor, name : StatsNames, value):
+    if name == StatsNames.max_size:
+        cursor.execute(f"UPDATE stats SET value = {str(value)} WHERE name = '{name.value}'")
+    else:
+        raise Exception("Cannot set this stat")
     
 # image operations
 
@@ -177,7 +176,7 @@ def delete_key(cursor, keyword):
     cursor.execute("DELETE FROM images WHERE keyword = %s", (keyword,))
 
 @cursor_operation
-def key2path(cursor, keyword):
+def get_path(cursor, keyword):
     cursor.execute("SELECT path FROM images WHERE keyword = %s", (keyword,))
     res = cursor.fetchone()
     if res:

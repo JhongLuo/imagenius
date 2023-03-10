@@ -1,6 +1,6 @@
-class MemcacheConfig:
+class Config:
     # list of memcache servers
-    server2ip = [
+    memcache_ip = [
         ('localhost', 5010),
         ('localhost', 5011),
         ('localhost', 5012),
@@ -10,3 +10,5 @@ class MemcacheConfig:
         ('localhost', 5016),
         ('localhost', 5017),
     ]
+    # auto scaler ip
+    scaler_ip = ('localhost', 5002)

@@ -1,7 +1,6 @@
 import hashlib
-from utils import memcachop
-from utils import rds
-from utils.config import MemcacheConfig
+from utils import memcachop, rds
+from utils.url import id2url
 import time
 """
 return the hash value of key
@@ -9,9 +8,6 @@ return the hash value of key
 
 def key2hash(key : str) -> int:
     return int(hashlib.md5(key.encode('utf-8')).hexdigest(), 16)
-
-def id2url(id : int) -> str:
-    return memcachop.get_url(*MemcacheConfig.server2ip[id])
 
 class Instruction:
     def __init__(self, lower, upper, old_cache, new_cache) -> None:

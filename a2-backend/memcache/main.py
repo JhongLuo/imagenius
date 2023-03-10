@@ -81,15 +81,9 @@ def delete_key(key):
     memcache.total_requests += 1
     if memcache.has(key):
         memcache.delete(key)
-        return jsonify({
-            'success': 'true'
-        })
-    else:
-        return jsonify({
-            'success': 'false',
-            'error': 'Key not found'
-        })
-        
+    return jsonify({
+        'success': 'true'
+    })  
         
 @webapp.route('/api/range/<lower>/<upper>', methods=['GET'])
 def get_range(lower, upper):

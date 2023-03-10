@@ -141,8 +141,15 @@ def rds_test():
             print(get_memcache_status(i))
     
     memcache_status_test()
-           
-        
+     
+def s3_test():
+    from utils.s3 import S3
+    s3 = S3()
+    filename = s3.store_image("test.jpg")
+    print(s3.read_image(filename))
+    s3.client.put_object(Bucket=s3.bucketName, Key=filename, Body=b"test")
+    print(s3.read_image(filename))
+    
 if __name__ == "__main__":
     # watcher_test()
     # ring_test()
@@ -150,4 +157,5 @@ if __name__ == "__main__":
     # sched_test()
     # apscheduler_test()
     # rds_test()
+    s3_test()
     pass
