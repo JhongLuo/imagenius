@@ -146,6 +146,7 @@ def get_bytes():
 @webapp.route('/api/length', methods=['GET'])
 def get_len():
     if not memcache.is_started:
+        print(f'not started {id(memcache)}')
         return jsonify({
             'success': 'false',
             'error': 'Server Not started'
@@ -164,11 +165,6 @@ def start():
     
 @webapp.route('/api/stop', methods=['POST'])
 def stop():
-    if not memcache.is_started:
-        return jsonify({
-            'success': 'false',
-            'error': 'Server Not started'
-        })
     memcache.stop()
     return jsonify({
         'success': 'true'
@@ -176,11 +172,11 @@ def stop():
     
 @webapp.route('/api/id', methods=['POST'])
 def set_id():
-    if memcache.id != None:
-        return jsonify({
-            'success': 'false',
-            'error': 'ID already set'
-        })
+    # if memcache.id != None:
+    #     return jsonify({
+    #         'success': 'false',
+    #         'error': 'ID already set'
+    #     })
     id = int(request.get_json()['id'])
     memcache.id = id
     return jsonify({

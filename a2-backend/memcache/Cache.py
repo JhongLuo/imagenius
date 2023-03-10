@@ -44,6 +44,7 @@ class Cache():
         return time.time()
     
     def start(self):
+        print(f'this instance is started {id(self)}')
         self.is_started = True
         set_memcache_status(self.id, True)
         
@@ -58,13 +59,13 @@ class Cache():
         self.set_policy(get_replacement_policy())
         # add stats to DB
         if self.total_requests:
-            self.watcher.add_stat(StatsNames.total_requests, self.total_requests)
+            self.watcher.put_metric(StatsNames.total_requests, self.total_requests)
             self.total_requests = 0
         if self.read_requests:
-            self.watcher.add_stat(StatsNames.read_requests, self.read_requests)
+            self.watcher.put_metric(StatsNames.read_requests, self.read_requests)
             self.read_requests = 0
         if self.missed_requests:
-            self.watcher.add_stat(StatsNames.missed_requests, self.missed_requests)
+            self.watcher.put_metric(StatsNames.missed_requests, self.missed_requests)
             self.missed_requests = 0
 
     def _pop(self):

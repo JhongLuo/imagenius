@@ -1,7 +1,7 @@
 import mysql.connector
 from utils.ReplacementPolicies import ReplacementPolicies
 from enum import Enum
-
+from utils.config import Config
 class StatsNames(Enum):
     total_requests = "total_requests"
     read_requests = "read_requests"
@@ -14,9 +14,9 @@ database_name = "ece1779a2"
 config = {
     # "pool_name" : "group18a2_pool",
     # "pool_size" : 1,
-    "user" : "root",
-    "password" : "ece1779pass",
-    "host" : "ece1779a2.cvtl8zx5dggi.us-east-1.rds.amazonaws.com",
+    "user" : Config.rds_user,
+    "password" : Config.rds_password,
+    "host" : Config.rds_ip,
     "database" : database_name,
 }
 
@@ -78,9 +78,21 @@ def create_tables(cursor):
 # memcache status operations
 
 @cursor_operation
-def reset_memcache_status(cursor):
+def reset_memcache_status(cursor, status=False):
+    if status:
+        status = "TRUE"
+    else:
+        status = "FALSE"
     for i in range(8):
-        cursor.execute(f"INSERT INTO memcache (id, is_started) VALUES ({i}, FALSE) ON DUPLICATE KEY UPDATE is_started = FALSE")
+        cursor.execute(f"INSERT INTO memcache (id, is_started) VALUES ({i}, {status}) ON DUPLICATE KEY UPDATE is_started = {status}")
+
+@cursor_operation
+def reset_auto_scaler_status(cursor, status=False):
+    if status:
+        status = "TRUE"
+    else:
+        status = "FALSE"
+    cursor.execute(f"INSERT INTO memcache (id, is_started) VALUES ({8}, {status}) ON DUPLICATE KEY UPDATE is_started = {status}")
 
 @cursor_operation
 def get_memcache_status(cursor, id):
@@ -96,10 +108,6 @@ def set_memcache_status(cursor, id, status):
         cursor.execute(f"UPDATE memcache SET is_started = {status} WHERE id = {id}")
     else:
         raise Exception("Invalid memcache id")
-
-@cursor_operation
-def reset_auto_scaler_status(cursor):
-    cursor.execute(f"INSERT INTO memcache (id, is_started) VALUES (8, FALSE) ON DUPLICATE KEY UPDATE is_started = FALSE")
 
 @cursor_operation
 def set_autoscaler_status(cursor, status):

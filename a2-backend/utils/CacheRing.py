@@ -42,6 +42,22 @@ class CacheRing:
                 instruction.append(Instruction(*self.partition2range(partition), old, new))
         return instruction
     
+    def start(self, i):
+        print(f'    start memcache {i} ...')
+        while not rds.get_memcache_status(i):
+            print(f'    message to memcache {i} is sent...')
+            memcachop.start(id2url(i))
+            time.sleep(1)
+        print(f'    memcache {i} is started!')
+    
+    def stop(self, i):
+        print(f'    stop memcache {i} ...')
+        while rds.get_memcache_status(i):
+            print(f'    message to memcache {i} is sent...')
+            memcachop.stop(id2url(i))
+            time.sleep(1)
+        print(f'    memcache {i} is stopped!')
+    
     # add memcache and get the instructions
     def add(self, num=1):
         if (self.cache_num + num > 8):
@@ -49,12 +65,7 @@ class CacheRing:
         
         print(f'adding {num} memcache ...')
         for i in range(self.cache_num, self.cache_num + num):
-            print(f'    start memcache {i} ...')
-            while not rds.get_memcache_status(i):
-                print(f'    message to memcache {i} is sent...')
-                memcachop.stop(id2url(i))
-                time.sleep(1)
-            print(f'    memcache {i} is started!')
+            self.start(i)
         
         old_partitions = self.partitions
         self.cache_num += num
@@ -69,18 +80,18 @@ class CacheRing:
         
         print(f'removing {num} memcache ...')
         for i in range(self.cache_num - 1, self.cache_num - num - 1, -1):
-            print(f'    stop memcache {i} ...')
-            while rds.get_memcache_status(i):
-                print(f'    message to memcache {i} is sent...')
-                memcachop.stop(id2url(i))
-                time.sleep(1)
-            print(f'    memcache {i} is stopped!')
+            self.stop(i)
         
         old_partitions = self.partitions
         self.cache_num -= num
         self.partitions = self.get_partitions()
         print(f'removing {num} memcache done!')
         return self.get_instructions(old_partitions)
+        
+        
+    def update_cache_num(self, num):
+        self.cache_num = num
+        self.partitions = self.get_partitions()
         
     def get_partitions(self):
         partition2cache = dict()

@@ -15,21 +15,32 @@ class Manager:
         self.shrink_ration = 1
         self.max_missed_rate = 1
         self.min_missed_rate = 0
-        self.last_record_time = datetime.datetime.utcnow()
+        self.last_record_time = datetime.datetime.utcnow() - datetime.timedelta(seconds=60)
         self.record_lock = threading.Lock()
         self.records = deque(maxlen=60)
         print('Initiating manager ...')
-        # init memcache
-        for i in range(8):
-            memcachop.set_id(id2url(i), i)
-        memcachop.start(id2url(0))
         self.delete_all_images()
+        print('Initiating memcache ...')
+        for i in range(8):
+            print(f'    set id of memcache {i} to {id2url(i)}')
+            memcachop.set_id(id2url(i), i)
+        rds.reset_memcache_status(True)
+        for i in range(1, 8):
+            self.ring.stop(i)
+        rds.reset_memcache_status(False)
+        self.ring.start(0)
+        
+        rds.reset_auto_scaler_status(True)
+        self.stop_scaler()
         
     def key2url(self, key):
         return id2url(self.ring.key2server(key))
         
     def get_miss_rate(self):
         return self.watcher.get_missed_rate()
+    
+    def get_hit_rate(self):
+        return self.watcher.get_hit_rate()
     
     def get_num_nodes(self):
         total = 0
@@ -38,11 +49,13 @@ class Manager:
                 total += 1
             else:
                 break
+        print('total number of memcache is', total)
         return total
     
     def start_scaler(self):
         while not rds.get_autoscaler_status():
             requests.post(scaler_url + '/start', json={
+                'cache_num' : self.get_num_nodes(),
                 'min_missed_rate': self.min_missed_rate,
                 'max_missed_rate': self.max_missed_rate,
                 'expand_ratio': self.expand_ratio,
@@ -68,7 +81,7 @@ class Manager:
     def mode_switch(self, is_manual):
         is_stated = rds.get_autoscaler_status()
         if is_manual == (not is_stated):
-            raise ValueError('mode is already set')
+            return
         if is_manual:
             self.stop_scaler()
         else:
@@ -92,7 +105,7 @@ class Manager:
             raise ValueError('max size must be no smaller than 0')
         rds.set_stat(rds.StatsNames.max_size, size)
     
-    def set_policy(policy):
+    def set_policy(self, policy):
         rds.set_replacement_policy(policy)
     
     def set_expand_ratio(self, ratio: float):
@@ -181,7 +194,8 @@ class Manager:
         return rds.get_replacement_policy()
     
     def get_max_size(self):
-        return rds.get_stat(rds.StatsNames.max_size)
+        max_size = rds.get_stat(rds.StatsNames.max_size)
+        return max_size
     
     def is_manual_mode(self):
         return not rds.get_autoscaler_status()
@@ -190,24 +204,27 @@ class Manager:
         total = 0
         for i in range(8):
             if rds.get_memcache_status(i):
-                total += memcachop.get_len(id2url(i))
+                total += int(memcachop.get_len(id2url(i)))
             else:
                 break
+        print(f'cache items len is {total}')
         return total
     
     def get_cache_items_size(self):
         total = 0
         for i in range(8):
             if rds.get_memcache_status(i):
-                total += memcachop.get_bytes(id2url(i))
+                total += int(memcachop.get_bytes(id2url(i)))
             else:
                 break
+        print(f'cache items size is {total}')
         return total
     
     def record(self):
         while True:
             if datetime.datetime.utcnow() - self.last_record_time > datetime.timedelta(seconds=60):
                 self.last_record_time = datetime.datetime.utcnow()
+                print('recording statistics...')
                 record = {
                     'timestamp' : self.last_record_time,
                     'miss_rate' : self.watcher.get_missed_rate(),
@@ -217,6 +234,7 @@ class Manager:
                     'items_bytes' : int(float(self.get_cache_items_size()) / 1024 / 1024),
                     'requests_count' : self.watcher.get_request_count(),
                 }
+                print(f"record: {record}")
                 with self.record_lock:
                     self.records.append(record)
             time.sleep(1)

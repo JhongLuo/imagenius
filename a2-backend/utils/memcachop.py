@@ -41,7 +41,10 @@ def get_bytes(url):
     return int(requests.get(url + '/bytes').json()['bytes'])
 
 def get_len(url):
-    return int(requests.get(url + '/length').json()['length'])
+    response = requests.get(url + '/length').json()
+    if "error" in response:
+        raise Exception(response['error'])
+    return int(response['length'])
     
 def stop(url):
     requests.post(url + '/stop')

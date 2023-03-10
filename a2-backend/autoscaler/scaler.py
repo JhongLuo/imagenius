@@ -39,15 +39,16 @@ class Scaler:
             raise ValueError('shrink ratio invalid')
         self.shrink_ration = ratio
         
-    def set_config(self, min_missed_rate, max_missed_rate, expand_ratio, shrink_ratio):
+    def set_config(self, cache_num, min_missed_rate, max_missed_rate, expand_ratio, shrink_ratio):
         with self.config_lock:
+            self.ring.update_cache_num(cache_num)
             self.set_min_missed_rate(min_missed_rate)
             self.set_max_missed_rate(max_missed_rate)
             self.set_expand_ratio(expand_ratio)
             self.set_shrink_ratio(shrink_ratio)
             
-    def start(self, min_missed_rate, max_missed_rate, expand_ratio, shrink_ratio):
-        self.set_config(min_missed_rate, max_missed_rate, expand_ratio, shrink_ratio)           
+    def start(self, cache_num, min_missed_rate, max_missed_rate, expand_ratio, shrink_ratio):
+        self.set_config(cache_num, min_missed_rate, max_missed_rate, expand_ratio, shrink_ratio)           
         with self.config_lock:
             self.last_update_time = datetime.datetime.utcnow()
             self.is_started = True

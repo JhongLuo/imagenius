@@ -37,7 +37,16 @@ class Watcher:
         missed = self.get_metric(StatsNames.missed_requests, start, end)
         if read == 0:
             return 0
-        return missed / read
+        return max(read, missed) / read
+    
+    def get_hit_rate(self):
+        end = datetime.datetime.utcnow()
+        start = end - datetime.timedelta(minutes=1)
+        read = self.get_metric(StatsNames.read_requests, start, end)
+        missed = self.get_metric(StatsNames.missed_requests, start, end)
+        if read == 0:
+            return 0
+        return max(read - missed, 0) / read
     
     def get_request_count(self):
         end = datetime.datetime.utcnow()

@@ -10,5 +10,7 @@ class Config:
         ('localhost', 5016),
         ('localhost', 5017),
     ]
-    # auto scaler ip
     scaler_ip = ('localhost', 5002)
+    rds_ip = "biggerdb.cvtl8zx5dggi.us-east-1.rds.amazonaws.com"
+    rds_user = "root"
+    rds_password = "ece1779pass"
