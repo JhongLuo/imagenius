@@ -184,7 +184,7 @@ onMounted(() => {
           <span
             inline-flex items-center px-3
             my-border rounded-l-none border-l-0
-            my-input
+            my-input select-none
           >
             MB
           </span>
@@ -201,8 +201,8 @@ onMounted(() => {
       <!-- Modal: Put Cache Configs -->
       <TheModal
         v-model:is-shown="isModalPutCacheConfigsShown"
-        :modal-id="MODAL_ID__PUT_CACHE_CONFIGS"
         modal-type="submit"
+        :modal-id="MODAL_ID__PUT_CACHE_CONFIGS"
         :modal-title="MODAL_TITLE__PUT_CACHE_CONFIGS"
         :modal-description="MODAL_DESCRIPTION__PUT_CACHE_CONFIGS(cacheConfigs.replacementPolicy, cacheConfigs.maxSize)"
         :action="handlePutCacheConfigs"

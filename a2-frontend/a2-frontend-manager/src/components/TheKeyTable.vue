@@ -51,8 +51,8 @@ const isModalShown = ref(false)
           <!-- Delete Modal Content -->
           <TheModal
             v-model:is-shown="isModalShown"
-            :modal-id="modalId"
             modal-type="delete"
+            :modal-id="modalId"
             :modal-title="modalTitle"
             :modal-description="modalDescription"
             :action="deleteButtonAction"
