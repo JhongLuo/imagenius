@@ -3,8 +3,6 @@ from . import Cache
 from apscheduler.schedulers.background import BackgroundScheduler
 import time
 
-#TODO modify seconds
-
 def start_scheduler(memcache):
     def syncStats(memcache):
         memcache.syncDB()
@@ -15,6 +13,7 @@ def start_scheduler(memcache):
 webapp = Flask(__name__)
 
 global memcache
+
 memcache = Cache.Cache()
 time.sleep(1)
 start_scheduler(memcache)

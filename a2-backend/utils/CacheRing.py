@@ -1,11 +1,17 @@
 import hashlib
-
+from utils import memcachop
+from utils import rds
+from utils.config import MemcacheConfig
+import time
 """
 return the hash value of key
 """
 
 def key2hash(key : str) -> int:
     return int(hashlib.md5(key.encode('utf-8')).hexdigest(), 16)
+
+def id2url(id : int) -> str:
+    return memcachop.get_url(*MemcacheConfig.server2ip[id])
 
 class Instruction:
     def __init__(self, lower, upper, old_cache, new_cache) -> None:
@@ -16,6 +22,11 @@ class Instruction:
     
     def __str__(self) -> str:
         return f"[{hex(self.lower)}, {hex(self.upper)}) {self.old_cache} -> {self.new_cache}"
+
+    def execute(self):
+        content = memcachop.get_range(id2url(self.old_cache), self.lower, self.upper)
+        memcachop.delete_range(id2url(self.old_cache), self.lower, self.upper)
+        memcachop.merge_range(id2url(self.new_cache), content)
 
 class CacheRing:
     def __init__(self):
@@ -39,18 +50,40 @@ class CacheRing:
     def add(self, num=1):
         if (self.cache_num + num > 8):
             raise Exception("CacheRing: total number of memcache cannot be bigger than 8")
+        
+        print(f'adding {num} memcache ...')
+        for i in range(self.cache_num, self.cache_num + num):
+            print(f'    start memcache {i} ...')
+            while not rds.get_memcache_status(i):
+                print(f'    message to memcache {i} is sent...')
+                memcachop.stop(id2url(i))
+                time.sleep(1)
+            print(f'    memcache {i} is started!')
+        
         old_partitions = self.partitions
         self.cache_num += num
         self.partitions = self.get_partitions()
-        return self.get_instructions(old_partitions)
+        print(f'adding {num} memcache done!')
+        return self.get_instructions(old_partitions)    
     
     # remove memcache and get the instructions
     def remove(self, num=1):
         if (self.cache_num - num < 1):
             raise Exception("CacheRing: total number of memcache cannot be smaller than 1")
+        
+        print(f'removing {num} memcache ...')
+        for i in range(self.cache_num - 1, self.cache_num - num - 1, -1):
+            print(f'    stop memcache {i} ...')
+            while rds.get_memcache_status(i):
+                print(f'    message to memcache {i} is sent...')
+                memcachop.stop(id2url(i))
+                time.sleep(1)
+            print(f'    memcache {i} is stopped!')
+        
         old_partitions = self.partitions
         self.cache_num -= num
         self.partitions = self.get_partitions()
+        print(f'removing {num} memcache done!')
         return self.get_instructions(old_partitions)
         
     def get_partitions(self):
@@ -78,44 +111,3 @@ class CacheRing:
     """
     def key2server(self, key):
         return self.partition2server(self.hash2partition(key2hash(key)))
-
-"""
-test code
-"""   
-if __name__ == '__main__':
-    def ring_test(ring):
-        print([hex(v) for v in ring.boundaries])
-        for _ in range(7):
-            print("\nadd")
-            ins = ring.add()
-            for i in ins:
-                print(i) 
-            print(ring.cache_num)
-            print(ring.get_partitions())
-        for _ in range(7):
-            print("\nremove")
-            ins = ring.remove()
-            for i in ins:
-                print(i)
-            print(ring.cache_num)
-            print(ring.get_partitions())
-
-    def hash_test(ring):
-        hash_list = []
-        for i in range(10):
-            hash_list.append(key2hash(str(i)))
-        print(hash_list)
-        print([hex(v) for v in hash_list])
-        partition_count = [0] * ring.partition_num
-        right_count = 0
-        for i in range(10000):
-            hash = key2hash(str(i))
-            partition = ring.hash2partition(hash)
-            partition_count[partition] += 1
-            right_count += (hash >= ring.boundaries[partition] and hash < ring.boundaries[partition + 1])
-        print(right_count / 10000) # should be 1.0
-        print(partition_count) # should be evenly distributed
-        
-    ring = CacheRing()
-    # ring_test(ring)
-    hash_test(ring)

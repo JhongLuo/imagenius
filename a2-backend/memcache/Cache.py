@@ -1,18 +1,18 @@
 import sys
 from utils.ReplacementPolicies import ReplacementPolicies
 import threading
-from utils.rds import get_stat, get_replacement_policy, add_stat, StatsNames
+from utils.rds import get_stat, get_replacement_policy, StatsNames, set_memcache_status
 from sortedcontainers import SortedDict
 from random import randint
 import time
-
+from utils.cloudwatch import Watcher
 class Node:
     def __init__(self, key, value, hash, time) -> None:
         self.key = key
         self.hash = hash
         self.value = value
         self.time = time
-        
+        self.watcher = Watcher()
     @staticmethod
     def from_json(json):
         return Node(json['key'], json['value'], json['hash'], json['time'])
@@ -26,6 +26,8 @@ class Node:
         }
 class Cache():
     def __init__(self) -> None:
+        self.id = None
+        self.is_started = False
         self.bst = SortedDict()
         self.dict = dict()
         self.max_size = 0
@@ -41,19 +43,28 @@ class Cache():
     def get_time(self):
         return time.time()
     
+    def start(self):
+        self.is_started = True
+        set_memcache_status(self.id, True)
+        
+        
+    def stop(self):
+        self.is_started = False
+        set_memcache_status(self.id, False)
+    
     def syncDB(self):
         # read config from DB and set to self
         self.set_max_size(get_stat(StatsNames.max_size))
         self.set_policy(get_replacement_policy())
         # add stats to DB
         if self.total_requests:
-            add_stat(StatsNames.total_requests, self.total_requests)
+            self.watcher.add_stat(StatsNames.total_requests, self.total_requests)
             self.total_requests = 0
         if self.read_requests:
-            add_stat(StatsNames.read_requests, self.read_requests)
+            self.watcher.add_stat(StatsNames.read_requests, self.read_requests)
             self.read_requests = 0
         if self.missed_requests:
-            add_stat(StatsNames.missed_requests, self.missed_requests)
+            self.watcher.add_stat(StatsNames.missed_requests, self.missed_requests)
             self.missed_requests = 0
 
     def _pop(self):

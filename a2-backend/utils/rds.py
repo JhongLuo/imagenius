@@ -3,9 +3,9 @@ from utils.ReplacementPolicies import ReplacementPolicies
 from enum import Enum
 
 class StatsNames(Enum):
-    total_requests = "total_requests"
-    read_requests = "read_requests"
-    missed_requests = "missed_requests"
+    # total_requests = "total_requests"
+    # read_requests = "read_requests"
+    # missed_requests = "missed_requests"
     replacement_policy = "replacement_policy"
     max_size = "max_size"
         
@@ -13,7 +13,7 @@ database_name = "ece1779a2"
 
 config = {
     "pool_name" : "group18a2_pool",
-    "pool_size" : 16,
+    "pool_size" : 1,
     "user" : "root",
     "password" : "ece1779pass",
     "host" : "ece1779a2.cvtl8zx5dggi.us-east-1.rds.amazonaws.com",
@@ -52,29 +52,79 @@ def create_database():
     
 def init_database():
     create_database()
+    delete_tables()
+    create_tables()
+    reset_tables()
+
+def reset_tables():
     reset_stats()
+    reset_memcache_status()
+    reset_auto_scaler_status()
+    delete_keys()
 
 @cursor_operation
-def create_table(cursor):
+def delete_tables(cursor):
+    cursor.execute("DROP TABLE IF EXISTS images")
+    cursor.execute("DROP TABLE IF EXISTS stats")
+    cursor.execute("DROP TABLE IF EXISTS memcache")
+
+@cursor_operation
+def create_tables(cursor):
     cursor.execute("CREATE TABLE IF NOT EXISTS images (keyword VARCHAR(255) PRIMARY KEY, path VARCHAR(255) NOT NULL)")
     cursor.execute("CREATE TABLE IF NOT EXISTS stats (name VARCHAR(255) PRIMARY KEY, value DECIMAL(65, 3) NOT NULL)")
+    # memcache has boolean status(default false) and int primary id
+    cursor.execute("CREATE TABLE IF NOT EXISTS memcache (id INT PRIMARY KEY, is_started BOOLEAN DEFAULT FALSE)")
+
+# memcache status operations
+
+@cursor_operation
+def reset_memcache_status(cursor):
+    for i in range(8):
+        cursor.execute(f"INSERT INTO memcache (id, is_started) VALUES ({i}, FALSE) ON DUPLICATE KEY UPDATE is_started = FALSE")
+
+@cursor_operation
+def get_memcache_status(cursor, id):
+    if id >= 0 and id < 8:
+        cursor.execute(f"SELECT is_started FROM memcache WHERE id = {id}")
+        return bool(cursor.fetchone()[0])
+    else:
+        raise Exception("Invalid memcache id")
+
+@cursor_operation
+def set_memcache_status(cursor, id, status):
+    if id >= 0 and id < 8:
+        cursor.execute(f"UPDATE memcache SET is_started = {status} WHERE id = {id}")
+    else:
+        raise Exception("Invalid memcache id")
+
+@cursor_operation
+def reset_auto_scaler_status(cursor):
+    cursor.execute(f"INSERT INTO memcache (id, is_started) VALUES (8, FALSE) ON DUPLICATE KEY UPDATE is_started = FALSE")
+
+@cursor_operation
+def set_autoscaler_status(cursor, status):
+    cursor.execute(f"INSERT INTO memcache (id, is_started) VALUES (8, {status}) ON DUPLICATE KEY UPDATE is_started = {status}")
+    
+@cursor_operation
+def get_autoscaler_status(cursor):
+    cursor.execute(f"SELECT is_started FROM memcache WHERE id = 8")
+    return bool(cursor.fetchone()[0])
+
 
 # stats operations
 
 @cursor_operation
 def reset_stats(cursor):
     data = [
-        (StatsNames.total_requests.value, 0),
-        (StatsNames.read_requests.value, 0),
-        (StatsNames.missed_requests.value, 0),
+        # (StatsNames.total_requests.value, 0),
+        # (StatsNames.read_requests.value, 0),
+        # (StatsNames.missed_requests.value, 0),
         (StatsNames.replacement_policy.value, ReplacementPolicies.LRU.value),
         (StatsNames.max_size.value, 100 * 1024 * 1024),
     ]
     for name, value in data:
         value = str(value)
         cursor.execute("INSERT INTO stats (name, value) VALUES (%s, %s) ON DUPLICATE KEY UPDATE value = %s", (name, value, value))
-
-
 
 @cursor_operation
 def get_replacement_policy(cursor):
@@ -86,26 +136,25 @@ def get_replacement_policy(cursor):
 def set_replacement_policy(cursor, policy):
     cursor.execute(f"UPDATE stats SET value = {str(policy.value)} WHERE name = '{StatsNames.replacement_policy.value}'")
 
-
 @cursor_operation
 def get_stat(cursor, name : StatsNames):
     cursor.execute(f"SELECT value FROM stats WHERE name = '{name.value}'")
     res = cursor.fetchone()
     return int(res[0])
 
-@cursor_operation
-def add_stat(cursor, name : StatsNames, value):
-    if name == StatsNames.total_requests or name == StatsNames.read_requests or name == StatsNames.missed_requests:
-        cursor.execute(f"UPDATE stats SET value = value + {str(value)} WHERE name = '{name.value}'")
-    else:
-        raise Exception("Cannot add to this stat")
+# @cursor_operation
+# def add_stat(cursor, name : StatsNames, value):
+#     if name == StatsNames.total_requests or name == StatsNames.read_requests or name == StatsNames.missed_requests:
+#         cursor.execute(f"UPDATE stats SET value = value + {str(value)} WHERE name = '{name.value}'")
+#     else:
+#         raise Exception("Cannot add to this stat")
 
-@cursor_operation
-def set_stat(cursor, name : StatsNames, value):
-    if name == StatsNames.max_size or name == StatsNames.replacement_policy:
-        cursor.execute(f"UPDATE stats SET value = {str(value)} WHERE name = '{name.value}'")
-    else:
-        raise Exception("Cannot set this stat")
+# @cursor_operation
+# def set_stat(cursor, name : StatsNames, value):
+#     if name == StatsNames.max_size or name == StatsNames.replacement_policy:
+#         cursor.execute(f"UPDATE stats SET value = {str(value)} WHERE name = '{name.value}'")
+#     else:
+#         raise Exception("Cannot set this stat")
     
 # image operations
 
@@ -135,52 +184,6 @@ def key2path(cursor, keyword):
         return res[0]
     else:
         return None
-    
 
-    
-    
-"""
-test code
-"""
-def images_test() :
-    print(get_keys()) # []
-    for i in range(100):
-        set_key(f"{i}", f"{i}.jpg")
-    print(get_keys())
-    print([key2path(x) for x in get_keys()])
-    print([key2path(x) for x in range(100, 110)])
-    delete_keys()
-    print(get_keys()) # []
-
-def stats_test():
-    reset_stats()
-    print(get_stat(StatsNames.max_size))
-    print(get_stat(StatsNames.replacement_policy))
-    set_stat(StatsNames.max_size, 100)
-    set_stat(StatsNames.replacement_policy, ReplacementPolicies.RANDOM.value)
-    print(get_stat(StatsNames.max_size))
-    print(get_stat(StatsNames.replacement_policy))
-    set_stat(StatsNames.max_size, 10000)
-    set_stat(StatsNames.replacement_policy, ReplacementPolicies.LRU.value)
-    print(get_stat(StatsNames.max_size))
-    print(get_stat(StatsNames.replacement_policy))
-    
-    print(get_stat(StatsNames.total_requests))
-    print(get_stat(StatsNames.read_requests))
-    print(get_stat(StatsNames.missed_requests))
-    add_stat(StatsNames.total_requests, 100)
-    add_stat(StatsNames.read_requests, 200)
-    add_stat(StatsNames.missed_requests, 300)
-    print(get_stat(StatsNames.total_requests))
-    print(get_stat(StatsNames.read_requests))
-    print(get_stat(StatsNames.missed_requests))
-
-if __name__ == "__main__":
-    create_database()
-    create_table()
-    reset_stats()
-    # images_test()
-    stats_test()
-    
     
     
