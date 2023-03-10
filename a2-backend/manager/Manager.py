@@ -227,8 +227,8 @@ class Manager:
                 print('recording statistics...')
                 record = {
                     'timestamp' : self.last_record_time,
-                    'miss_rate' : self.watcher.get_missed_rate(),
-                    'hit_rate' : (1 - self.watcher.get_missed_rate()),
+                    'miss_rate' : self.watcher.get_missed_rate() * 100,
+                    'hit_rate' : self.watcher.get_hit_rate() * 100,
                     'nodes_num' : self.get_num_nodes(),
                     'items_len' : self.get_cache_items_len(),
                     'items_bytes' : int(float(self.get_cache_items_size()) / 1024 / 1024),

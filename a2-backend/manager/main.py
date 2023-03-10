@@ -44,13 +44,17 @@ def get_cache_keys():
                 }
         })
         
-@webapp.route("/api/cache_configs", methods=["GET"])
+@webapp.route("/api/config", methods=["GET"])
 def get_cache_configs():
     try:
         return jsonify({
             "success": "true",
             "replacement_policy": "LRU" if man.get_replacement_policy() == ReplacementPolicies.LRU else "RR",
             "max_size": man.get_max_size() / 1024 / 1024,
+            "expRatio" : int(man.expand_ratio * 100),
+            "shrinkRatio": int(man.shrink_ration * 100),
+            "maxMiss": int(man.max_missed_rate * 100),
+            "minMis": int(man.min_missed_rate * 100),
         })
     except Exception as e:
         return jsonify({
@@ -211,16 +215,17 @@ def configure_cache():
                 raise Exception("Invalid policy")
         
         if "expRatio" in request.args:
-            man.set_expand_ratio(float(request.args.get("expRatio")))
+            man.set_expand_ratio(int(request.args.get("expRatio")) / 100)
         
         if "shrinkRatio" in request.args:
-            man.set_shrink_ratio(float(request.args.get("shrinkRatio")))
+            man.set_shrink_ratio(int(request.args.get("shrinkRatio"))/ 100)
         
-        if "maxMiss" in request.args:
-            man.set_max_missed_rate(int(request.args.get("maxMiss")))
-        
-        if "minMiss" in request.args:
-            man.set_min_missed_rate(int(request.args.get("minMiss")))
+        if 'maxMiss' in request.args and 'minMiss' in request.args:
+            man.set_both_rate(int(request.args.get("maxMiss")) / 100, int(request.args.get("minMiss"))/ 100)
+        elif "maxMiss" in request.args:
+            man.set_max_missed_rate(int(request.args.get("maxMiss")) / 100)
+        elif "minMiss" in request.args:
+            man.set_min_missed_rate(int(request.args.get("minMiss"))/ 100)
         
         return jsonify({
             "success": "true",
