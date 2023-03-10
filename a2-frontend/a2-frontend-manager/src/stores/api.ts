@@ -176,6 +176,50 @@ export const useAPIStore = defineStore('api', () => {
   //
   const getStats = () => baseAxios.value.get('/api/stats')
 
+  const getNumNodes = () => baseAxios.value.post('/api/getNumNodes')
+
+  const getRate = (rate: 'hit' | 'miss') => {
+    const pathStr = '/api/getRate'
+    const queryStr = `?rate=${rate}`
+    const fullPathStr = pathStr + queryStr
+    return baseAxios.value.post(fullPathStr)
+  }
+
+  const putCacheConfigsNew = (
+    mode: 'manual' | 'auto',
+    numNodes: number,
+    cacheSize: number,
+    policy: 'LRU' | 'RR',
+    expRatio: number,
+    shrinkRatio: number,
+    maxMiss: number,
+    minMiss: number,
+  ) => {
+    const pathStr = '/api/configure_cache'
+    const queryStr = '?'
+    if (mode !== undefined)
+      queryStr.concat(`mode=${mode}&`)
+    if (numNodes !== undefined)
+      queryStr.concat(`numNodes=${numNodes}&`)
+    if (cacheSize !== undefined)
+      queryStr.concat(`cacheSize=${cacheSize}&`)
+    if (policy !== undefined)
+      queryStr.concat(`policy=${policy}&`)
+    if (expRatio !== undefined)
+      queryStr.concat(`expRatio=${expRatio}&`)
+    if (shrinkRatio !== undefined)
+      queryStr.concat(`shrinkRatio=${shrinkRatio}&`)
+    if (maxMiss !== undefined)
+      queryStr.concat(`maxMiss=${maxMiss}&`)
+    if (minMiss !== undefined)
+      queryStr.concat(`minMiss=${minMiss}`)
+
+    const fullPathStr = pathStr + queryStr
+    return baseAxios.value.post(fullPathStr)
+  }
+
+  const getCacheConfigsNew = () => baseAxios.value.post('/api/get_cache_configs_new')
+
   return {
     ipAddr,
     baseURLShort,
@@ -188,6 +232,10 @@ export const useAPIStore = defineStore('api', () => {
     putCacheConfigs,
     postClearCache,
     getStats,
+    getNumNodes,
+    getRate,
+    putCacheConfigsNew,
+    getCacheConfigsNew,
   }
 })
 
