@@ -20,7 +20,7 @@ class Scaler:
         self.watcher.get_missed_rate()
     
     def set_min_missed_rate(self, rate: float):
-        if rate <= 0 or rate > 1:
+        if rate < 0 or rate > 1:
             raise ValueError('min missed rate must be between 0 and 1')
         self.min_missed_rate = rate
     

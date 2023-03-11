@@ -150,6 +150,8 @@ def s3_test():
     s3.client.put_object(Bucket=s3.bucketName, Key=filename, Body=b"test")
     print(s3.read_image(filename))
     
+
+
 if __name__ == "__main__":
     # watcher_test()
     # ring_test()
@@ -157,5 +159,5 @@ if __name__ == "__main__":
     # sched_test()
     # apscheduler_test()
     # rds_test()
-    s3_test()
+    # s3_test()
     pass

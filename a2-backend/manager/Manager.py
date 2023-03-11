@@ -18,9 +18,9 @@ class Manager:
         self.last_record_time = datetime.datetime.utcnow() - datetime.timedelta(seconds=60)
         self.record_lock = threading.Lock()
         self.records = deque(maxlen=60)
-        print('Initiating manager ...')
+        print('Initializing manager ...')
         self.delete_all_images()
-        print('Initiating memcache ...')
+        print('Initializing memcache ...')
         for i in range(8):
             print(f'    set id of memcache {i} to {id2url(i)}')
             memcachop.set_id(id2url(i), i)
@@ -32,6 +32,8 @@ class Manager:
         
         rds.reset_auto_scaler_status(True)
         self.stop_scaler()
+        print('Initializing cache config ...')
+        rds.reset_stats()
         
     def key2url(self, key):
         return id2url(self.ring.key2server(key))
@@ -96,9 +98,12 @@ class Manager:
         if num == current:
             return
         elif num > current:
-            self.ring.add(num - current)
+            instructions = self.ring.add(num - current)
         else:
-            self.ring.remove(current - num)
+            instructions = self.ring.remove(current - num)
+            
+        for ins in instructions:
+            ins.execute()
     
     def set_max_size(self, size : int):
         if size < 0:
@@ -217,7 +222,7 @@ class Manager:
                 total += int(memcachop.get_bytes(id2url(i)))
             else:
                 break
-        print(f'cache items size is {total}')
+        print(f'cache items size is {total / 1024 / 1024} MB')
         return total
     
     def record(self):
@@ -231,7 +236,7 @@ class Manager:
                     'hit_rate' : self.watcher.get_hit_rate() * 100,
                     'nodes_num' : self.get_num_nodes(),
                     'items_len' : self.get_cache_items_len(),
-                    'items_bytes' : int(float(self.get_cache_items_size()) / 1024 / 1024),
+                    'items_bytes' : (float(self.get_cache_items_size()) / 1024 / 1024),
                     'requests_count' : self.watcher.get_request_count(),
                 }
                 print(f"record: {record}")

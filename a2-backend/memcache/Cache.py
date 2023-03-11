@@ -60,13 +60,13 @@ class Cache():
         # add stats to DB
         if self.total_requests:
             self.watcher.put_metric(StatsNames.total_requests, self.total_requests)
-            self.total_requests = 0
         if self.read_requests:
             self.watcher.put_metric(StatsNames.read_requests, self.read_requests)
-            self.read_requests = 0
         if self.missed_requests:
             self.watcher.put_metric(StatsNames.missed_requests, self.missed_requests)
-            self.missed_requests = 0
+        self.total_requests = 0
+        self.read_requests = 0
+        self.missed_requests = 0
 
     def _pop(self):
         if len(self.bst) > 0:

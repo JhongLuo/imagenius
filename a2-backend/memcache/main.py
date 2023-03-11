@@ -7,11 +7,6 @@ import sys
 
 @webapp.route('/api/keys', methods=['GET'])
 def get_keys():
-    if not memcache.is_started:
-        return jsonify({
-            'success': 'false',
-            'error': 'Server Not started'
-        })
     memcache.total_requests += 1
     return jsonify({
         'success': 'true',
@@ -20,11 +15,6 @@ def get_keys():
     
 @webapp.route('/api/keys', methods=['DELETE'])
 def delete_keys():
-    if not memcache.is_started:
-        return jsonify({
-            'success': 'false',
-            'error': 'Server Not started'
-        })
     memcache.total_requests += 1
     memcache.clear()
     return jsonify({
@@ -33,11 +23,6 @@ def delete_keys():
     
 @webapp.route('/api/key/<key>', methods=['GET'])
 def get_key(key):
-    if not memcache.is_started:
-        return jsonify({
-            'success': 'false',
-            'error': 'Server Not started'
-        })
     memcache.total_requests += 1
     memcache.read_requests += 1
     if not memcache.has(key):
@@ -73,11 +58,6 @@ def set_key(key):
     
 @webapp.route('/api/key/<key>', methods=['DELETE'])
 def delete_key(key):
-    if not memcache.is_started:
-        return jsonify({
-            'success': 'false',
-            'error': 'Server Not started'
-        })
     memcache.total_requests += 1
     if memcache.has(key):
         memcache.delete(key)
@@ -87,11 +67,6 @@ def delete_key(key):
         
 @webapp.route('/api/range/<lower>/<upper>', methods=['GET'])
 def get_range(lower, upper):
-    if not memcache.is_started:
-        return jsonify({
-            'success': 'false',
-            'error': 'Server Not started'
-        })
     lower = int(lower)
     upper = int(upper)
     node_list = memcache.get_range(lower, upper)
@@ -104,13 +79,6 @@ def get_range(lower, upper):
 def delete_range(lower, upper):
     lower = int(lower)
     upper = int(upper)
-    if not memcache.is_started:
-        return jsonify({
-            'success': 'false',
-            'error': 'Server Not started'
-        })
-    lower = int(lower)
-    upper = int(upper)
     memcache.delete_range(lower, upper)
     return jsonify({
         'success': 'true'
@@ -118,11 +86,6 @@ def delete_range(lower, upper):
     
 @webapp.route('/api/range', methods=['PATCH'])
 def merge_range():
-    if not memcache.is_started:
-        return jsonify({
-            'success': 'false',
-            'error': 'Server Not started'
-        })
     content = request.get_json()
     # node is encoded into json we need to decode it
     node_list = [Node.from_json(node) for node in content]
@@ -133,11 +96,6 @@ def merge_range():
     
 @webapp.route('/api/bytes', methods=['GET'])
 def get_bytes():
-    if not memcache.is_started:
-        return jsonify({
-            'success': 'false',
-            'error': 'Server Not started'
-        })
     return jsonify({
         'success': 'true',
         'bytes': memcache.get_bytes()
@@ -145,12 +103,6 @@ def get_bytes():
     
 @webapp.route('/api/length', methods=['GET'])
 def get_len():
-    if not memcache.is_started:
-        print(f'not started {id(memcache)}')
-        return jsonify({
-            'success': 'false',
-            'error': 'Server Not started'
-        })
     return jsonify({
         'success': 'true',
         'length': memcache.get_len()
@@ -172,11 +124,6 @@ def stop():
     
 @webapp.route('/api/id', methods=['POST'])
 def set_id():
-    # if memcache.id != None:
-    #     return jsonify({
-    #         'success': 'false',
-    #         'error': 'ID already set'
-    #     })
     id = int(request.get_json()['id'])
     memcache.id = id
     return jsonify({

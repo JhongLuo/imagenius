@@ -20,9 +20,14 @@ class Instruction:
         return f"[{hex(self.lower)}, {hex(self.upper)}) {self.old_cache} -> {self.new_cache}"
 
     def execute(self):
+        print(f'    execute instruction  move [{hex(self.lower)}, {hex(self.upper)}) from {self.old_cache} to {self.new_cache} ...')
         content = memcachop.get_range(id2url(self.old_cache), self.lower, self.upper)
+        print(f'        get content from old cache {content}')
         memcachop.delete_range(id2url(self.old_cache), self.lower, self.upper)
+        print(f'        delete content from old cache')
         memcachop.merge_range(id2url(self.new_cache), content)
+        print(f'        merge content to new cache')
+        print(f'    instruction executed!')
 
 class CacheRing:
     def __init__(self):
@@ -40,6 +45,7 @@ class CacheRing:
             new = self.partitions[partition]
             if old != new:
                 instruction.append(Instruction(*self.partition2range(partition), old, new))
+        print(instruction)
         return instruction
     
     def start(self, i):

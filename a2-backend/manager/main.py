@@ -193,6 +193,16 @@ name = minMiss, type = int
 @webapp.route("/api/configure_cache", methods=["POST"])
 def configure_cache():
     try:
+        legal_args = ["mode", "numNodes", "cacheSize", "policy", "expRatio", "shrinkRatio", "maxMiss", "minMiss"]
+        arg_count = 0
+        for arg in request.args:
+            if arg not in legal_args:
+                raise Exception("Invalid argument")
+            else:
+                arg_count += 1
+        if arg_count == 0:
+            raise Exception("No arguments")
+        
         if "mode" in request.args:
             if request.args.get("mode") == "manual":
                 man.mode_switch(True)
@@ -234,6 +244,7 @@ def configure_cache():
             "cacheSize" : int((man.get_max_size() / 1024) / 1024),
             "policy" : "LRU" if man.get_replacement_policy() == ReplacementPolicies.LRU else "RR"
         })
+        
     except Exception as e:
         return jsonify({
             "success": "false",
@@ -282,13 +293,12 @@ def upload():
         key = request.form.get("key")
         file = request.form.get("file")
         if not file:
-            file = request.files.get("file")
+            file = request.files.get("file").read()
         if not key or key == "" or not file:
             raise Exception("Invalid key or file")
-        content = file
         if type(file) != str:
-            content = base64.b64encode(file.read()).decode()
-        man.put_image(key, content)
+            file = base64.b64encode(file).decode('utf-8')
+        man.put_image(key, file)
         return jsonify({
             "success": "true",
             "key": key

@@ -7,7 +7,7 @@ def start_scheduler(memcache):
     def syncStats(memcache):
         last_sync_time = datetime.datetime.utcnow()
         while True:
-            if memcache.is_started and datetime.datetime.utcnow() - last_sync_time > datetime.timedelta(seconds=5):
+            if datetime.datetime.utcnow() - last_sync_time > datetime.timedelta(seconds=5):
                 print("syncing...")
                 memcache.syncDB()
                 last_sync_time = datetime.datetime.utcnow()
