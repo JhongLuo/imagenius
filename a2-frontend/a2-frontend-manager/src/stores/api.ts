@@ -213,7 +213,6 @@ export const useAPIStore = defineStore('api', () => {
 
     const fullPathStr = pathStr + queryStr
 
-    console.log(fullPathStr)
     return baseAxios.value.post(fullPathStr)
   }
 

@@ -65,7 +65,7 @@ const chartOptions = computed(() => {
 
     stroke: {
       show: true,
-      curve: 'straight',
+      curve: 'smooth',
       lineCap: 'round',
       colors: [isDark.value ? '#82E0AA' : '#73C797'],
       width: 4,

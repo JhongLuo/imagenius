@@ -7,10 +7,6 @@ const props = defineProps<{
 
 const isDark = useDark()
 
-const yAxisLabelFormatter = (value: number) => {
-  return `${value * 100}%`
-}
-
 const chartOptions = computed(() => {
   return {
     chart: {
@@ -114,16 +110,14 @@ const chartOptions = computed(() => {
 
     yaxis: {
       min: 0,
-      max: 1,
-      forceNiceScale: false,
+      max: 8,
       tickAmount: 4,
-      decimalsInFloat: 2,
+      decimalsInFloat: 0,
       labels: {
         show: true,
-        formatter: yAxisLabelFormatter,
+        formatter: undefined,
       },
     },
-
   } as ApexOptions
 })
 </script>

@@ -7,6 +7,10 @@ const props = defineProps<{
 
 const isDark = useDark()
 
+const yAxisLabelFormatter = (value: number) => {
+  return `${value * 100}%`
+}
+
 const chartOptions = computed(() => {
   return {
     chart: {
@@ -37,9 +41,9 @@ const chartOptions = computed(() => {
     },
 
     legend: {
-      show: false,
+      show: true,
       showForSingleSeries: true,
-      floating: true,
+      floating: false,
       fontSize: '16px',
       fontFamily: 'DM Sans',
       fontWeight: 1000,
@@ -65,9 +69,9 @@ const chartOptions = computed(() => {
 
     stroke: {
       show: true,
-      curve: 'smooth',
+      curve: 'straight',
       lineCap: 'round',
-      colors: [isDark.value ? '#82E0AA' : '#73C797'],
+      colors: undefined,
       width: 4,
     },
 
@@ -110,15 +114,16 @@ const chartOptions = computed(() => {
 
     yaxis: {
       min: 0,
-      max: undefined,
-      forceNiceScale: true,
-      tickAmount: 5,
-      decimalsInFloat: 0,
+      max: 1,
+      forceNiceScale: false,
+      tickAmount: 4,
+      decimalsInFloat: 2,
       labels: {
         show: true,
-        formatter: undefined,
+        formatter: yAxisLabelFormatter,
       },
     },
+
   } as ApexOptions
 })
 </script>

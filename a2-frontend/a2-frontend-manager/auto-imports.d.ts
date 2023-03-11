@@ -12,14 +12,18 @@ declare global {
   const $shallowRef: typeof import('vue/macros')['$shallowRef']
   const $toRef: typeof import('vue/macros')['$toRef']
   const CHART_ID__HIT_RATES: typeof import('./src/composables/constants')['CHART_ID__HIT_RATES']
+  const CHART_ID__H_M_RATES: typeof import('./src/composables/constants')['CHART_ID__H_M_RATES']
   const CHART_ID__MISS_RATES: typeof import('./src/composables/constants')['CHART_ID__MISS_RATES']
   const CHART_ID__NUMS_ITEMS: typeof import('./src/composables/constants')['CHART_ID__NUMS_ITEMS']
+  const CHART_ID__NUMS_NODES: typeof import('./src/composables/constants')['CHART_ID__NUMS_NODES']
   const CHART_ID__NUMS_REQUESTS: typeof import('./src/composables/constants')['CHART_ID__NUMS_REQUESTS']
   const CHART_ID__USAGES_PERCENT: typeof import('./src/composables/constants')['CHART_ID__USAGES_PERCENT']
   const CHART_ID__USAGES_SIZE: typeof import('./src/composables/constants')['CHART_ID__USAGES_SIZE']
   const CHART_TITLE__HIT_RATES: typeof import('./src/composables/constants')['CHART_TITLE__HIT_RATES']
+  const CHART_TITLE__H_M_RATES: typeof import('./src/composables/constants')['CHART_TITLE__H_M_RATES']
   const CHART_TITLE__MISS_RATES: typeof import('./src/composables/constants')['CHART_TITLE__MISS_RATES']
   const CHART_TITLE__NUMS_ITEMS: typeof import('./src/composables/constants')['CHART_TITLE__NUMS_ITEMS']
+  const CHART_TITLE__NUMS_NODES: typeof import('./src/composables/constants')['CHART_TITLE__NUMS_NODES']
   const CHART_TITLE__NUMS_REQUESTS: typeof import('./src/composables/constants')['CHART_TITLE__NUMS_REQUESTS']
   const CHART_TITLE__USAGES_PERCENT: typeof import('./src/composables/constants')['CHART_TITLE__USAGES_PERCENT']
   const CHART_TITLE__USAGES_SIZE: typeof import('./src/composables/constants')['CHART_TITLE__USAGES_SIZE']
@@ -375,14 +379,18 @@ declare module 'vue' {
     readonly $shallowRef: UnwrapRef<typeof import('vue/macros')['$shallowRef']>
     readonly $toRef: UnwrapRef<typeof import('vue/macros')['$toRef']>
     readonly CHART_ID__HIT_RATES: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__HIT_RATES']>
+    readonly CHART_ID__H_M_RATES: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__H_M_RATES']>
     readonly CHART_ID__MISS_RATES: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__MISS_RATES']>
     readonly CHART_ID__NUMS_ITEMS: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__NUMS_ITEMS']>
+    readonly CHART_ID__NUMS_NODES: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__NUMS_NODES']>
     readonly CHART_ID__NUMS_REQUESTS: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__NUMS_REQUESTS']>
     readonly CHART_ID__USAGES_PERCENT: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__USAGES_PERCENT']>
     readonly CHART_ID__USAGES_SIZE: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__USAGES_SIZE']>
     readonly CHART_TITLE__HIT_RATES: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__HIT_RATES']>
+    readonly CHART_TITLE__H_M_RATES: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__H_M_RATES']>
     readonly CHART_TITLE__MISS_RATES: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__MISS_RATES']>
     readonly CHART_TITLE__NUMS_ITEMS: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__NUMS_ITEMS']>
+    readonly CHART_TITLE__NUMS_NODES: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__NUMS_NODES']>
     readonly CHART_TITLE__NUMS_REQUESTS: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__NUMS_REQUESTS']>
     readonly CHART_TITLE__USAGES_PERCENT: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__USAGES_PERCENT']>
     readonly CHART_TITLE__USAGES_SIZE: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__USAGES_SIZE']>
