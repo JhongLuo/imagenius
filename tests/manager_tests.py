@@ -3,8 +3,8 @@ import os
 import time
 url = "http://localhost:5000/api"
 
-file_1 = "".join(["sdsf" for _ in range(10000)])
-file_2 = "".join(["2323" for _ in range(10000)])
+file_1 = "".join(["sdsf" for _ in range(50000)])
+file_2 = "".join(["2323" for _ in range(50000)])
 
 def upload1(key):
     return requests.post(url + "/upload", data={'key': key, 'file': file_1}).json()
@@ -97,20 +97,26 @@ def add_and_remove_cache_test():
     print(set_config(numNodes=9)) # should fail
         
 def auto_scaler_test():
+    # expand test
+    print(set_config(mode='manual'))
     print(set_config(numNodes=1))
     print(set_config(mode='auto'))
-    print(set_config(expRatio=0.5)) # should fail
-    print(set_config(expRatio=1.5, shrinkRatio=0.5, maxMiss=0.5, cacheSize=3)) # should fail
-    for i in range(300):
+    # print(set_config(expRatio=0.5)) # should fail
+    print(set_config(expRatio=2, shrinkRatio=0.5, maxMiss=0.3, minMiss=0.1, cacheSize=1))
+    
+    total_image = 20
+    for i in range(total_image):
         time.sleep(0.5)
         print(upload1(str(i)))
-        
-    for i in range(1000):
-        time.sleep(0.5)
+    # cache will expand there
+    while True:
+        time.sleep(1)
         import random
-        i = random.randint(0, 300)
-        print(get(str(i)))
-    
+        i = random.randint(0, total_image - 1)
+        response = get(str(i))
+        response.pop('content')
+        print(response)
+    # after 60 seconds, cache will shrink there
         
 # add_and_remove_cache_test()
 # auto_scaler_test()

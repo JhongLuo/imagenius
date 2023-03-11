@@ -4,6 +4,8 @@ from utils.cachering import CacheRing
 from utils.rds import set_autoscaler_status
 import datetime
 import threading
+import requests
+from utils.url import manager_url
 class Scaler:
     def __init__(self) -> None:
         self.is_started = False
@@ -16,9 +18,6 @@ class Scaler:
         self.ring = CacheRing()
         self.config_lock = threading.Lock()
         
-    def get_missed_rate(self) -> float:
-        self.watcher.get_missed_rate()
-    
     def set_min_missed_rate(self, rate: float):
         if rate < 0 or rate > 1:
             raise ValueError('min missed rate must be between 0 and 1')
@@ -38,6 +37,10 @@ class Scaler:
         if ratio > 1 or ratio < 0:
             raise ValueError('shrink ratio invalid')
         self.shrink_ration = ratio
+        
+    def set_manager_cache_num(self):
+        requests.post(manager_url + f'/cache_num/{self.ring.cache_num}')
+        
         
     def set_config(self, cache_num, min_missed_rate, max_missed_rate, expand_ratio, shrink_ratio):
         with self.config_lock:
@@ -62,16 +65,30 @@ class Scaler:
     def expand(self):
         current = self.ring.cache_num
         new = min(8, int(current * self.expand_ratio))
+        if self.expand_ratio > 1 and new == current and new < 8:
+            new += 1
+        if new == current:
+            return
+        print(f'auto expanding from {current} to {new}')
         instructions = self.ring.add(new - current)
+        self.set_manager_cache_num()
+        print("manager cache num updated")
         for ins in instructions:
             ins.execute()
+        print("expand done!")
     
     def shrink(self):
         current = self.ring.cache_num
         new = max(1, int(current * self.shrink_ration))
+        if new == current:
+            return 
+        print(f'auto shrink from {current} to {new} ...')
         instructions = self.ring.remove(current - new)
+        self.set_manager_cache_num()
+        print("manager cache num updated")
         for ins in instructions:
             ins.execute()
+        print("shrink done!")
             
     def run(self):
         while True:
@@ -79,7 +96,8 @@ class Scaler:
             with self.config_lock:
                 # check if the scaler is started and if it is time to update
                 if self.is_started and (datetime.datetime.utcnow() - self.last_update_time).seconds > 60:
-                    missed = self.get_missed_rate()
+                    missed = self.watcher.get_missed_rate()
+                    print(f'current missed rate: {missed}, min: {self.min_missed_rate}, max: {self.max_missed_rate}')
                     if missed < self.min_missed_rate:
                         self.shrink()
                         self.last_update_time = datetime.datetime.utcnow()

@@ -16,4 +16,6 @@ def start_scheduler(scaler):
     scheduler.add_job(func=run, args=(scaler,))
     scheduler.start()
 
+start_scheduler(scaler)
+
 from autoscaler import main

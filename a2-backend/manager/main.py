@@ -56,7 +56,7 @@ def get_cache_configs():
             "expRatio" : float(man.expand_ratio),
             "shrinkRatio": float(man.shrink_ration),
             "maxMiss": float(man.max_missed_rate),
-            "minMis": float(man.min_missed_rate),
+            "minMiss": float(man.min_missed_rate),
         })
     except Exception as e:
         return jsonify({
@@ -233,7 +233,7 @@ def configure_cache():
             man.set_shrink_ratio(float(request.args.get("shrinkRatio")))
         
         if 'maxMiss' in request.args and 'minMiss' in request.args:
-            man.set_both_rate(float(request.args.get("maxMiss")), float(request.args.get("minMiss")))
+            man.set_both_rate(float(request.args.get("minMiss")), float(request.args.get("maxMiss")))
         elif "maxMiss" in request.args:
             man.set_max_missed_rate(float(request.args.get("maxMiss")))
         elif "minMiss" in request.args:
@@ -344,3 +344,16 @@ def retrieve(key_value):
 @webapp.route("/api/key/<key_value>", methods=["GET"])
 def get_image_alt_post(key_value):
     return retrieve(key_value)
+
+
+'''
+update manager's count of memcache 
+
+!!!should only be called by the auto scaler!!!
+'''
+@webapp.route("/api/cache_num/<cache_num>", methods=["POST"])
+def update_route(cache_num):
+    man.update_route(int(cache_num))
+    return jsonify({
+        "success": "true"
+    })

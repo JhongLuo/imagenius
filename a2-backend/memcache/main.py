@@ -67,9 +67,7 @@ def delete_key(key):
         
 @webapp.route('/api/range/<lower>/<upper>', methods=['GET'])
 def get_range(lower, upper):
-    lower = int(lower)
-    upper = int(upper)
-    node_list = memcache.get_range(lower, upper)
+    node_list = memcache.get_range(int(lower), int(upper))
     return jsonify({
         'success': 'true',
         'content': [node.to_json() for node in node_list]
@@ -77,9 +75,7 @@ def get_range(lower, upper):
     
 @webapp.route('/api/range/<lower>/<upper>', methods=['DELETE'])
 def delete_range(lower, upper):
-    lower = int(lower)
-    upper = int(upper)
-    memcache.delete_range(lower, upper)
+    memcache.delete_range(int(lower), int(upper))
     return jsonify({
         'success': 'true'
     })
@@ -88,8 +84,7 @@ def delete_range(lower, upper):
 def merge_range():
     content = request.get_json()
     # node is encoded into json we need to decode it
-    node_list = [Node.from_json(node) for node in content]
-    memcache.merge_range(node_list)
+    memcache.merge_range([Node.from_json(node) for node in content])
     return jsonify({
         'success': 'true'
     })

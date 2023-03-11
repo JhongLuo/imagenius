@@ -1,4 +1,5 @@
 class Config:
+    manager_ip = ('localhost', 5000)
     # list of memcache servers
     memcache_ip = [
         ('localhost', 5010),

@@ -52,6 +52,7 @@ class Manager:
             else:
                 break
         print('total number of memcache is', total)
+        self.ring.update_cache_num(total)
         return total
     
     def start_scaler(self):
@@ -74,6 +75,7 @@ class Manager:
         
     def config_scaler(self):
         requests.post(scaler_url + '/config', json={
+            'cache_num' : self.get_num_nodes(),
             'min_missed_rate': self.min_missed_rate,
             'max_missed_rate': self.max_missed_rate,
             'expand_ratio': self.expand_ratio,
@@ -89,18 +91,18 @@ class Manager:
         else:
             self.start_scaler()
 
-    def change_nodes_num(self, num):
-        if num < 1 or num > 8:
+    def change_nodes_num(self, new):
+        if new < 1 or new > 8:
             raise ValueError('invalid number of nodes')
         if rds.get_autoscaler_status():
             raise ValueError('cannot change nodes number in auto mode')
         current = self.get_num_nodes()
-        if num == current:
+        if new == current:
             return
-        elif num > current:
-            instructions = self.ring.add(num - current)
+        if new > current:
+            instructions = self.ring.add(new - current)
         else:
-            instructions = self.ring.remove(current - num)
+            instructions = self.ring.remove(current - new)
             
         for ins in instructions:
             ins.execute()
@@ -138,7 +140,7 @@ class Manager:
         self.config_scaler()
     
     def set_both_rate(self, min_rate, max_rate):
-        if min_rate <= 0 or min_rate >= max_rate or max_rate >= 1:
+        if min_rate < 0 or min_rate >= max_rate or max_rate > 1:
             raise ValueError('rate invalid')
         self.min_missed_rate = min_rate
         self.max_missed_rate = max_rate
@@ -232,8 +234,8 @@ class Manager:
                 print('recording statistics...')
                 record = {
                     'timestamp' : self.last_record_time,
-                    'miss_rate' : self.watcher.get_missed_rate() * 100,
-                    'hit_rate' : self.watcher.get_hit_rate() * 100,
+                    'miss_rate' : self.watcher.get_missed_rate(),
+                    'hit_rate' : self.watcher.get_hit_rate(),
                     'nodes_num' : self.get_num_nodes(),
                     'items_len' : self.get_cache_items_len(),
                     'items_bytes' : (float(self.get_cache_items_size()) / 1024 / 1024),
@@ -243,3 +245,6 @@ class Manager:
                 with self.record_lock:
                     self.records.append(record)
             time.sleep(1)
+            
+    def update_route(self, cache_num):
+        self.ring.update_cache_num(cache_num)

@@ -119,30 +119,38 @@ class Cache():
     
     # [lower, upper)
     def get_range(self, lower, upper):
-            node_list = []
-            for _, node in self.dict.items():
-                if node.hash < lower or node.hash >= upper:
-                    continue
+        node_list = []
+        for _, node in self.dict.items():
+            if lower <= node.hash and node.hash < upper:
                 node_list.append(node)
-            return node_list
+        return node_list
     
     # [lower, upper)
     def delete_range(self, lower, upper):
+        delete_key_list = []
         for _, node in self.dict.items():
-            if node.hash < lower or node.hash >= upper:
-                continue
-            self.delete(node.key)
+            if lower <= node.hash and node.hash < upper:
+                delete_key_list.append(node.key)        
+        for key in delete_key_list:
+            self.delete(key)
 
-    # [lower, upper)
+    
     def merge_range(self, node_list):
-        with self.writeLock:
-            for node in node_list:
-                if node.time <= self.bst.peekitem(index=0)[0]:
-                    continue
-                self.dict[node.key] = node
-                self.bst[node.time] = node
-                while self.bytes > self.max_size:
-                    self._pop()
+        for node in node_list:
+            should_merge = True
+            if node.key in self.dict:
+                if self.dict[node.key].time > node.time:
+                    should_merge = False
+                else:
+                    self.delete(node.key)
+            if should_merge:
+                with self.writeLock:    
+                    self.dict[node.key] = node
+                    self.bst[node.time] = node
+                    self.bytes += sys.getsizeof(node.value)
+                    while self.bytes > self.max_size:
+                        self._pop()
+    
     
     def clear(self) -> None:
         with self.writeLock:
@@ -154,6 +162,8 @@ class Cache():
         return self.bytes
     
     def get_len(self):
+        if len(self.dict) != len(self.bst):
+            print(f"Dict and BST are not consistent {len(self.dict)} {len(self.bst)}")
         return len(self.dict)
     
     def set_policy(self, policy):
