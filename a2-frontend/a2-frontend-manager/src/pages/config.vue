@@ -6,7 +6,7 @@ defineOptions({
 const api = useAPIStore()
 const { toastsArray, blinkToast } = useToasts()
 
-const cacheConfigs = reactive({
+const cacheConfigs = reactive<CacheConfigOptions>({
   mode: 'auto',
   numNodes: 1,
   cacheSize: 0,
@@ -16,13 +16,31 @@ const cacheConfigs = reactive({
   maxMiss: 0,
   minMiss: 0,
 })
+
 const cacheKeys = ref([])
 const isDownloading = ref(false)
 const isModalPutCacheConfigsShown = ref(false)
 
-const showModalPutCacheConfigs = () => {
-  isModalPutCacheConfigsShown.value = true
-}
+const cacheOptionsValidity = computed(() => {
+  return {
+    cacheSize: cacheConfigs.cacheSize !== '' && cacheConfigs.cacheSize >= 0,
+    expRatio: cacheConfigs.expRatio !== '' && cacheConfigs.expRatio > 1,
+    shrinkRatio: cacheConfigs.shrinkRatio !== '' && cacheConfigs.shrinkRatio > 0 && cacheConfigs.shrinkRatio < 1,
+  }
+})
+
+const isFormValid = computed(() => {
+  if (!cacheOptionsValidity.value.cacheSize)
+    return false
+
+  if (cacheConfigs.mode === 'auto') { // manual
+    return cacheOptionsValidity.value.expRatio && cacheOptionsValidity.value.shrinkRatio
+  }
+
+  else {
+    return true
+  }
+})
 
 const handleGetCacheConfigs = async () => {
   // fetch data
@@ -30,14 +48,14 @@ const handleGetCacheConfigs = async () => {
     const response = await api.getCacheConfigsNew()
     utilsJS.validateResponse(response)
     // handle success
-    cacheConfigs.mode = response.data.mode[0]
-    cacheConfigs.numNodes = response.data.numNodes[0]
-    cacheConfigs.cacheSize = response.data.cacheSize[0]
-    cacheConfigs.policy = response.data.policy[0]
-    cacheConfigs.expRatio = response.data.expRatio[0]
-    cacheConfigs.shrinkRatio = response.data.shrinkRatio[0]
-    cacheConfigs.maxMiss = response.data.maxMiss[0]
-    cacheConfigs.minMiss = response.data.minMiss[0]
+    cacheConfigs.mode = response.data.mode
+    cacheConfigs.numNodes = response.data.numNodes
+    cacheConfigs.cacheSize = response.data.cacheSize
+    cacheConfigs.policy = response.data.policy
+    cacheConfigs.expRatio = response.data.expRatio
+    cacheConfigs.shrinkRatio = response.data.shrinkRatio
+    cacheConfigs.maxMiss = response.data.maxMiss
+    cacheConfigs.minMiss = response.data.minMiss
     blinkToast(
       TOAST_ID__GET_CACHE_CONFIGS__SUCCESS,
       'info',
@@ -58,18 +76,17 @@ const handlePutCacheConfigs = async () => {
     // construct request data
     const data = {
       mode: cacheConfigs.mode,
-      numNodes: cacheConfigs.numNodes,
+      numNodes: (cacheConfigs.mode === 'manual' && typeof cacheConfigs.numNodes === 'number') ? cacheConfigs.numNodes : undefined,
       cacheSize: cacheConfigs.cacheSize,
       policy: cacheConfigs.policy,
-      expRatio: cacheConfigs.expRatio,
-      shrinkRatio: cacheConfigs.shrinkRatio,
-      maxMiss: cacheConfigs.maxMiss,
-      minMiss: cacheConfigs.minMiss,
+      expRatio: (cacheConfigs.mode === 'auto' && typeof cacheConfigs.expRatio === 'number') ? cacheConfigs.expRatio : undefined,
+      shrinkRatio: (cacheConfigs.mode === 'auto' && typeof cacheConfigs.shrinkRatio === 'number') ? cacheConfigs.shrinkRatio : undefined,
+      maxMiss: (cacheConfigs.mode === 'auto' && typeof cacheConfigs.maxMiss === 'number') ? cacheConfigs.maxMiss / 100 : undefined,
+      minMiss: (cacheConfigs.mode === 'auto' && typeof cacheConfigs.minMiss === 'number') ? cacheConfigs.minMiss / 100 : undefined,
     } as CacheConfigOptions
     const response = await api.putCacheConfigsNew(data)
     utilsJS.validateResponse(response)
     // handle success
-    console.warn(response.data)
     blinkToast(
       TOAST_ID__PUT_CACHE_CONFIGS__SUCCESS,
       'success',
@@ -134,6 +151,7 @@ const handleDeleteCache = async () => {
 }
 
 onMounted(() => {
+  initTooltips()
   handleGetCacheConfigs()
   handleGetCacheKeys()
 })
@@ -142,7 +160,7 @@ onMounted(() => {
 <template>
   <!-- Page Title -->
   <h1 my-title>
-    Config
+    Cache Config
   </h1>
 
   <!-- Page Content -->
@@ -195,12 +213,19 @@ onMounted(() => {
           flex-grow-1
           my-border
           my-input disabled:pointer-events-none
-          placeholder="Enter a number"
+          data-tooltip-target="tooltip-num-nodes"
+          placeholder="<empty>"
           onkeydown="return false"
           :disabled="cacheConfigs.mode !== 'manual'"
         >
+
+        <TheTooltip
+          id="tooltip-num-nodes"
+          label="1 <= Value <= 8"
+        />
+
         <TheInputHelperText
-          helper-text="Manual mode only, between 1 and 8"
+          helper-text="Manual mode only."
         />
       </TheLabeledInput>
 
@@ -217,11 +242,11 @@ onMounted(() => {
             v-model="cacheConfigs.cacheSize"
             type="number"
             min="0"
-            oninput="this.value|=0"
             flex-grow-1
             my-border rounded-r-none
             my-input
-            placeholder="Enter a number"
+            data-tooltip-target="tooltip-cache-size"
+            placeholder="<empty>"
           >
           <span
             inline-flex items-center px-3
@@ -231,6 +256,11 @@ onMounted(() => {
             MB
           </span>
         </div>
+
+        <TheTooltip
+          id="tooltip-cache-size"
+          label="Value >= 0"
+        />
       </TheLabeledInput>
 
       <!-- Replacement Policy -->
@@ -276,16 +306,15 @@ onMounted(() => {
               id="input-ratio-expand"
               v-model="cacheConfigs.expRatio"
               type="number"
-              min="0"
-              oninput="this.value = this.value < 1 ? 1 : this.value"
-              w-full
+              w-full h-full
               my-border
               my-input text-center
-              placeholder="Enter a number"
+              placeholder="<empty>"
               :disabled="cacheConfigs.mode !== 'auto'"
             >
+
             <TheInputHelperText
-              helper-text="expand ratio > 1"
+              helper-text="Expand Ratio > 1"
             />
           </div>
           <!-- col: shrinkRatio -->
@@ -297,16 +326,15 @@ onMounted(() => {
               id="input-ratio-shrink"
               v-model="cacheConfigs.shrinkRatio"
               type="number"
-              min="0"
-              oninput="this.value|=0"
-              w-full
+              w-full h-full
               my-border
               my-input text-center
-              placeholder="Enter a number"
+              placeholder="<empty>"
               :disabled="cacheConfigs.mode !== 'auto'"
             >
+
             <TheInputHelperText
-              helper-text="1 > shrink ratio > 0"
+              helper-text="0 < Shrink Ratio < 1"
             />
           </div>
         </div>
@@ -334,10 +362,11 @@ onMounted(() => {
                 v-model="cacheConfigs.maxMiss"
                 type="number"
                 oninput="this.value = this.value > 100 ? 100 : Math.floor(this.value)"
-                w-full
+                w-full h-full
                 my-border rounded-r-none
                 my-input text-center
-                placeholder="Enter a number"
+                data-tooltip-target="tooltip-max-miss"
+                placeholder="<empty>"
                 :disabled="cacheConfigs.mode !== 'auto'"
               >
               <span
@@ -349,8 +378,13 @@ onMounted(() => {
               </span>
             </div>
 
+            <TheTooltip
+              id="tooltip-max-miss"
+              label="Interger Only"
+            />
+
             <TheInputHelperText
-              helper-text="integers only"
+              helper-text="Max Miss Rate"
             />
           </div>
           <!-- col: minMiss -->
@@ -366,10 +400,11 @@ onMounted(() => {
                 v-model="cacheConfigs.minMiss"
                 type="number"
                 oninput="this.value = this.value > 100 ? 100 : Math.floor(this.value)"
-                w-full
+                w-full h-full
                 my-border rounded-r-none
                 my-input text-center
-                placeholder="Enter a number"
+                data-tooltip-target="tooltip-min-miss"
+                placeholder="<empty>"
                 :disabled="cacheConfigs.mode !== 'auto'"
               >
               <span
@@ -380,8 +415,14 @@ onMounted(() => {
                 %
               </span>
             </div>
+
+            <TheTooltip
+              id="tooltip-min-miss"
+              label="Integers Only"
+            />
+
             <TheInputHelperText
-              helper-text="integers only"
+              helper-text="Min Miss Rate"
             />
           </div>
         </div>
@@ -391,7 +432,8 @@ onMounted(() => {
       <TheButton
         text-sm
         label="Update"
-        @click="showModalPutCacheConfigs"
+        :disabled="!isFormValid"
+        @click="isModalPutCacheConfigsShown = true"
       />
 
       <!-- Modal: Put Cache Configs -->

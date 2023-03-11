@@ -20,14 +20,14 @@ export default defineConfig({
     ['my-shadow-light', 'shadow-lg shadow-gray-5 shadow-op-30 dark:shadow-gray-8 dark:shadow-op-60'],
     ['my-shadow-heavy', 'shadow-lg shadow-gray-5 dark:shadow-gray-8'],
     // colors
-    ['my-text-color-primary', 'text-gray-8 placeholder-gray-6 dark:text-gray-2 dark:placeholder-gray-4'],
+    ['my-text-color-primary', 'text-gray-8 placeholder-gray-4 dark:text-gray-2 dark:placeholder-gray-7'],
     ['my-text-color-secondary', 'text-gray-5 placeholder-gray-5 dark:text-gray-4'],
     ['my-text-color-tertiary', 'text-gray-4 placeholder-gray-5 dark:text-gray-6'],
     ['my-bg-primary', 'bg-white dark:bg-black'],
     ['my-bg-secondary', 'bg-#FAFAFA dark:bg-#181A22'],
     ['my-bg-tertiary', 'bg-#FAFAFA dark:bg-gray-8'],
     // components
-    ['my-input', 'text-sm font-medium rounded-md my-text-color-primary my-bg-primary my-border disabled:my-text-color-tertiary'],
+    ['my-input', 'text-sm font-medium rounded-md my-text-color-primary my-bg-primary my-border pla disabled:text-op-15 disabled:placeholder-op-15'],
     ['my-text-input', 'w-full px-4 py-2 my-input'],
     ['my-title', 'mb-5 text-xl font-extrabold my-text-color-primary select-none'],
     ['my-label', 'mb-2 text-sm font-medium my-text-color-primary'],
