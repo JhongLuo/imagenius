@@ -18,6 +18,8 @@ export const TOAST_ID__CLEAR_CACHE__ERROR = 'toast-id-clear-cache-error'
 export const TOAST_ID__GET_STATS__SUCCESS = 'toast-id-get-stats-success'
 export const TOAST_ID__GET_STATS__ERROR = 'toast-id-get-stats-error'
 export const TOAST_ID__REFRESH_STATS__INFO = 'toast-id-refresh-stats-info'
+export const TOAST_ID__GET_NUM_NODES__ERROR = 'toast-id-get-num-nodes-error'
+export const TOAST_ID__NEW_NUM_NODES = 'toast-id-new-num-nodes'
 
 export const TOAST_MSG__UPLOAD_IMG__SUCCESS = 'Image uploaded successfully.'
 export const TOAST_MSG__RETRIEVE_IMG__SUCCESS = 'Image retrieved successfully.'
@@ -29,6 +31,7 @@ export const TOAST_MSG__GET_CACHE_KEYS__SUCCESS = 'Cache keys loaded successfull
 export const TOAST_MSG__CLEAR_CACHE__SUCCESS = 'Cache erased successfully.'
 export const TOAST_MSG__GET_STATS__SUCCESS = 'Stats loaded successfully.'
 export const TOAST_MSG__REFRESH_STATS__INFO = 'Stats refresh ongoing.'
+export const TOAST_MSG__NEW_NUM_NODES = (from: number, to: number) => `Memcache pool size changed from ${from} to ${to}.`
 
 // modal: ids + titles + descriptions
 export const MODAL_ID__DELETE_ALL = 'modal-delete-all-keys'
