@@ -169,6 +169,8 @@ class Manager:
         image = memcachop.get(self.key2url(key), key)
         if not image:
             image_path = rds.get_path(key)
+            if not image_path:
+                return None
             image = self.s3.read_image(image_path)
             memcachop.put(self.key2url(key), key, image)
         return image

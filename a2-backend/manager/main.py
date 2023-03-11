@@ -327,10 +327,13 @@ method = POST
 @webapp.route("/api/key/<key_value>", methods=["POST"])
 def retrieve(key_value):
     try:
+        image = man.get_image(key_value)
+        if not image:
+            raise Exception("Image not found")
         return jsonify({
             "success": "true",
             "key": key_value,
-            "content" : man.get_image(key_value)
+            "content" : image
         })
     except Exception as e:
         return jsonify({
