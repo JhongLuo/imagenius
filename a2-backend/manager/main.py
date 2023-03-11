@@ -49,8 +49,10 @@ def get_cache_configs():
     try:
         return jsonify({
             "success": "true",
-            "replacement_policy": "LRU" if man.get_replacement_policy() == ReplacementPolicies.LRU else "RR",
-            "max_size": man.get_max_size() / 1024 / 1024,
+            "mode": "manual" if man.is_manual_mode() else "auto",
+            "numNodes" : int(man.get_num_nodes()),
+            "cacheSize" : int(man.get_max_size() / 1024 ** 2),
+            "policy" : "LRU" if man.get_replacement_policy() == ReplacementPolicies.LRU else "RR",
             "expRatio" : float(man.expand_ratio),
             "shrinkRatio": float(man.shrink_ration),
             "maxMiss": float(man.max_missed_rate),

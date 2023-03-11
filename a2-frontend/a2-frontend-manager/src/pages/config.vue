@@ -259,7 +259,7 @@ onMounted(() => {
 
         <TheTooltip
           id="tooltip-cache-size"
-          label="Value >= 0"
+          label="Value ≥ 0"
         />
       </TheLabeledInput>
 
