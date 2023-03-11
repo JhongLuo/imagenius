@@ -51,10 +51,10 @@ def get_cache_configs():
             "success": "true",
             "replacement_policy": "LRU" if man.get_replacement_policy() == ReplacementPolicies.LRU else "RR",
             "max_size": man.get_max_size() / 1024 / 1024,
-            "expRatio" : int(man.expand_ratio * 100),
-            "shrinkRatio": int(man.shrink_ration * 100),
-            "maxMiss": int(man.max_missed_rate * 100),
-            "minMis": int(man.min_missed_rate * 100),
+            "expRatio" : float(man.expand_ratio),
+            "shrinkRatio": float(man.shrink_ration),
+            "maxMiss": float(man.max_missed_rate),
+            "minMis": float(man.min_missed_rate),
         })
     except Exception as e:
         return jsonify({
@@ -150,15 +150,15 @@ def get_rate():
     try:
         rate = request.args.get("rate")
         if rate == "hit":
-            value = man.get_hit_rate() * 100
+            value = man.get_hit_rate()
         elif rate == "miss":
-            value = man.get_miss_rate() * 100
+            value = man.get_miss_rate()
         else:
             raise Exception("Invalid rate name")
         return jsonify({
             "success": "true",
             "rate": rate,
-            "value": int(value)
+            "value": float(value)
         })
     except Exception as e:
         return jsonify({
@@ -180,8 +180,8 @@ name = cacheSize, type = int (in MB)
 name = policy, type = string, possible values = "LRU", "RR"
 name = expRatio, type = string
 name = shrinkRatio, type = string
-name = maxMiss, type = int
-name = minMiss, type = int
+name = maxMiss, type = float
+name = minMiss, type = float
 {
     "success": "true",
     "mode": [String],
@@ -225,17 +225,17 @@ def configure_cache():
                 raise Exception("Invalid policy")
         
         if "expRatio" in request.args:
-            man.set_expand_ratio(int(request.args.get("expRatio")) / 100)
+            man.set_expand_ratio(float(request.args.get("expRatio")))
         
         if "shrinkRatio" in request.args:
-            man.set_shrink_ratio(int(request.args.get("shrinkRatio"))/ 100)
+            man.set_shrink_ratio(float(request.args.get("shrinkRatio")))
         
         if 'maxMiss' in request.args and 'minMiss' in request.args:
-            man.set_both_rate(int(request.args.get("maxMiss")) / 100, int(request.args.get("minMiss"))/ 100)
+            man.set_both_rate(float(request.args.get("maxMiss")), float(request.args.get("minMiss")))
         elif "maxMiss" in request.args:
-            man.set_max_missed_rate(int(request.args.get("maxMiss")) / 100)
+            man.set_max_missed_rate(float(request.args.get("maxMiss")))
         elif "minMiss" in request.args:
-            man.set_min_missed_rate(int(request.args.get("minMiss"))/ 100)
+            man.set_min_missed_rate(float(request.args.get("minMiss")))
         
         return jsonify({
             "success": "true",
