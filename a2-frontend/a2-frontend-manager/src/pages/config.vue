@@ -295,7 +295,7 @@ onMounted(() => {
             <option value="LRU">
               Least Recently Used
             </option>
-            <option value="random">
+            <option value="RR">
               Random Replacement
             </option>
           </select>
