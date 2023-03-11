@@ -8,11 +8,11 @@ const { toastsArray, blinkToast } = useToasts()
 
 const cacheConfigs = reactive<CacheConfigOptions>({
   mode: 'auto',
-  numNodes: 1,
+  numNodes: -1,
   cacheSize: 0,
   policy: 'LRU',
-  expRatio: 2,
-  shrinkRatio: 0.5,
+  expRatio: 1,
+  shrinkRatio: 1,
   maxMiss: 0,
   minMiss: 0,
 })
@@ -58,6 +58,7 @@ const handleGetCacheConfigs = async (isReload = false) => {
     cacheConfigs.shrinkRatio = response.data.shrinkRatio
     cacheConfigs.maxMiss = response.data.maxMiss * 100
     cacheConfigs.minMiss = response.data.minMiss * 100
+    await utils.sleep(150)
     isDownloadingCacheConfigs.value = false
     if (!isReload) {
       blinkToast(
@@ -171,7 +172,11 @@ onMounted(() => {
   <!-- Page Content -->
   <ThePageContent>
     <div
-      :class="{ 'blur-sm grayscale': isDownloadingCacheConfigs }"
+      :class="{
+        'blur-sm grayscale': isDownloadingCacheConfigs,
+        'invisible': cacheConfigs.numNodes === -1,
+      }"
+      transition-all duration-300
     >
       <!-- Input Group -->
       <TheInputGroup
@@ -468,7 +473,7 @@ onMounted(() => {
     <!-- HR -->
     <TheConfigHR />
 
-    <!-- Table: All Keys -->
+    <!-- Table: Cache Keys -->
     <TheKeyTable
       :data="cacheKeys"
       :table-title="TABLE_TITLE__CACHE_KEYS"
