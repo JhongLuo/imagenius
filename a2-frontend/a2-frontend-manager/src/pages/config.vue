@@ -42,7 +42,7 @@ const isFormValid = computed(() => {
   }
 })
 
-const handleGetCacheConfigs = async () => {
+const handleGetCacheConfigs = async (isReload = false) => {
   // fetch data
   try {
     const response = await api.getCacheConfigsNew()
@@ -54,12 +54,14 @@ const handleGetCacheConfigs = async () => {
     cacheConfigs.policy = response.data.policy
     cacheConfigs.expRatio = response.data.expRatio
     cacheConfigs.shrinkRatio = response.data.shrinkRatio
-    cacheConfigs.maxMiss = response.data.maxMiss
-    cacheConfigs.minMiss = response.data.minMiss
-    blinkToast(
-      TOAST_ID__GET_CACHE_CONFIGS__SUCCESS,
-      'info',
-      TOAST_MSG__GET_CACHE_CONFIGS__SUCCESS)
+    cacheConfigs.maxMiss = response.data.maxMiss * 100
+    cacheConfigs.minMiss = response.data.minMiss * 100
+    if (!isReload) {
+      blinkToast(
+        TOAST_ID__GET_CACHE_CONFIGS__SUCCESS,
+        'info',
+        TOAST_MSG__GET_CACHE_CONFIGS__SUCCESS)
+    }
   }
   catch (errMsg) {
     // handle error
@@ -91,6 +93,7 @@ const handlePutCacheConfigs = async () => {
       TOAST_ID__PUT_CACHE_CONFIGS__SUCCESS,
       'success',
       TOAST_MSG__PUT_CACHE_CONFIGS__SUCCESS)
+    await handleGetCacheConfigs(true)
   }
   catch (errMsg) {
     // handle error

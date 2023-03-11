@@ -217,7 +217,7 @@ export const useAPIStore = defineStore('api', () => {
     return baseAxios.value.post(fullPathStr)
   }
 
-  const getCacheConfigsNew = () => baseAxios.value.post('/api/get_cache_configs_new')
+  const getCacheConfigsNew = () => baseAxios.value.get('/api/config')
 
   return {
     ipAddr,
