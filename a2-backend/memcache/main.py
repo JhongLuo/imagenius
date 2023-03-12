@@ -15,7 +15,6 @@ def get_keys():
     
 @webapp.route('/api/keys', methods=['DELETE'])
 def delete_keys():
-    memcache.total_requests += 1
     memcache.clear()
     return jsonify({
         'success': 'true'
