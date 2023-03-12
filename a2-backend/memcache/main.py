@@ -42,7 +42,6 @@ def set_key(key):
             'success': 'false',
             'error': 'Server Not started'
         })
-    memcache.total_requests += 1
     content = request.get_json()
     if sys.getsizeof(content) >= memcache.max_size:
         return jsonify({
