@@ -9,13 +9,13 @@ global scaler
 
 scaler = Scaler()
 
-def start_scheduler(scaler):
-    def run(scaler):
-        scaler.run()
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(func=run, args=(scaler,))
-    scheduler.start()
+# def start_scheduler(scaler):
+#     def run(scaler):
+#         scaler.run()
+#     scheduler = BackgroundScheduler()
+#     scheduler.add_job(func=run, args=(scaler,))
+#     scheduler.start()
 
-start_scheduler(scaler)
+# start_scheduler(scaler)
 
 from autoscaler import main

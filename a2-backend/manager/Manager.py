@@ -17,7 +17,7 @@ class Manager:
         self.min_missed_rate = 0
         self.last_record_time = datetime.datetime.utcnow() - datetime.timedelta(seconds=60)
         self.record_lock = threading.Lock()
-        self.records = deque(maxlen=60)
+        self.records = deque(maxlen=30)
         print('Initializing manager ...')
         self.delete_all_images()
         print('Initializing memcache ...')
@@ -45,12 +45,7 @@ class Manager:
         return self.watcher.get_hit_rate()
     
     def get_num_nodes(self):
-        total = 0
-        for i in range(8):
-            if rds.get_memcache_status(i):
-                total += 1
-            else:
-                break
+        total = rds.get_online_memcache_nums()
         print('total number of memcache is', total)
         self.ring.update_cache_num(total)
         return total
@@ -229,6 +224,10 @@ class Manager:
         print(f'cache items size is {total / 1024 / 1024} MB')
         return total
     
+    def remind_scaler(self):
+        if rds.get_autoscaler_status():
+            requests.post(scaler_url + '/remind')
+    
     def record(self):
         while True:
             if datetime.datetime.utcnow() - self.last_record_time > datetime.timedelta(seconds=60):
@@ -246,6 +245,7 @@ class Manager:
                 print(f"record: {record}")
                 with self.record_lock:
                     self.records.append(record)
+                self.remind_scaler()
             time.sleep(1)
             
     def update_route(self, cache_num):

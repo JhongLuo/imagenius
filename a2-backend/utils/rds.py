@@ -103,6 +103,11 @@ def get_memcache_status(cursor, id):
         raise Exception("Invalid memcache id")
 
 @cursor_operation
+def get_online_memcache_nums(cursor):
+    cursor.execute(f"SELECT COUNT(*) FROM memcache WHERE is_started = TRUE")
+    return cursor.fetchone()[0]
+
+@cursor_operation
 def set_memcache_status(cursor, id, status):
     if id >= 0 and id < 8:
         cursor.execute(f"UPDATE memcache SET is_started = {status} WHERE id = {id}")

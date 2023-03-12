@@ -1,10 +1,20 @@
 import requests
-import os
+import sys
 import time
+
+
 url = "http://localhost:5000/api"
 
-file_1 = "".join(["sdsf" for _ in range(50000)])
-file_2 = "".join(["2323" for _ in range(50000)])
+file_MB = 0.1
+sleep_time = 0.1
+file_1 = ""
+file_2 = ""
+while sys.getsizeof(file_1) < file_MB * 1024 * 1024:
+    file_1 += "sdsf" * 100
+    file_2 += "2323" * 100
+
+print(len(file_1))
+print(sys.getsizeof(file_1))
 
 def upload1(key):
     return requests.post(url + "/upload", data={'key': key, 'file': file_1}).json()
@@ -53,6 +63,14 @@ def set_config(mode = None, numNodes = None, cacheSize = None, policy = None, ex
         paras += f'minMiss={minMiss}&'
     return requests.post(url +f"/configure_cache?{paras}").json()
 
+
+def get_miss_rate():
+    return float(requests.post(url +f"/getRate?rate=miss").json()["value"])
+
+def get_num_nodes():
+    res = requests.post(url +f"/getNumNodes").json()
+    return int(res["numNodes"])
+
 '''
 test code
 '''
@@ -76,8 +94,6 @@ def image_test():
             print(get(str(i))['content'])
             print('wrong content')
     
-        
-
 def add_and_remove_cache_test():
     for i in range(40):
         time.sleep(1)
@@ -95,7 +111,7 @@ def add_and_remove_cache_test():
     
     print(set_config(numNodes=1)) # should fail
     print(set_config(numNodes=9)) # should fail
-        
+
 def auto_scaler_test():
     # expand test
     print(set_config(mode='manual'))
@@ -104,7 +120,7 @@ def auto_scaler_test():
     # print(set_config(expRatio=0.5)) # should fail
     print(set_config(expRatio=2, shrinkRatio=0.5, maxMiss=0.3, minMiss=0.1, cacheSize=1))
     
-    total_image = 20
+    total_image = 200
     for i in range(total_image):
         time.sleep(0.5)
         print(upload1(str(i)))
@@ -117,12 +133,4 @@ def auto_scaler_test():
         response.pop('content')
         print(response)
     # after 60 seconds, cache will shrink there
-        
-# add_and_remove_cache_test()
-# auto_scaler_test()
-# image_test()
-
-
-auto_scaler_test()
-print(get_cache_config())
-print(get_cache_keys())
+  

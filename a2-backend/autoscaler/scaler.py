@@ -104,6 +104,16 @@ class Scaler:
                     elif missed > self.max_missed_rate:
                         self.expand()
                         self.last_update_time = datetime.datetime.utcnow()
+                        
+                        
+    def run_once(self):
+        with self.config_lock:
+            missed = self.watcher.get_missed_rate()
+            print(f'current missed rate: {missed}, min: {self.min_missed_rate}, max: {self.max_missed_rate}')
+            if missed < self.min_missed_rate:
+                self.shrink()
+            elif missed > self.max_missed_rate:
+                self.expand()
                 
                 
                 
