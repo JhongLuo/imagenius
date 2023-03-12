@@ -29,8 +29,8 @@ def update_config():
     })
     
 @webapp.route('/api/remind', methods=['POST'])
-def scale():
-    scaler.run_once()
+def be_reminded():
+    scaler.be_reminded()
     return jsonify({
         "success": "true"
     })
