@@ -7,7 +7,6 @@ import sys
 
 @webapp.route('/api/keys', methods=['GET'])
 def get_keys():
-    memcache.total_requests += 1
     return jsonify({
         'success': 'true',
         'keys': list(memcache.keys())
@@ -57,7 +56,6 @@ def set_key(key):
     
 @webapp.route('/api/key/<key>', methods=['DELETE'])
 def delete_key(key):
-    memcache.total_requests += 1
     if memcache.has(key):
         memcache.delete(key)
     return jsonify({
