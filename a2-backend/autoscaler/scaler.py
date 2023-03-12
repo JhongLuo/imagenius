@@ -16,7 +16,7 @@ class Scaler:
         self.watcher = Watcher()
         self.ring = CacheRing()
         self.config_lock = threading.Lock()
-        self.should_auto_scale = False
+        self.last_update_time = datetime.datetime.utcnow()
         
     def set_min_missed_rate(self, rate: float):
         if rate < 0 or rate > 1:
@@ -94,18 +94,14 @@ class Scaler:
         while True:
             time.sleep(1)
             with self.config_lock:
-                if self.should_auto_scale:
+                if self.is_started and datetime.datetime.utcnow() - self.last_update_time > datetime.timedelta(seconds=60):
+                    self.last_update_time = datetime.datetime.utcnow()
                     missed = self.watcher.get_missed_rate()
                     print(f'current missed rate: {missed}, min: {self.min_missed_rate}, max: {self.max_missed_rate}')
                     if missed < self.min_missed_rate:
                         self.shrink()
                     elif missed > self.max_missed_rate:
                         self.expand()
-                    self.should_auto_scale = False
-            
-                        
-    def be_reminded(self):
-        self.should_auto_scale = True
                 
                 
                 

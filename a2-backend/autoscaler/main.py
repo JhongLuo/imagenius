@@ -28,10 +28,3 @@ def update_config():
         'success': 'true'
     })
     
-@webapp.route('/api/remind', methods=['POST'])
-def be_reminded():
-    scaler.be_reminded()
-    return jsonify({
-        "success": "true"
-    })
-    
