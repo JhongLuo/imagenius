@@ -104,7 +104,8 @@ def get_memcache_status(cursor, id):
 
 @cursor_operation
 def get_online_memcache_nums(cursor):
-    cursor.execute(f"SELECT COUNT(*) FROM memcache WHERE is_started = TRUE")
+    # id is from 0 to 7
+    cursor.execute(f"SELECT COUNT(*) FROM memcache WHERE id < 8 AND is_started = TRUE")
     return cursor.fetchone()[0]
 
 @cursor_operation
