@@ -174,7 +174,6 @@ onMounted(() => {
     <div
       :class="{
         'blur-sm grayscale': isDownloadingCacheConfigs,
-        'invisible': cacheConfigs.numNodes === -1,
       }"
       transition-all duration-300
     >

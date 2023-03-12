@@ -33,7 +33,6 @@ const handleGetAllKeys = async (isReload = false) => {
       TOAST_ID__GET_ALL_KEYS__ERROR,
       'error',
       errMsg as string)
-    isDownloading.value = false
   }
 }
 

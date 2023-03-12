@@ -22,6 +22,17 @@ export interface StatsData {
   miss_rates: number[]
 }
 
+export interface CacheConfigOptions {
+  mode: string
+  numNodes?: number
+  cacheSize: number
+  policy: string
+  expRatio?: number
+  shrinkRatio?: number
+  maxMiss?: number
+  minMiss?: number
+}
+
 export default {
   sleep(ms = 500) {
     return new Promise(resolve => setTimeout(resolve, ms))
@@ -56,5 +67,21 @@ export default {
       return Math.ceil(maxY / 10) * 10
     else
       return Math.ceil(maxY / 100) * 100
+  },
+
+  strAsNonNegNumber(str: string, min = 0, max?: number, isInclusive = true) {
+    str = str.replace(/^0+|[^\d.]/g, '')
+    if (max && min > max)
+      return str
+    if (Number(str) < min && isInclusive)
+      return min.toString()
+    if (Number(str) <= min && !isInclusive)
+      return (min + 0.01).toString()
+    if (max && Number(str) > max && isInclusive)
+      return max.toString()
+    if (max && Number(str) >= max && !isInclusive)
+      return (max - 0.01).toString()
+    else
+      return str
   },
 }

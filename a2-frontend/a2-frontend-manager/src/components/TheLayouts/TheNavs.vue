@@ -10,7 +10,7 @@
       ·
     </p>
 
-    <a
+    <!-- <a
       icon-btn i-carbon:cloud-upload
       href="/upload"
       title="Upload"
@@ -20,7 +20,7 @@
       icon-btn i-carbon:cloud-download
       href="/retrieve"
       title="Retrieve"
-    />
+    /> -->
 
     <a
       icon-btn i-carbon:virtual-column-key

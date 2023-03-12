@@ -5,8 +5,8 @@ defineOptions({
 
 const api = useAPIStore()
 
-const navigateToUpload = () => {
-  window.location.href = '/upload'
+const start = () => {
+  window.location.href = '/config'
 }
 
 onMounted(() => {
@@ -32,7 +32,7 @@ onMounted(() => {
       data-tooltip-target="tooltip-connect"
       data-tooltip-trigger="hover"
       w-64 text-center
-      @keydown.enter="navigateToUpload"
+      @keydown.enter="start"
     />
 
     <!-- tooltip -->
@@ -45,7 +45,7 @@ onMounted(() => {
     <button
       my-btn-primary m-4 text-sm
       :disabled="!api.ipAddr.addr"
-      @click="navigateToUpload"
+      @click="start"
     >
       Go
     </button>

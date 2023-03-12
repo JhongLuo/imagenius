@@ -1,13 +1,18 @@
 <script setup lang="ts">
 defineProps<{
   toastsArray: ToastModel[]
+  toastsPos?: 'top' | 'bottom'
 }>()
 </script>
 
 <template>
   <div
     id="toast-container"
-    absolute top-5 right-5
+    fixed
+    :class="{
+      'top-5 right-5': !toastsPos || toastsPos === 'top',
+      'bottom-5 right-5': toastsPos === 'bottom',
+    }"
     z10
     flex flex-col justify-center items-end
   >

@@ -12,14 +12,18 @@ declare global {
   const $shallowRef: typeof import('vue/macros')['$shallowRef']
   const $toRef: typeof import('vue/macros')['$toRef']
   const CHART_ID__HIT_RATES: typeof import('./src/composables/constants')['CHART_ID__HIT_RATES']
+  const CHART_ID__H_M_RATES: typeof import('./src/composables/constants')['CHART_ID__H_M_RATES']
   const CHART_ID__MISS_RATES: typeof import('./src/composables/constants')['CHART_ID__MISS_RATES']
   const CHART_ID__NUMS_ITEMS: typeof import('./src/composables/constants')['CHART_ID__NUMS_ITEMS']
+  const CHART_ID__NUMS_NODES: typeof import('./src/composables/constants')['CHART_ID__NUMS_NODES']
   const CHART_ID__NUMS_REQUESTS: typeof import('./src/composables/constants')['CHART_ID__NUMS_REQUESTS']
   const CHART_ID__USAGES_PERCENT: typeof import('./src/composables/constants')['CHART_ID__USAGES_PERCENT']
   const CHART_ID__USAGES_SIZE: typeof import('./src/composables/constants')['CHART_ID__USAGES_SIZE']
   const CHART_TITLE__HIT_RATES: typeof import('./src/composables/constants')['CHART_TITLE__HIT_RATES']
+  const CHART_TITLE__H_M_RATES: typeof import('./src/composables/constants')['CHART_TITLE__H_M_RATES']
   const CHART_TITLE__MISS_RATES: typeof import('./src/composables/constants')['CHART_TITLE__MISS_RATES']
   const CHART_TITLE__NUMS_ITEMS: typeof import('./src/composables/constants')['CHART_TITLE__NUMS_ITEMS']
+  const CHART_TITLE__NUMS_NODES: typeof import('./src/composables/constants')['CHART_TITLE__NUMS_NODES']
   const CHART_TITLE__NUMS_REQUESTS: typeof import('./src/composables/constants')['CHART_TITLE__NUMS_REQUESTS']
   const CHART_TITLE__USAGES_PERCENT: typeof import('./src/composables/constants')['CHART_TITLE__USAGES_PERCENT']
   const CHART_TITLE__USAGES_SIZE: typeof import('./src/composables/constants')['CHART_TITLE__USAGES_SIZE']
@@ -58,8 +62,10 @@ declare global {
   const TOAST_ID__GET_CACHE_CONFIGS__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__GET_CACHE_CONFIGS__SUCCESS']
   const TOAST_ID__GET_CACHE_KEYS__ERROR: typeof import('./src/composables/constants')['TOAST_ID__GET_CACHE_KEYS__ERROR']
   const TOAST_ID__GET_CACHE_KEYS__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__GET_CACHE_KEYS__SUCCESS']
+  const TOAST_ID__GET_NUM_NODES__ERROR: typeof import('./src/composables/constants')['TOAST_ID__GET_NUM_NODES__ERROR']
   const TOAST_ID__GET_STATS__ERROR: typeof import('./src/composables/constants')['TOAST_ID__GET_STATS__ERROR']
   const TOAST_ID__GET_STATS__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__GET_STATS__SUCCESS']
+  const TOAST_ID__NEW_NUM_NODES: typeof import('./src/composables/constants')['TOAST_ID__NEW_NUM_NODES']
   const TOAST_ID__PUT_CACHE_CONFIGS__ERROR: typeof import('./src/composables/constants')['TOAST_ID__PUT_CACHE_CONFIGS__ERROR']
   const TOAST_ID__PUT_CACHE_CONFIGS__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__PUT_CACHE_CONFIGS__SUCCESS']
   const TOAST_ID__REFRESH_STATS__INFO: typeof import('./src/composables/constants')['TOAST_ID__REFRESH_STATS__INFO']
@@ -73,6 +79,7 @@ declare global {
   const TOAST_MSG__GET_CACHE_CONFIGS__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__GET_CACHE_CONFIGS__SUCCESS']
   const TOAST_MSG__GET_CACHE_KEYS__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__GET_CACHE_KEYS__SUCCESS']
   const TOAST_MSG__GET_STATS__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__GET_STATS__SUCCESS']
+  const TOAST_MSG__NEW_NUM_NODES: typeof import('./src/composables/constants')['TOAST_MSG__NEW_NUM_NODES']
   const TOAST_MSG__PUT_CACHE_CONFIGS__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__PUT_CACHE_CONFIGS__SUCCESS']
   const TOAST_MSG__REFRESH_STATS__INFO: typeof import('./src/composables/constants')['TOAST_MSG__REFRESH_STATS__INFO']
   const TOAST_MSG__RETRIEVE_IMG__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__RETRIEVE_IMG__SUCCESS']
@@ -249,6 +256,7 @@ declare global {
   const useIntervalFn: typeof import('@vueuse/core')['useIntervalFn']
   const useKeyModifier: typeof import('@vueuse/core')['useKeyModifier']
   const useLastChanged: typeof import('@vueuse/core')['useLastChanged']
+  const useLatestNumNodes: typeof import('./src/composables/useLatestNumNodes')['useLatestNumNodes']
   const useLink: typeof import('vue-router')['useLink']
   const useLocalStorage: typeof import('@vueuse/core')['useLocalStorage']
   const useMagicKeys: typeof import('@vueuse/core')['useMagicKeys']
@@ -375,14 +383,18 @@ declare module 'vue' {
     readonly $shallowRef: UnwrapRef<typeof import('vue/macros')['$shallowRef']>
     readonly $toRef: UnwrapRef<typeof import('vue/macros')['$toRef']>
     readonly CHART_ID__HIT_RATES: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__HIT_RATES']>
+    readonly CHART_ID__H_M_RATES: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__H_M_RATES']>
     readonly CHART_ID__MISS_RATES: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__MISS_RATES']>
     readonly CHART_ID__NUMS_ITEMS: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__NUMS_ITEMS']>
+    readonly CHART_ID__NUMS_NODES: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__NUMS_NODES']>
     readonly CHART_ID__NUMS_REQUESTS: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__NUMS_REQUESTS']>
     readonly CHART_ID__USAGES_PERCENT: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__USAGES_PERCENT']>
     readonly CHART_ID__USAGES_SIZE: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__USAGES_SIZE']>
     readonly CHART_TITLE__HIT_RATES: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__HIT_RATES']>
+    readonly CHART_TITLE__H_M_RATES: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__H_M_RATES']>
     readonly CHART_TITLE__MISS_RATES: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__MISS_RATES']>
     readonly CHART_TITLE__NUMS_ITEMS: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__NUMS_ITEMS']>
+    readonly CHART_TITLE__NUMS_NODES: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__NUMS_NODES']>
     readonly CHART_TITLE__NUMS_REQUESTS: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__NUMS_REQUESTS']>
     readonly CHART_TITLE__USAGES_PERCENT: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__USAGES_PERCENT']>
     readonly CHART_TITLE__USAGES_SIZE: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__USAGES_SIZE']>
@@ -421,8 +433,10 @@ declare module 'vue' {
     readonly TOAST_ID__GET_CACHE_CONFIGS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GET_CACHE_CONFIGS__SUCCESS']>
     readonly TOAST_ID__GET_CACHE_KEYS__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GET_CACHE_KEYS__ERROR']>
     readonly TOAST_ID__GET_CACHE_KEYS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GET_CACHE_KEYS__SUCCESS']>
+    readonly TOAST_ID__GET_NUM_NODES__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GET_NUM_NODES__ERROR']>
     readonly TOAST_ID__GET_STATS__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GET_STATS__ERROR']>
     readonly TOAST_ID__GET_STATS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GET_STATS__SUCCESS']>
+    readonly TOAST_ID__NEW_NUM_NODES: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__NEW_NUM_NODES']>
     readonly TOAST_ID__PUT_CACHE_CONFIGS__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__PUT_CACHE_CONFIGS__ERROR']>
     readonly TOAST_ID__PUT_CACHE_CONFIGS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__PUT_CACHE_CONFIGS__SUCCESS']>
     readonly TOAST_ID__REFRESH_STATS__INFO: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__REFRESH_STATS__INFO']>
@@ -436,6 +450,7 @@ declare module 'vue' {
     readonly TOAST_MSG__GET_CACHE_CONFIGS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__GET_CACHE_CONFIGS__SUCCESS']>
     readonly TOAST_MSG__GET_CACHE_KEYS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__GET_CACHE_KEYS__SUCCESS']>
     readonly TOAST_MSG__GET_STATS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__GET_STATS__SUCCESS']>
+    readonly TOAST_MSG__NEW_NUM_NODES: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__NEW_NUM_NODES']>
     readonly TOAST_MSG__PUT_CACHE_CONFIGS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__PUT_CACHE_CONFIGS__SUCCESS']>
     readonly TOAST_MSG__REFRESH_STATS__INFO: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__REFRESH_STATS__INFO']>
     readonly TOAST_MSG__RETRIEVE_IMG__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__RETRIEVE_IMG__SUCCESS']>
@@ -612,6 +627,7 @@ declare module 'vue' {
     readonly useIntervalFn: UnwrapRef<typeof import('@vueuse/core')['useIntervalFn']>
     readonly useKeyModifier: UnwrapRef<typeof import('@vueuse/core')['useKeyModifier']>
     readonly useLastChanged: UnwrapRef<typeof import('@vueuse/core')['useLastChanged']>
+    readonly useLatestNumNodes: UnwrapRef<typeof import('./src/composables/useLatestNumNodes')['useLatestNumNodes']>
     readonly useLink: UnwrapRef<typeof import('vue-router')['useLink']>
     readonly useLocalStorage: UnwrapRef<typeof import('@vueuse/core')['useLocalStorage']>
     readonly useMagicKeys: UnwrapRef<typeof import('@vueuse/core')['useMagicKeys']>

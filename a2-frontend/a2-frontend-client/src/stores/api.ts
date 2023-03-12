@@ -1,4 +1,5 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
+import type { CacheConfigOptions } from '~/composables/utils'
 
 export const useAPIStore = defineStore('api', () => {
   const defaultAddr = 'localhost:5000'
@@ -176,6 +177,47 @@ export const useAPIStore = defineStore('api', () => {
   //
   const getStats = () => baseAxios.value.get('/api/stats')
 
+  const getNumNodes = () => baseAxios.value.post('/api/getNumNodes')
+
+  const getRate = (rate: string) => {
+    const pathStr = '/api/getRate'
+    const queryStr = `?rate=${rate}`
+    const fullPathStr = pathStr + queryStr
+    return baseAxios.value.post(fullPathStr)
+  }
+
+  const putCacheConfigsNew = (data: CacheConfigOptions) => {
+    const pathStr = '/api/configure_cache'
+    let queryStr = '?'
+
+    queryStr = queryStr.concat(`mode=${data.mode}&`)
+
+    if (data.numNodes !== undefined)
+      queryStr = queryStr.concat(`numNodes=${data.numNodes}&`)
+
+    queryStr = queryStr.concat(`cacheSize=${data.cacheSize}&`)
+
+    queryStr = queryStr.concat(`policy=${data.policy}`)
+
+    if (data.expRatio !== undefined)
+      queryStr = queryStr.concat(`&expRatio=${data.expRatio}&`)
+
+    if (data.shrinkRatio !== undefined)
+      queryStr = queryStr.concat(`shrinkRatio=${data.shrinkRatio}&`)
+
+    if (data.maxMiss !== undefined)
+      queryStr = queryStr.concat(`maxMiss=${data.maxMiss}&`)
+
+    if (data.minMiss !== undefined)
+      queryStr = queryStr.concat(`minMiss=${data.minMiss}`)
+
+    const fullPathStr = pathStr + queryStr
+
+    return baseAxios.value.post(fullPathStr)
+  }
+
+  const getCacheConfigsNew = () => baseAxios.value.get('/api/config')
+
   return {
     ipAddr,
     baseURLShort,
@@ -188,6 +230,10 @@ export const useAPIStore = defineStore('api', () => {
     putCacheConfigs,
     postClearCache,
     getStats,
+    getNumNodes,
+    getRate,
+    putCacheConfigsNew,
+    getCacheConfigsNew,
   }
 })
 
