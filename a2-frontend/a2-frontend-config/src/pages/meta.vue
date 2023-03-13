@@ -376,7 +376,6 @@ onMounted(() => {
     <TheMetaCard
       w-full
       :is-blurred="isDownloadingMemcache"
-      border
     >
       <h2 mb-8 text-lg>
         Memcache
