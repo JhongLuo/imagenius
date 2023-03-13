@@ -6,7 +6,7 @@ defineOptions({
 const api = useAPIStore()
 
 const start = () => {
-  window.location.href = '/config'
+  window.location.href = '/meta'
 }
 
 onMounted(() => {

@@ -27,8 +27,7 @@ export default defineConfig({
     ['my-bg-secondary', 'bg-#FAFAFA dark:bg-#181A22'],
     ['my-bg-tertiary', 'bg-#FAFAFA dark:bg-gray-8'],
     // components
-    ['my-input', 'text-sm font-medium rounded-md my-text-color-primary my-bg-primary my-border pla disabled:text-op-15 disabled:placeholder-op-15'],
-    ['my-text-input', 'w-full px-4 py-2 my-input'],
+    ['my-input', 'w-full px-4 py-2 text-sm font-medium rounded-md my-text-color-primary my-bg-primary my-border pla disabled:text-op-15 disabled:placeholder-op-15'],
     ['my-title', 'mb-5 text-xl font-extrabold my-text-color-primary select-none'],
     ['my-label', 'mb-2 text-sm font-medium my-text-color-primary'],
     ['my-helper-text', 'mt-1 text-xs font-medium my-text-color-secondary'],

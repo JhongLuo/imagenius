@@ -4,7 +4,7 @@ defineProps<{
 }>()
 
 const { modelValue } = defineModel<{
-  modelValue?: string
+  modelValue: string | number
 }>()
 </script>
 
@@ -12,7 +12,7 @@ const { modelValue } = defineModel<{
   <input
     :id="inputId"
     v-model="modelValue"
-    my-input-style
-    autocomplete="false"
+    my-input
+    autocomplete="off"
   >
 </template>

@@ -33,6 +33,7 @@ declare module '@vue/runtime-core' {
     TheInputHelperText: typeof import('./src/components/TheInputs/TheInputHelperText.vue')['default']
     TheKeyTable: typeof import('./src/components/TheKeyTable.vue')['default']
     TheLabeledInput: typeof import('./src/components/TheInputs/TheLabeledInput.vue')['default']
+    TheMetaCard: typeof import('./src/components/TheMetaCard.vue')['default']
     TheModal: typeof import('./src/components/TheDismissables/TheModal.vue')['default']
     TheNavs: typeof import('./src/components/TheLayouts/TheNavs.vue')['default']
     ThePageContent: typeof import('./src/components/TheLayouts/ThePageContent.vue')['default']

@@ -29,9 +29,9 @@
     /> -->
 
     <a
-      icon-btn i-carbon:settings-adjust
-      href="/config"
-      title="Config"
+      icon-btn i-carbon:bare-metal-server
+      href="/meta"
+      title="Meta"
     />
 
     <!-- <a

@@ -13,6 +13,5 @@ const { modelValue } = defineModel<{
     v-model="modelValue"
     :input-id="inputId"
     type="text"
-    my-text-input
   />
 </template>

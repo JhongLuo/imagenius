@@ -5,7 +5,7 @@ defineProps<{
 }>()
 
 const { modelValue } = defineModel<{
-  modelValue?: string
+  modelValue?: string | number
 }>()
 
 defineOptions({
@@ -25,7 +25,7 @@ defineOptions({
       {{ labelText }}
     </label>
 
-    <TheTextInput
+    <TheInput
       v-if="modelValue !== undefined"
       v-model="modelValue"
       :input-id="inputId"

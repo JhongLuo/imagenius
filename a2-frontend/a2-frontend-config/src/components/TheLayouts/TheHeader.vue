@@ -4,7 +4,7 @@
   >
     <div flex flex-row justify-center>
       <!-- icon -->
-      <div i-carbon:cloud-services text-4xl inline-block />
+      <div i-carbon:accumulation-snow text-4xl inline-block />
 
       <!-- spacer -->
       <div px-2 />
@@ -15,11 +15,11 @@
         select-none
       >
         <p text-lg>
-          A2 Manager Web Frontend
+          A2 Backend Configs
         </p>
         <p text-sm op75>
           <em>
-            Memcache Pool Management
+            some secret sh*t you probably don't need to know about
           </em>
         </p>
       </div>
