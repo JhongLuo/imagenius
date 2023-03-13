@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from . import Cache
 from apscheduler.schedulers.background import BackgroundScheduler
 import time
@@ -18,7 +19,7 @@ def start_scheduler(memcache):
     scheduler.start()
 
 webapp = Flask(__name__)
-
+CORS(webapp, resources={r"/*": {"origins": "*"}})
 global memcache
 
 memcache = Cache.Cache()

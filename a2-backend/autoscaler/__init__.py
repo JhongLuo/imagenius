@@ -1,9 +1,11 @@
 from flask import Flask
+from flask_cors import CORS
 from autoscaler.scaler import Scaler
 from apscheduler.schedulers.background import BackgroundScheduler
 
 
 webapp = Flask(__name__)
+CORS(webapp, resources={r"/*": {"origins": "*"}})
 
 global scaler
 
