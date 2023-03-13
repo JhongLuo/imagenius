@@ -2,27 +2,23 @@ import mysql.connector
 from utils.ReplacementPolicies import ReplacementPolicies
 from enum import Enum
 from utils.config import Config
+import requests
 class StatsNames(Enum):
     total_requests = "total_requests"
     read_requests = "read_requests"
     missed_requests = "missed_requests"
     replacement_policy = "replacement_policy"
     max_size = "max_size"
-        
-database_name = "ece1779a2"
+    
+    
+print(requests.get(Config.config_service_ip + '/rds'))
+db_config = requests.get(Config.config_service_ip + '/rds').json()
+print("config", db_config)
 
-config = {
-    # "pool_name" : "group18a2_pool",
-    # "pool_size" : 1,
-    "user" : Config.rds_user,
-    "password" : Config.rds_password,
-    "host" : Config.rds_ip,
-    "database" : database_name,
-}
 
 def cursor_operation(func):
     def wrapper(*args, **kwargs):
-        conn = mysql.connector.connect(**config)
+        conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
         try:
             rtn = func(cursor, *args, **kwargs)
@@ -39,13 +35,11 @@ def cursor_operation(func):
 # on the first run, create the database and tables
 
 def create_database():
-    new_config = config.copy()
+    new_config = db_config.copy()
     new_config.pop("database")
-    # new_config.pop("pool_size")
-    # new_config.pop("pool_name")
     conn = mysql.connector.connect(**new_config)
     cursor = conn.cursor()
-    cursor.execute(f"CREATE DATABASE IF NOT EXISTS {database_name}")
+    cursor.execute(f"CREATE DATABASE IF NOT EXISTS {db_config['database']}")
     conn.commit()
     cursor.close()
     conn.close()
@@ -129,9 +123,6 @@ def get_autoscaler_status(cursor):
 @cursor_operation
 def reset_stats(cursor):
     data = [
-        # (StatsNames.total_requests.value, 0),
-        # (StatsNames.read_requests.value, 0),
-        # (StatsNames.missed_requests.value, 0),
         (StatsNames.replacement_policy.value, ReplacementPolicies.LRU.value),
         (StatsNames.max_size.value, 100 * 1024 * 1024),
     ]
@@ -157,13 +148,6 @@ def get_stat(cursor, name : StatsNames):
         return int(res[0])
     else:
         raise Exception("Cannot get this stat")
-
-# @cursor_operation
-# def add_stat(cursor, name : StatsNames, value):
-#     if name == StatsNames.total_requests or name == StatsNames.read_requests or name == StatsNames.missed_requests:
-#         cursor.execute(f"UPDATE stats SET value = value + {str(value)} WHERE name = '{name.value}'")
-#     else:
-#         raise Exception("Cannot add to this stat")
 
 @cursor_operation
 def set_stat(cursor, name : StatsNames, value):
