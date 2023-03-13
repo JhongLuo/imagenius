@@ -3,7 +3,7 @@ import sys
 import time
 
 
-url = "http://localhost:5000/api"
+url = "http://54.146.182.23:5000/api"
 
 file_MB = 0.1
 sleep_time = 0.1

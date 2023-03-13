@@ -4,7 +4,7 @@ import random
 from collections import deque
 import time
 import matplotlib.pyplot as plt
-from manager_tests import file_MB, get, sleep_time, upload1, set_config, delete_all, get_miss_rate, get_num_nodes
+from manager_tests import file_MB, get, sleep_time, upload1, set_config, delete_all, get_miss_rate, get_num_nodes, clear_cache
 
 def prepare_workload(total_MB):
     total_image = int(total_MB / file_MB) + 1
@@ -184,6 +184,7 @@ def auto_shrink():
     print(set_config(mode='manual', numNodes=8))
     total_MB = 2
     prepare_workload(total_MB)
+    print(clear_cache())
     total_image = int(total_MB / file_MB) + 1
     print(set_config(mode='auto', expRatio=2, shrinkRatio=0.5, maxMiss=0.3, minMiss=0.1, cacheSize=2))
     miss_rates = []
