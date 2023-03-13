@@ -37,3 +37,6 @@
 **/.vite-ssg-dist
 **/.vite-ssg-temp
 **/dist-ssr
+
+*.png
+*.json
