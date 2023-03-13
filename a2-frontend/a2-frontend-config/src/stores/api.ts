@@ -218,6 +218,20 @@ export const useAPIStore = defineStore('api', () => {
 
   const getCacheConfigsNew = () => baseAxios.value.get('/api/config')
 
+  // ###############################################################
+
+  const metaConfigsPrefix = '/api/ece1779/a2/config'
+
+  const getMetaConfigsRds = () => baseAxios.value.get(`${metaConfigsPrefix}/rds`)
+  const getMetaConfigsManager = () => baseAxios.value.get(`${metaConfigsPrefix}/manager`)
+  const getMetaConfigsScaler = () => baseAxios.value.get(`${metaConfigsPrefix}/scaler`)
+  const getMetaConfigsMemcache = (id: number) => baseAxios.value.post(`${metaConfigsPrefix}/memcache/${id}`)
+
+  const postMetaConfigsRds = (data: object) => baseAxios.value.post(`${metaConfigsPrefix}/rds`, data)
+  const postMetaConfigsManager = (data: object) => baseAxios.value.post(`${metaConfigsPrefix}/manager`, data)
+  const postMetaConfigsScaler = (data: object) => baseAxios.value.post(`${metaConfigsPrefix}/scaler`, data)
+  const postMetaConfigsMemcache = (id: number, data: object) => baseAxios.value.post(`${metaConfigsPrefix}/memcache/${id}`, data)
+
   return {
     ipAddr,
     baseURLShort,
@@ -234,6 +248,14 @@ export const useAPIStore = defineStore('api', () => {
     getRate,
     putCacheConfigsNew,
     getCacheConfigsNew,
+    getMetaConfigsRds,
+    postMetaConfigsRds,
+    getMetaConfigsManager,
+    postMetaConfigsManager,
+    getMetaConfigsScaler,
+    postMetaConfigsScaler,
+    getMetaConfigsMemcache,
+    postMetaConfigsMemcache,
   }
 })
 

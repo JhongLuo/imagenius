@@ -369,7 +369,7 @@ declare global {
   // @ts-ignore
   export type { ToastModel, ToastType } from '~/composables/useToasts'
   // @ts-ignore
-  export type { StatsData, RawStatsData } from '~/composables/utils'
+  export type { StatsData, RawStatsData, CacheConfigOptions } from '~/composables/utils'
 }
 // for vue template auto import
 import { UnwrapRef } from 'vue'

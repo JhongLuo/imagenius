@@ -5,21 +5,22 @@
 //
 //
 export interface RawStatsData {
-  items_len: number[]
-  requests_count: number[]
-  items_bytes: number[]
-  max_size: number[]
-  hit_rate: number[]
+  timestamp: number[]
   miss_rate: number[]
+  hit_rate: number[]
+  nodes_num: number[]
+  items_len: number[]
+  items_bytes: number[]
+  requests_count: number[]
 }
 
 export interface StatsData {
-  nums_items: number[]
-  nums_requests: number[]
-  usages_size: number[]
-  usages_percent: number[]
+  nums_nodes: number[]
   hit_rates: number[]
   miss_rates: number[]
+  nums_items: number[]
+  usages_size: number[]
+  nums_requests: number[]
 }
 
 export interface CacheConfigOptions {

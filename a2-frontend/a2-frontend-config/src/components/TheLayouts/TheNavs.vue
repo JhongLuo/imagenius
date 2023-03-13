@@ -22,11 +22,11 @@
       title="Retrieve"
     /> -->
 
-    <a
+    <!-- <a
       icon-btn i-carbon:virtual-column-key
       href="/keys"
       title="Keys"
-    />
+    /> -->
 
     <a
       icon-btn i-carbon:settings-adjust
@@ -34,11 +34,11 @@
       title="Config"
     />
 
-    <a
+    <!-- <a
       icon-btn i-carbon:chart-line
       href="/stats"
       title="Stats"
-    />
+    /> -->
 
     <p mx-1 select-none>
       ·
