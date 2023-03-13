@@ -320,11 +320,11 @@ onMounted(() => {
         />
       </TheMetaCard>
 
-      <!-- Manger -->
+      <!-- Manager -->
       <TheMetaCard
         :is-blurred="isDownloadingManager"
       >
-        <h2>Manger</h2>
+        <h2>Manager</h2>
         <TheLabeledInput
           v-model="managerConfigs.ip"
           input-id="meta-manager-ip"
