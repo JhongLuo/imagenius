@@ -186,8 +186,6 @@ class Manager:
         for i in range(8):
             if rds.get_memcache_status(i):
                 memcachop.clear_cache(id2url(i))
-            else:
-                break
     
     def get_stats(self):
         with self.record_lock:
