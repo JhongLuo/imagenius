@@ -6,9 +6,17 @@ class S3:
         self.bucketName = "ece1779t18a3"
         self.s3_resource = boto3.resource('s3')   
         
-        self.file_counter = 0
         self.createBucket()
-        
+        self.file_counter = self.get_largest_filename() + 1
+    
+    def get_largest_filename(self):
+        all = self.s3_resource.Bucket(self.bucketName).objects.all()
+        largest = -1
+        for obj in all:
+            if int(obj.key) > largest:
+                largest = int(obj.key)
+        return largest
+    
     def createBucket(self):
         if self.checkBucketExists():
             pass
@@ -48,13 +56,13 @@ class S3:
         self.file_counter += 1
         return new_filename
             
-    def store_image(self, file):
+    def store_image(self, bytes):
         new_filename = self.get_new_filename()
-        self.client.put_object(Bucket=self.bucketName, Key=new_filename, Body=file.encode('utf-8'))
+        self.client.put_object(Bucket=self.bucketName, Key=new_filename, Body=bytes)
         return new_filename
 
     def read_image(self, filename):
-        return self.client.get_object(Bucket=self.bucketName, Key=filename)['Body'].read().decode('utf-8')
+        return self.client.get_object(Bucket=self.bucketName, Key=filename)['Body'].read()
         
     def delete_image(self, filename):
         self.client.delete_object(Bucket=self.bucketName, Key=filename)
