@@ -65,17 +65,21 @@ class Dynamo:
         self.dy = boto3.client('dynamodb')
 
     # retrieve all images with the same label
-    def label_retrive(self, label):
-        response = self.dy.query(
-            TableName=self.image_table_name,
-            KeyConditionExpression='label = :label',
-            ExpressionAttributeValues={
-                ":label": {'S': label}
-            },
-        )
+    def labels_retrive(self, labels):
         images = set()
-        for item in response['Items']:
-            images.add(item['image_path']['S'])
+        for label in labels:
+            images_per_label = set()
+            response = self.dy.query(
+                TableName=self.image_table_name,
+                KeyConditionExpression='label = :label',
+                ExpressionAttributeValues={
+                    ":label": {'S': label}
+                },
+            )
+            
+            for item in response['Items']:
+                images_per_label.add(item['image_path']['S'])
+            images.intersection_update(images_per_label)
         images = list(images)
         images.sort()
         return images
@@ -121,6 +125,41 @@ class Dynamo:
         else:
             print(f"Successfully inserted image_path {image_path} with labels {', '.join(labels)} for description {description}")
 
+    def list_images(self):
+        response = self.dy.scan(
+            TableName=self.image_table_name,
+            ProjectionExpression='image_path',
+        )
+        images = set()
+        for item in response['Items']:
+            images.add(item['image_path']['S'])
+        images = list(images)
+        images.sort()
+        return images
+    
+    def list_labels(self):
+        response = self.dy.scan(
+            TableName=self.image_table_name,
+            ProjectionExpression='label',
+        )
+        labels = set()
+        for item in response['Items']:
+            labels.add(item['label']['S'])
+        labels = list(labels)
+        labels.sort()
+        return labels
+    
+    def list_descriptions(self):
+        response = self.dy.scan(
+            TableName=self.image_table_name,
+            ProjectionExpression='description',
+        )
+        descriptions = set()
+        for item in response['Items']:
+            descriptions.add(item['description']['S'])
+        descriptions = list(descriptions)
+        descriptions.sort()
+        return descriptions
             
 
         

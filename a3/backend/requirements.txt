@@ -24,6 +24,7 @@ kappa==0.6.0
 MarkupSafe==2.1.2
 multidict==6.0.4
 openai==0.27.2
+Pillow==9.5.0
 placebo==0.9.0
 protobuf==3.20.3
 pycodestyle==2.10.0
