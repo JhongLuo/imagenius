@@ -10,6 +10,7 @@ class Dynamo:
         }
         if not self.table_exists(self.image_table_name):
             self.create_image_table()
+            self.dy.get_waiter('table_exists').wait(TableName=self.image_table_name)
     
     def table_exists(self, table_name):
         try:
@@ -67,6 +68,7 @@ class Dynamo:
     # retrieve all images with the same label
     def labels_retrive(self, labels):
         images = set()
+        is_first = True
         for label in labels:
             images_per_label = set()
             response = self.dy.query(
@@ -79,7 +81,11 @@ class Dynamo:
             
             for item in response['Items']:
                 images_per_label.add(item['image_path']['S'])
-            images.intersection_update(images_per_label)
+            if is_first:
+                images = images_per_label
+                is_first = False
+            else:
+                images.intersection_update(images_per_label)
         images = list(images)
         images.sort()
         return images

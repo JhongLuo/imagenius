@@ -11,7 +11,6 @@ def description2image(description, n=1, size="256x256"):
         n=n,
         size=size
     )
-    print(response)
     image_url = response['data'][0]['url']
     response = requests.get(image_url)
     image = base64.b64encode(response.content).decode('utf-8')

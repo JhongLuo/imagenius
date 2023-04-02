@@ -5,7 +5,10 @@ from service.dalle import description2image
 from service.s3 import S3
 from service.dynamo import Dynamo
 from service.rekognition import Rekognition
+from flask_cors import CORS
+
 app = Flask(__name__)
+CORS(app)
 
 s3 = S3()
 dynamo = Dynamo()
@@ -45,12 +48,12 @@ def delete_images():
 
 @app.route('/images', methods = ['GET'])
 def get_images():
-    filter = request.get_json()
-    image_paths = []
-    if "description" in filter and filter["description"]:
-        image_paths = dynamo.description_retrive(filter["description"])
-    elif "labels" in filter and filter["labels"] and len(filter["labels"]) > 0:
-        image_paths = dynamo.labels_retrive(filter["labels"])
+    description = request.args.get('description', None)
+    labels = request.args.getlist('labels', None)
+    if description:
+        image_paths = dynamo.description_retrive(description)
+    elif labels and len(labels) > 0:
+        image_paths = dynamo.labels_retrive(labels)
     else: 
         image_paths = dynamo.list_images()
 

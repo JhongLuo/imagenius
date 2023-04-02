@@ -62,7 +62,7 @@ class S3:
         return new_filename
 
     def read_image(self, filename):
-        return self.client.get_object(Bucket=self.bucketName, Key=filename)['Body'].read()
-        
+        return self.client.get_object(Bucket=self.bucketName, Key=filename)['Body'].read().decode('utf-8')
+         
     def delete_image(self, filename):
         self.client.delete_object(Bucket=self.bucketName, Key=filename)
