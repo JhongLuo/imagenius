@@ -36,14 +36,13 @@ image dict:
     content : base64 encoded image
 """
 @app.route('/api/generate', methods = ['POST'])
-def create_images():
-    data = request.get_json()
-    if "prompt" not in data or not data["prompt"]:
+def create_images():        
+    prompt = request.form.get("prompt", None)
+    if not prompt:
         return make_response(jsonify({
             "error": "prompt is required"
         }), 400)
-        
-    prompt = data['prompt']
+
     return_images = []
     for _ in range(image_num):
         image, raw_image = prompt2image(prompt)
@@ -76,15 +75,11 @@ return json:
 """
 @app.route('/api/images', methods = ['POST'])
 def post_image():
-    data = request.get_json()
-    required_fields = ["key_selections"]
-    for required_field in required_fields:
-        if required_field not in data or not data[required_field]:
-            return make_response(jsonify({
-                "error": f"{required_field} is required"
-            }), 400)
-    
-    key_selections = data['key_selections']
+    key_selections = request.form.get("key_selections", None)
+    if not key_selections:
+        return make_response(jsonify({
+            "error": "key_selections is required"
+        }), 400)
     for key in key_selections:
         if key not in temp_cache:
             return make_response(jsonify({
