@@ -36,7 +36,7 @@ class Dynamo:
             'KeyType': 'RANGE'
         }
         gsi_partition_key = {
-            'AttributeName': 'description',
+            'AttributeName': 'prompt',
             'KeyType': 'HASH'
         }
         gsi_sort_key = {
@@ -45,7 +45,7 @@ class Dynamo:
         }
         attribute_definitions = [
             {'AttributeName': 'image_path', 'AttributeType': 'S'},
-            {'AttributeName': 'description', 'AttributeType': 'S'},
+            {'AttributeName': 'prompt', 'AttributeType': 'S'},
             {'AttributeName': 'label', 'AttributeType': 'S'},
         ]
         gsi = {
@@ -90,13 +90,13 @@ class Dynamo:
         images.sort()
         return images
     
-    def description_retrive(self, description):
+    def prompt_retrive(self, prompt):
         response = self.dy.query(
             TableName=self.image_table_name,
             IndexName='DesIndex',
-            KeyConditionExpression='description = :description',
+            KeyConditionExpression='prompt = :prompt',
             ExpressionAttributeValues={
-                ":description": {'S': description}
+                ":prompt": {'S': prompt}
             },
         )
         images = set()
@@ -106,7 +106,7 @@ class Dynamo:
         images.sort()
         return images
     
-    def put_image(self, image_path, labels, description):
+    def put_image(self, image_path, labels, prompt):
         labels.append('all')
         item_list = []
         for label in labels:
@@ -115,7 +115,7 @@ class Dynamo:
                     'Item': {
                         'label': {'S': label},
                         'image_path': {'S': image_path},
-                        'description': {'S': description},
+                        'prompt': {'S': prompt},
                     }
                 }
             }
@@ -129,7 +129,7 @@ class Dynamo:
             print("Some items were not processed:")
             print(response['UnprocessedItems'])
         else:
-            print(f"Successfully inserted image_path {image_path} with labels {', '.join(labels)} for description {description}")
+            print(f"Successfully inserted image_path {image_path} with labels {', '.join(labels)} for prompt {prompt}")
 
     def list_images(self):
         response = self.dy.scan(
@@ -155,17 +155,17 @@ class Dynamo:
         labels.sort()
         return labels
     
-    def list_descriptions(self):
+    def list_prompts(self):
         response = self.dy.scan(
             TableName=self.image_table_name,
-            ProjectionExpression='description',
+            ProjectionExpression='prompt',
         )
-        descriptions = set()
+        prompts = set()
         for item in response['Items']:
-            descriptions.add(item['description']['S'])
-        descriptions = list(descriptions)
-        descriptions.sort()
-        return descriptions
+            prompts.add(item['prompt']['S'])
+        prompts = list(prompts)
+        prompts.sort()
+        return prompts
             
 
         

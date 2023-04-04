@@ -5,9 +5,9 @@ import base64
 
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
-def description2image(description, n=1, size="256x256"):
+def prompt2image(prompt, n=1, size="256x256"):
     response = openai.Image.create(
-        prompt= description,
+        prompt= prompt,
         n=n,
         size=size
     )
