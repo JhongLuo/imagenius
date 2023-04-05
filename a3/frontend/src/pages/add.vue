@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { ImageSelectable, RawImageData } from '~/composables/utils'
+
 defineOptions({
   name: 'AddPage',
 })
@@ -6,9 +8,9 @@ defineOptions({
 const api = useAPIStore()
 const { toastsArray, blinkToast } = useToasts()
 
-const generatePrompt = ref('')
-const imgsGenerated = ref<ImageGenerated[]>([])
-const imgsSelected = computed<ImageGenerated[]>(() => imgsGenerated.value.filter(img => img.selected))
+const generatePrompt = ref<string>('')
+const imgsGenerated = ref<ImageSelectable[]>([])
+const imgsSelected = computed<ImageSelectable[]>(() => imgsGenerated.value.filter(img => img.selected))
 
 const isGenerating = ref(false)
 const isSaving = ref(false)
@@ -30,20 +32,25 @@ const handleGenerate = async () => {
     const response = await api.generateImages(fd)
     utilsJS.validateResponse(response)
     // handle success
-    await utils.sleep(50)
     imgsGenerated.value = []
     response.data.images.forEach((imgData: RawImageData) => {
       imgsGenerated.value.push({
         key: imgData.key,
-        src: imgData.src,
+        src: '',
+        srcSaved: imgData.src,
         selected: false,
-      } as ImageGenerated)
+      } as ImageSelectable)
+    })
+    // finish loading and start display
+    await utils.sleep(50)
+    isGenerating.value = false
+    imgsGenerated.value.forEach((img: ImageSelectable) => {
+      img.src = img.srcSaved
     })
     blinkToast(
       TOAST_ID__GENERATE_IMGS__SUCCESS,
       'success',
       TOAST_MSG__GENERATE_IMGS__SUCCESS)
-    isGenerating.value = false
   }
   catch (err) {
     // handle error
@@ -66,18 +73,23 @@ const handleSave = async () => {
     // construct request form data
     const fd = new FormData()
     const selectedKeys = imgsSelected.value.map(img => img.key)
-    fd.append('key_selections', JSON.stringify(selectedKeys))
+    fd.append('selected_keys', JSON.stringify(selectedKeys))
     const response = await api.saveImages(fd)
     utilsJS.validateResponse(response)
     // handle success
+    // start displaying results
+    await utils.sleep(50)
+    generatePrompt.value = ''
+    imgsGenerated.value.forEach((img: ImageSelectable) => {
+      img.src = ''
+    })
     await utils.sleep(50)
     imgsGenerated.value = []
-    generatePrompt.value = ''
+    isSaving.value = false
     blinkToast(
       TOAST_ID__SAVE_IMGS__SUCCESS,
       'success',
       TOAST_MSG__SAVE_IMGS__SUCCESS)
-    isSaving.value = false
   }
   catch (err) {
     // handle error
@@ -121,7 +133,7 @@ const handleSave = async () => {
         </TheLabeledInput>
       </div>
 
-      <!-- Group <upload button + spinner> -->
+      <!-- Group <generate button + spinner> -->
       <div
         flex items-center space-x-3
       >
@@ -144,7 +156,11 @@ const handleSave = async () => {
     <div
       w-full h-full
       mt-8
-      grid grid-cols-2 gap-4
+      grid gap-4
+      :class="{
+        'grid-cols-1': imgsGenerated.length < 2,
+        'grid-cols-2': imgsGenerated.length >= 2,
+      }"
     >
       <TheImagePreview
         v-for="img in imgsGenerated"
@@ -153,14 +169,13 @@ const handleSave = async () => {
         caption-pos="bottom-right"
         :caption-text="img.selected ? '✓' : ''"
         :alt="img.key"
-        :class="{ 'blur-sm grayscale': isSaving }"
-        transition-all
-        duration-300
+        :class="{ 'blur-sm grayscale': isGenerating || isSaving }"
+        transition-all duration-300
         @click="img.selected = !img.selected"
       />
     </div>
 
-    <!-- Group <upload button + spinner> -->
+    <!-- Group <save button + spinner> -->
     <div
       v-if="imgsGenerated.length"
       mt-8

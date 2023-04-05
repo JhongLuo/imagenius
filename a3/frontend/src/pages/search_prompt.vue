@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import type { Image, RawImageData } from '~/composables/utils'
+
 defineOptions({
-  name: 'SearchPage',
+  name: 'SearchByPromptPage',
 })
 
 const api = useAPIStore()
@@ -13,7 +15,7 @@ const isSearching = ref(false)
 
 const isPromptValid = computed(() => searchPrompt.value)
 
-const handleSearch = async () => {
+const handleSearchByPrompt = async () => {
   // input validation
   if (!isPromptValid.value)
     return
@@ -24,22 +26,27 @@ const handleSearch = async () => {
     // construct request form data
     const fd = new FormData()
     fd.append('prompt', searchPrompt.value)
-    const response = await api.searchImages(fd)
+    const response = await api.searchImagesByPrompt(fd)
     utilsJS.validateResponse(response)
     // handle success
-    await utils.sleep(50)
     imgsSearchResult.value = []
     response.data.images.forEach((imgData: RawImageData) => {
       imgsSearchResult.value.push({
         key: imgData.key,
-        src: imgData.src,
+        src: '',
+        srcSaved: imgData.src,
       } as Image)
+    })
+    // finish loading and start displaying results
+    await utils.sleep(50)
+    isSearching.value = false
+    imgsSearchResult.value.forEach((img: Image) => {
+      img.src = img.srcSaved
     })
     blinkToast(
       TOAST_ID__SEARCH_IMGS__SUCCESS,
       'success',
       TOAST_MSG__SEARCH_IMGS__SUCCESS)
-    isSearching.value = false
   }
   catch (err) {
     // handle error
@@ -55,7 +62,7 @@ const handleSearch = async () => {
 <template>
   <!-- Page Title -->
   <h1 my-title>
-    Search
+    Search By Prompt
   </h1>
 
   <!-- Page Content -->
@@ -78,12 +85,12 @@ const handleSearch = async () => {
             icon="i-carbon:ibm-watson-speech-to-text"
             input-id="input-image-prompt"
             placeholder="Prompt for image search..."
-            @keydown.enter="handleSearch"
+            @keydown.enter="handleSearchByPrompt"
           />
         </TheLabeledInput>
       </div>
 
-      <!-- Group <upload button + spinner> -->
+      <!-- Group <search button + spinner> -->
       <div
         flex items-center space-x-3
       >
@@ -97,27 +104,29 @@ const handleSearch = async () => {
         <TheButton
           label="Search"
           :disabled="!isPromptValid"
-          @click="handleSearch"
+          @click="handleSearchByPrompt"
         />
       </div>
     </div>
 
-    <!-- Select and Submission: -->
+    <!-- Search Results: -->
     <div
       w-full h-full
       mt-8
-      grid grid-cols-2 gap-4
+      grid gap-4
+      :class="{
+        'grid-cols-1': imgsSearchResult.length < 2,
+        'grid-cols-2': imgsSearchResult.length >= 2,
+      }"
     >
       <TheImagePreview
         v-for="img in imgsSearchResult"
         :key="img.key"
         :src="img.src"
         caption-pos="bottom-right"
-        :caption-text="img.selected ? '✓' : ''"
         :alt="img.key"
-        transition-all
-        duration-300
-        @click="img.selected = !img.selected"
+        :class="{ 'blur-sm grayscale': isSearching }"
+        transition-all duration-300
       />
     </div>
   </ThePageContent>

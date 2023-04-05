@@ -65,16 +65,6 @@ export default defineConfig({
           imports: ['ToastModel', 'ToastType'],
           type: true,
         },
-        {
-          from: '~/composables/utils',
-          imports: ['StatsData', 'RawStatsData', 'CacheConfigOptions'],
-          type: true,
-        },
-        {
-          from: '~/composables/utils',
-          imports: ['RawImageData', 'Image', 'ImageGenerated'],
-          type: true,
-        },
       ],
       dts: true,
       dirs: [

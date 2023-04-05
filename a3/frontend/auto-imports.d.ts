@@ -377,8 +377,6 @@ declare global {
   export type { ApexOptions } from 'apexcharts'
   // @ts-ignore
   export type { ToastModel, ToastType } from '~/composables/useToasts'
-  // @ts-ignore
-  export type { StatsData, RawStatsData, CacheConfigOptions, RawImageData, Image, ImageGenerated } from '~/composables/utils'
 }
 // for vue template auto import
 import { UnwrapRef } from 'vue'

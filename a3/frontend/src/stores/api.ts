@@ -68,7 +68,7 @@ export const useAPIStore = defineStore('api', () => {
   // image obj format:
   //   {
   //     "key": String,
-  //     "url": String
+  //     "src": String
   //   }
   //
   //
@@ -79,7 +79,7 @@ export const useAPIStore = defineStore('api', () => {
   // request format:
   // (POST)
   //   {
-  //     "key_selections": JSON String of [String] # decode using json.loads()
+  //     "selected_keys": JSON String of [String] # decode using json.loads()
   //   }
   //
   // response format:
@@ -90,7 +90,7 @@ export const useAPIStore = defineStore('api', () => {
   //
   const saveImages = (data: FormData) => baseAxios.value.post('/api/save', data)
 
-  // - Search Images:
+  // - Search Images By Prompt:
   //
   // request format:
   // (POST)
@@ -107,11 +107,49 @@ export const useAPIStore = defineStore('api', () => {
   // image obj format:
   //   {
   //     "key": String,
-  //     "url": String
+  //     "src": String
   //   }
   //
   //
-  const searchImages = (data: FormData) => baseAxios.value.post('/api/search', data)
+  const searchImagesByPrompt = (data: FormData) => baseAxios.value.post('/api/search/prompt', data)
+
+  // - Get Tags:
+  //
+  // request format:
+  // (GET)
+  //
+  // response format:
+  //   {
+  //     "success": "true",
+  //     "tags" : [String]
+  //   }
+  //
+  //
+  //
+  const getTags = () => baseAxios.value.get('/api/tags')
+
+  // - Search Images By Tags:
+  //
+  // request format:
+  // (POST)
+  //   {
+  //     "selected_tags": [String],
+  //   }
+  //
+  // response format:
+  //   {
+  //     "success": "true",
+  //     "images" : [Image]
+  //   }
+  //
+  // image obj format:
+  //   {
+  //     "key": String,
+  //     "src": String
+  //   }
+  //
+  //
+  const searchImagesByTags = (data: FormData) => baseAxios.value.post('/api/search/tags', data)
 
   return {
     ipAddr,
@@ -120,7 +158,9 @@ export const useAPIStore = defineStore('api', () => {
     updateApiKey,
     generateImages,
     saveImages,
-    searchImages,
+    searchImagesByPrompt,
+    getTags,
+    searchImagesByTags,
   }
 })
 

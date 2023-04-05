@@ -9,11 +9,15 @@ export interface RawImageData {
   src: string
 }
 
-export type Image = RawImageData
+export interface Image extends RawImageData {
+  srcSaved: string
+}
 
-export interface ImageGenerated extends Image {
+export interface ImageSelectable extends Image {
   selected: boolean
 }
+
+export type Labeled = { label: string } & unknown
 
 export interface RawStatsData {
   timestamp: number[]

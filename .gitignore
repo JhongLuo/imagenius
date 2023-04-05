@@ -39,5 +39,3 @@
 **/dist-ssr
 
 *.png
-*.json
-*.env
