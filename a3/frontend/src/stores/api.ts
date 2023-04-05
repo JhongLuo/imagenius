@@ -79,7 +79,7 @@ export const useAPIStore = defineStore('api', () => {
   // request format:
   // (POST)
   //   {
-  //     "selected_keys": JSON String of [String] # decode using json.loads()
+  //     "selected_keys": [String], encoded into a JSON string  # can be decoded using json.loads()
   //   }
   //
   // response format:
@@ -133,7 +133,7 @@ export const useAPIStore = defineStore('api', () => {
   // request format:
   // (POST)
   //   {
-  //     "selected_tags": [String],
+  //     "selected_tags": [String], encoded into a JSON string  # can be decoded using json.loads()
   //   }
   //
   // response format:
