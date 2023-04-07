@@ -27,17 +27,17 @@ const handleGetTags = async () => {
     // handle success
     imgTags.value = response.data.tags
     // finish loading and start displaying results
-    await utils.sleep(50)
+    await utils.sleep(500)
     isGettingTags.value = false
     blinkToast(
-      TOAST_ID__GENERATE_IMGS__SUCCESS,
+      TOAST_ID__GET_TAGS__SUCCESS,
       'success',
-      TOAST_MSG__GENERATE_IMGS__SUCCESS)
+      TOAST_MSG__GET_TAGS__SUCCESS)
   }
   catch (err) {
     // handle error
     blinkToast(
-      TOAST_ID__GENERATE_IMGS__ERROR,
+      TOAST_ID__GET_TAGS__ERROR,
       'error',
       err as string)
     isGettingTags.value = false
@@ -62,7 +62,7 @@ const handleSearchByTags = async () => {
       } as Image)
     })
     // finish loading and start displaying results
-    await utils.sleep(50)
+    await utils.sleep(300)
     isSearching.value = false
     imgsSearchResult.value.forEach((img: Image) => {
       img.src = img.srcSaved
@@ -112,8 +112,8 @@ onMounted(() => {
       mt-8
       grid gap-4
       :class="{
-        'grid-cols-1': imgsSearchResult.length < 2,
-        'grid-cols-2': imgsSearchResult.length >= 2,
+        'grid-cols-1': imgsSearchResult.length === 1,
+        'grid-cols-2': imgsSearchResult.length >= 2 || imgsSearchResult.length === 0,
       }"
     >
       <TheImagePreview

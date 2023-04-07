@@ -115,8 +115,8 @@ const handleSearchByPrompt = async () => {
       mt-8
       grid gap-4
       :class="{
-        'grid-cols-1': imgsSearchResult.length < 2,
-        'grid-cols-2': imgsSearchResult.length >= 2,
+        'grid-cols-1': imgsSearchResult.length === 1,
+        'grid-cols-2': imgsSearchResult.length >= 2 || imgsSearchResult.length === 0,
       }"
     >
       <TheImagePreview

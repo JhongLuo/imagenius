@@ -13,9 +13,7 @@ export interface Image extends RawImageData {
   srcSaved: string
 }
 
-export interface ImageSelectable extends Image {
-  selected: boolean
-}
+export type Selectable = { selected: boolean } & unknown
 
 export type Labeled = { label: string } & unknown
 

@@ -40,6 +40,8 @@ declare module '@vue/runtime-core' {
     TheSpinner: typeof import('./src/components/TheSpinner.vue')['default']
     TheStatsGrid: typeof import('./src/components/TheLayouts/TheStatsGrid.vue')['default']
     TheTabs: typeof import('./src/components/TheLayouts/TheTabs.vue')['default']
+    TheTag: typeof import('./src/components/TheTag.vue')['default']
+    TheTags: typeof import('./src/components/TheTags.vue')['default']
     TheTextInput: typeof import('./src/components/TheInputs/TheTextInput.vue')['default']
     TheToast: typeof import('./src/components/TheDismissables/TheToast.vue')['default']
     TheToasts: typeof import('./src/components/TheDismissables/TheToasts.vue')['default']

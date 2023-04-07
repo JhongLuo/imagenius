@@ -36,14 +36,14 @@ defineOptions({
             'left-4': captionPos && captionPos.includes('left'),
           }"
         >
-          <p
+          <span
             px-3 py-1
             backdrop-blur-sm rounded-lg
             text-white select-none
             class="bg-truegray-5/50"
           >
             {{ captionText }}
-          </p>
+          </span>
         </figcaption>
       </figure>
     </div>

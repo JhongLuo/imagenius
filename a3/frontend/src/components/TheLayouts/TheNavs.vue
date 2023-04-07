@@ -18,14 +18,20 @@
 
     <a
       icon-btn i-carbon:image-search
-      href="/search_prompt"
+      href="/search/prompt"
       title="Search By Prompt"
     />
 
     <a
-      icon-btn i-carbon:tag-group
-      href="/search_tag"
+      icon-btn i-carbon:tag
+      href="/search/tag"
       title="Search By Tag"
+    />
+
+    <a
+      icon-btn i-carbon:tag-group
+      href="/search/tags"
+      title="Search By Tags"
     />
 
     <a

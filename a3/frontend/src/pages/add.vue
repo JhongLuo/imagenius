@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ImageSelectable, RawImageData } from '~/composables/utils'
+import type { Image, RawImageData, Selectable } from '~/composables/utils'
 
 defineOptions({
   name: 'AddPage',
@@ -9,8 +9,8 @@ const api = useAPIStore()
 const { toastsArray, blinkToast } = useToasts()
 
 const generatePrompt = ref<string>('')
-const imgsGenerated = ref<ImageSelectable[]>([])
-const imgsSelected = computed<ImageSelectable[]>(() => imgsGenerated.value.filter(img => img.selected))
+const imgsGenerated = ref<(Image & Selectable)[]>([])
+const imgsSelected = computed<(Image & Selectable)[]>(() => imgsGenerated.value.filter(img => img.selected))
 
 const isGenerating = ref(false)
 const isSaving = ref(false)
@@ -39,12 +39,12 @@ const handleGenerate = async () => {
         src: '',
         srcSaved: imgData.src,
         selected: false,
-      } as ImageSelectable)
+      } as (Image & Selectable))
     })
     // finish loading and start display
     await utils.sleep(50)
     isGenerating.value = false
-    imgsGenerated.value.forEach((img: ImageSelectable) => {
+    imgsGenerated.value.forEach((img: (Image & Selectable)) => {
       img.src = img.srcSaved
     })
     blinkToast(
@@ -80,7 +80,7 @@ const handleSave = async () => {
     // start displaying results
     await utils.sleep(50)
     generatePrompt.value = ''
-    imgsGenerated.value.forEach((img: ImageSelectable) => {
+    imgsGenerated.value.forEach((img: (Image & Selectable)) => {
       img.src = ''
     })
     await utils.sleep(50)
@@ -158,8 +158,8 @@ const handleSave = async () => {
       mt-8
       grid gap-4
       :class="{
-        'grid-cols-1': imgsGenerated.length < 2,
-        'grid-cols-2': imgsGenerated.length >= 2,
+        'grid-cols-1': imgsGenerated.length === 1,
+        'grid-cols-2': imgsGenerated.length >= 2 || imgsGenerated.length === 0,
       }"
     >
       <TheImagePreview
