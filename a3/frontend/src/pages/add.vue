@@ -12,11 +12,11 @@ const generatePrompt = ref<string>('')
 const imgsGenerated = ref<(Image & Selectable)[]>([])
 const imgsSelected = computed<(Image & Selectable)[]>(() => imgsGenerated.value.filter(img => img.selected))
 
-const isGenerating = ref(false)
-const isSaving = ref(false)
+const isGenerating = ref<boolean>(false)
+const isSaving = ref<boolean>(false)
 
-const isPromptValid = computed(() => generatePrompt.value)
-const isSelectionValid = computed(() => imgsSelected.value.length > 0)
+const isPromptValid = computed<boolean>(() => generatePrompt.value.length > 0)
+const isSelectionValid = computed<boolean>(() => imgsSelected.value.length > 0)
 
 const handleGenerate = async () => {
   // input validation
@@ -32,15 +32,13 @@ const handleGenerate = async () => {
     const response = await api.generateImages(fd)
     utilsJS.validateResponse(response)
     // handle success
-    imgsGenerated.value = []
-    response.data.images.forEach((imgData: RawImageData) => {
-      imgsGenerated.value.push({
-        key: imgData.key,
-        src: '',
-        srcSaved: imgData.src,
-        selected: false,
-      } as (Image & Selectable))
-    })
+    const rawDatas: RawImageData[] = response.data.images
+    imgsGenerated.value = rawDatas.map((rawData: RawImageData) => ({
+      key: rawData.key,
+      src: '',
+      srcSaved: rawData.src,
+      selected: false,
+    } as Image & Selectable))
     // finish loading and start display
     await utils.sleep(50)
     isGenerating.value = false

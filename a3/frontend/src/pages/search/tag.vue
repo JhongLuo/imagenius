@@ -8,14 +8,14 @@ defineOptions({
 const api = useAPIStore()
 const { toastsArray, blinkToast } = useToasts()
 
-const isGettingTags = ref(false)
-const isSearching = ref(false)
+const isGettingTags = ref<boolean>(false)
+const isSearching = ref<boolean>(false)
+const isTagsLoaded = ref<boolean>(false)
 
 const imgTags = ref<string[]>([])
 const imgTagsOptions = computed<Labeled[]>(() => imgTags.value.map(tag => ({ label: tag })))
-
 const initialTagLabel = 'Please select:'
-const selectedTags = ref({ label: initialTagLabel })
+const selectedTags = ref<Labeled>({ label: initialTagLabel })
 const imgsSearchResult = ref<Image[]>([])
 
 const handleGetTags = async () => {
@@ -29,6 +29,7 @@ const handleGetTags = async () => {
     // finish loading and start displaying results
     await utils.sleep(500)
     isGettingTags.value = false
+    isTagsLoaded.value = true
     blinkToast(
       TOAST_ID__GET_TAGS__SUCCESS,
       'success',
@@ -53,14 +54,12 @@ const handleSearchByTags = async () => {
     const response = await api.searchImagesByTags(fd)
     utilsJS.validateResponse(response)
     // handle success
-    imgsSearchResult.value = []
-    response.data.images.forEach((imgData: RawImageData) => {
-      imgsSearchResult.value.push({
-        key: imgData.key,
-        src: '',
-        srcSaved: imgData.src,
-      } as Image)
-    })
+    const rawDatas: RawImageData[] = response.data.images
+    imgsSearchResult.value = rawDatas.map((rawData: RawImageData) => ({
+      key: rawData.key,
+      src: '',
+      srcSaved: rawData.src,
+    } as Image))
     // finish loading and start displaying results
     await utils.sleep(300)
     isSearching.value = false
@@ -107,25 +106,74 @@ onMounted(() => {
     />
 
     <!-- Search Results: -->
-    <div
-      w-full h-full
-      mt-8
-      grid gap-4
-      :class="{
-        'grid-cols-1': imgsSearchResult.length === 1,
-        'grid-cols-2': imgsSearchResult.length >= 2 || imgsSearchResult.length === 0,
-      }"
-    >
-      <TheImagePreview
-        v-for="img in imgsSearchResult"
-        :key="img.key"
-        :src="img.src"
-        caption-pos="bottom-right"
-        :alt="img.key"
-        :class="{ 'blur-sm grayscale': isSearching }"
-        transition-all duration-300
-      />
-    </div>
+    <Transition>
+      <div
+        v-if="isTagsLoaded"
+        mt-8
+      >
+        <Transition>
+          <div
+            v-if="imgTagsOptions.length === 0"
+          >
+            <span
+              class="text-center text-gray-500"
+            >
+              No tags available in library.
+            </span>
+          </div>
+
+          <div
+            v-else-if="selectedTags.label === initialTagLabel"
+          >
+            <span
+              class="text-center text-gray-500"
+            >
+              Please selected a tag to search for.
+            </span>
+          </div>
+
+          <div
+            v-else-if="isSearching"
+          >
+            <span
+              class="text-center text-gray-500"
+            >
+              Searching for results...
+            </span>
+          </div>
+
+          <div
+            v-else-if="imgsSearchResult.length === 0"
+          >
+            <span
+              class="text-center text-gray-500"
+            >
+              No results found.
+            </span>
+          </div>
+
+          <div
+            v-else
+            w-full h-full
+            grid gap-4
+            :class="{
+              'grid-cols-1': imgsSearchResult.length === 1,
+              'grid-cols-2': imgsSearchResult.length >= 2 || imgsSearchResult.length === 0,
+            }"
+          >
+            <TheImagePreview
+              v-for="img in imgsSearchResult"
+              :key="img.key"
+              :src="img.src"
+              caption-pos="bottom-right"
+              :alt="img.key"
+              :class="{ 'blur-sm grayscale': isSearching }"
+              transition-all duration-300
+            />
+          </div>
+        </Transition>
+      </div>
+    </Transition>
   </ThePageContent>
 
   <!-- Toasts, Alerts & Modals -->
@@ -133,3 +181,19 @@ onMounted(() => {
     :toasts-array="toastsArray"
   />
 </template>
+
+<style>
+.v-enter-active {
+  transition: opacity 0.2s ease;
+  transition-delay: 0.1s
+}
+
+.v-leave-active {
+  transition: opacity 0.1s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+</style>

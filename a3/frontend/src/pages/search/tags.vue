@@ -8,9 +8,9 @@ defineOptions({
 const api = useAPIStore()
 const { toastsArray, blinkToast } = useToasts()
 
-const isGettingTags = ref(false)
-const isSearching = ref(false)
-const isTagsLoaded = ref(false)
+const isGettingTags = ref<boolean>(false)
+const isSearching = ref<boolean>(false)
+const isTagsLoaded = ref<boolean>(false)
 
 const imgTagsOptions = ref<(Labeled & Selectable)[]>([])
 const selectedTags = computed<string[]>(() => imgTagsOptions.value.filter(tag => tag.selected).map(tag => tag.label))
@@ -53,15 +53,12 @@ const handleSearchByTags = async () => {
     const response = await api.searchImagesByTags(fd)
     utilsJS.validateResponse(response)
     // handle success
-    imgsSearchResult.value = []
-    response.data.images.forEach((imgData: RawImageData) => {
-      imgsSearchResult.value.push({
-        key: imgData.key,
-        src: '',
-        srcSaved: imgData.src,
-      } as Image)
-    })
-    // finish loading and start displaying results
+    const rawDatas: RawImageData[] = response.data.images
+    imgsSearchResult.value = rawDatas.map((rawData: RawImageData) => ({
+      key: rawData.key,
+      src: '',
+      srcSaved: rawData.src,
+    } as Image))
     await utils.sleep(300)
     isSearching.value = false
     imgsSearchResult.value.forEach((img: Image) => {
@@ -122,79 +119,70 @@ onMounted(() => {
     <!-- Search Results: -->
     <Transition>
       <div
-        v-if="isTagsLoaded && imgTagsOptions.length === 0"
+        v-if="isTagsLoaded"
         mt-8
       >
-        <span
-          class="text-center text-gray-500"
-        >
-          No tags available in library.
-        </span>
-      </div>
+        <Transition>
+          <div
+            v-if="imgTagsOptions.length === 0"
+          >
+            <span
+              class="text-center text-gray-500"
+            >
+              No tags available in library.
+            </span>
+          </div>
 
-      <div
-        v-else-if="isTagsLoaded && imgTagsOptions.length !== 0 && isSearching"
-        mt-8
-      >
-        <span
-          class="text-center text-gray-500"
-        >
-          Searching for results...
-        </span>
-      </div>
+          <div
+            v-else-if="selectedTags.length === 0"
+          >
+            <span
+              class="text-center text-gray-500"
+            >
+              Please selected tags to search for.
+            </span>
+          </div>
 
-      <div
-        v-else-if="isTagsLoaded && imgTagsOptions.length !== 0 && !isSearching && selectedTags.length === 0"
-        mt-8
-      >
-        <span
-          class="text-center text-gray-500"
-        >
-          Please selected tags to search for.
-        </span>
-      </div>
+          <div
+            v-else-if="isSearching"
+          >
+            <span
+              class="text-center text-gray-500"
+            >
+              Searching for results...
+            </span>
+          </div>
 
-      <div
-        v-else-if="isTagsLoaded && imgTagsOptions.length !== 0 && !isSearching && selectedTags.length !== 0 && imgsSearchResult.length === 0"
-        mt-8
-      >
-        <span
-          class="text-center text-gray-500"
-        >
-          No results found.
-        </span>
-      </div>
+          <div
+            v-else-if="imgsSearchResult.length === 0"
+          >
+            <span
+              class="text-center text-gray-500"
+            >
+              No results found.
+            </span>
+          </div>
 
-      <div
-        v-else-if="isTagsLoaded && imgTagsOptions.length !== 0 && !isSearching && selectedTags.length !== 0 && imgsSearchResult.length !== 0"
-        w-full h-full
-        mt-8
-        grid gap-4
-        :class="{
-          'grid-cols-1': imgsSearchResult.length === 1,
-          'grid-cols-2': imgsSearchResult.length >= 2 || imgsSearchResult.length === 0,
-        }"
-      >
-        <TheImagePreview
-          v-for="img in imgsSearchResult"
-          :key="img.key"
-          :src="img.src"
-          caption-pos="bottom-right"
-          :alt="img.key"
-          :class="{ 'blur-sm grayscale': isSearching }"
-          transition-all duration-300
-        />
-      </div>
-
-      <div
-        v-else-if="isTagsLoaded && imgsSearchResult.length === 0"
-        mt-8
-      >
-        <span
-          class="text-center text-gray-500"
-        >
-          No results found.
-        </span>
+          <div
+            v-else
+            w-full h-full
+            grid gap-4
+            :class="{
+              'grid-cols-1': imgsSearchResult.length === 1,
+              'grid-cols-2': imgsSearchResult.length >= 2 || imgsSearchResult.length === 0,
+            }"
+          >
+            <TheImagePreview
+              v-for="img in imgsSearchResult"
+              :key="img.key"
+              :src="img.src"
+              caption-pos="bottom-right"
+              :alt="img.key"
+              :class="{ 'blur-sm grayscale': isSearching }"
+              transition-all duration-300
+            />
+          </div>
+        </Transition>
       </div>
     </Transition>
   </ThePageContent>
