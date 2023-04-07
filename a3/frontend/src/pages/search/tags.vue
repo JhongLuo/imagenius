@@ -12,10 +12,7 @@ const isGettingTags = ref(false)
 const isSearching = ref(false)
 const isTagsLoaded = ref(false)
 
-// const imgTags = ref<string[]>([])
-// const imgTagsOptions = computed<Labeled[]>(() => imgTags.value.map(tag => ({ label: tag })))
 const imgTagsOptions = ref<(Labeled & Selectable)[]>([])
-
 const selectedTags = computed<string[]>(() => imgTagsOptions.value.filter(tag => tag.selected).map(tag => tag.label))
 const imgsSearchResult = ref<Image[]>([])
 
@@ -86,7 +83,8 @@ const handleSearchByTags = async () => {
 }
 
 watch(selectedTags, () => {
-  handleSearchByTags()
+  if (selectedTags.value.length !== 0)
+    handleSearchByTags()
 })
 
 onMounted(() => {
@@ -124,7 +122,51 @@ onMounted(() => {
     <!-- Search Results: -->
     <Transition>
       <div
-        v-if="isTagsLoaded && !isSearching && imgsSearchResult.length > 0"
+        v-if="isTagsLoaded && imgTagsOptions.length === 0"
+        mt-8
+      >
+        <span
+          class="text-center text-gray-500"
+        >
+          No tags available in library.
+        </span>
+      </div>
+
+      <div
+        v-else-if="isTagsLoaded && imgTagsOptions.length !== 0 && isSearching"
+        mt-8
+      >
+        <span
+          class="text-center text-gray-500"
+        >
+          Searching for results...
+        </span>
+      </div>
+
+      <div
+        v-else-if="isTagsLoaded && imgTagsOptions.length !== 0 && !isSearching && selectedTags.length === 0"
+        mt-8
+      >
+        <span
+          class="text-center text-gray-500"
+        >
+          Please selected tags to search for.
+        </span>
+      </div>
+
+      <div
+        v-else-if="isTagsLoaded && imgTagsOptions.length !== 0 && !isSearching && selectedTags.length !== 0 && imgsSearchResult.length === 0"
+        mt-8
+      >
+        <span
+          class="text-center text-gray-500"
+        >
+          No results found.
+        </span>
+      </div>
+
+      <div
+        v-else-if="isTagsLoaded && imgTagsOptions.length !== 0 && !isSearching && selectedTags.length !== 0 && imgsSearchResult.length !== 0"
         w-full h-full
         mt-8
         grid gap-4
@@ -142,17 +184,6 @@ onMounted(() => {
           :class="{ 'blur-sm grayscale': isSearching }"
           transition-all duration-300
         />
-      </div>
-
-      <div
-        v-else-if="isTagsLoaded && isSearching"
-        mt-8
-      >
-        <span
-          class="text-center text-gray-500"
-        >
-          Searching for results...
-        </span>
       </div>
 
       <div
