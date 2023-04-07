@@ -151,6 +151,47 @@ export const useAPIStore = defineStore('api', () => {
   //
   const searchImagesByTags = (data: FormData) => baseAxios.value.post('/api/search/tags', data)
 
+  // - Get All Images:
+  //
+  // request format:
+  // (GET)
+  //
+  // response format:
+  //   {
+  //     "success": "true",
+  //     "images" : [Image]
+  //   }
+  //
+  // image obj format:
+  //   {
+  //     "key": String,
+  //     "src": String
+  //   }
+  //
+  //
+  const getAllImages = () => baseAxios.value.get('/api/list_all')
+
+  // - Delete All Images:
+  //
+  // request format:
+  // (POST)
+  //   No Payload
+  //
+  // response format:
+  //   {
+  //     "success": "true",
+  //     "images" : [Image] # should be empty
+  //   }
+  //
+  // image obj format:
+  //   {
+  //     "key": String,
+  //     "src": String
+  //   }
+  //
+  //
+  const deleteAllImages = () => baseAxios.value.post('/api/delete_all')
+
   return {
     ipAddr,
     apiKey,
@@ -161,6 +202,8 @@ export const useAPIStore = defineStore('api', () => {
     searchImagesByPrompt,
     getTags,
     searchImagesByTags,
+    getAllImages,
+    deleteAllImages,
   }
 })
 

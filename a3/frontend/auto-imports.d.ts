@@ -33,12 +33,15 @@ declare global {
   const EffectScope: typeof import('vue')['EffectScope']
   const MODAL_DESCRIPTION__CLEAR_CACHE: typeof import('./src/composables/constants')['MODAL_DESCRIPTION__CLEAR_CACHE']
   const MODAL_DESCRIPTION__DELETE_ALL: typeof import('./src/composables/constants')['MODAL_DESCRIPTION__DELETE_ALL']
+  const MODAL_DESCRIPTION__DELETE_ALL_IMGS: typeof import('./src/composables/constants')['MODAL_DESCRIPTION__DELETE_ALL_IMGS']
   const MODAL_DESCRIPTION__PUT_CACHE_CONFIGS: typeof import('./src/composables/constants')['MODAL_DESCRIPTION__PUT_CACHE_CONFIGS']
   const MODAL_ID__CLEAR_CACHE: typeof import('./src/composables/constants')['MODAL_ID__CLEAR_CACHE']
   const MODAL_ID__DELETE_ALL: typeof import('./src/composables/constants')['MODAL_ID__DELETE_ALL']
+  const MODAL_ID__DELETE_ALL_IMGS: typeof import('./src/composables/constants')['MODAL_ID__DELETE_ALL_IMGS']
   const MODAL_ID__PUT_CACHE_CONFIGS: typeof import('./src/composables/constants')['MODAL_ID__PUT_CACHE_CONFIGS']
   const MODAL_TITLE__CLEAR_CACHE: typeof import('./src/composables/constants')['MODAL_TITLE__CLEAR_CACHE']
   const MODAL_TITLE__DELETE_ALL: typeof import('./src/composables/constants')['MODAL_TITLE__DELETE_ALL']
+  const MODAL_TITLE__DELETE_ALL_IMGS: typeof import('./src/composables/constants')['MODAL_TITLE__DELETE_ALL_IMGS']
   const MODAL_TITLE__PUT_CACHE_CONFIGS: typeof import('./src/composables/constants')['MODAL_TITLE__PUT_CACHE_CONFIGS']
   const STATS_LABEL__HIT_RATES: typeof import('./src/composables/constants')['STATS_LABEL__HIT_RATES']
   const STATS_LABEL__MISS_RATES: typeof import('./src/composables/constants')['STATS_LABEL__MISS_RATES']
@@ -54,10 +57,14 @@ declare global {
   const TABLE_TITLE__CACHE_KEYS: typeof import('./src/composables/constants')['TABLE_TITLE__CACHE_KEYS']
   const TOAST_ID__CLEAR_CACHE__ERROR: typeof import('./src/composables/constants')['TOAST_ID__CLEAR_CACHE__ERROR']
   const TOAST_ID__CLEAR_CACHE__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__CLEAR_CACHE__SUCCESS']
+  const TOAST_ID__DELETE_ALL_IMGS__ERROR: typeof import('./src/composables/constants')['TOAST_ID__DELETE_ALL_IMGS__ERROR']
+  const TOAST_ID__DELETE_ALL_IMGS__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__DELETE_ALL_IMGS__SUCCESS']
   const TOAST_ID__DELETE_ALL__ERROR: typeof import('./src/composables/constants')['TOAST_ID__DELETE_ALL__ERROR']
   const TOAST_ID__DELETE_ALL__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__DELETE_ALL__SUCCESS']
   const TOAST_ID__GENERATE_IMGS__ERROR: typeof import('./src/composables/constants')['TOAST_ID__GENERATE_IMGS__ERROR']
   const TOAST_ID__GENERATE_IMGS__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__GENERATE_IMGS__SUCCESS']
+  const TOAST_ID__GET_ALL_IMGS__ERROR: typeof import('./src/composables/constants')['TOAST_ID__GET_ALL_IMGS__ERROR']
+  const TOAST_ID__GET_ALL_IMGS__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__GET_ALL_IMGS__SUCCESS']
   const TOAST_ID__GET_ALL_KEYS__ERROR: typeof import('./src/composables/constants')['TOAST_ID__GET_ALL_KEYS__ERROR']
   const TOAST_ID__GET_ALL_KEYS__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__GET_ALL_KEYS__SUCCESS']
   const TOAST_ID__GET_CACHE_CONFIGS__ERROR: typeof import('./src/composables/constants')['TOAST_ID__GET_CACHE_CONFIGS__ERROR']
@@ -82,8 +89,10 @@ declare global {
   const TOAST_ID__UPLOAD_IMG__ERROR: typeof import('./src/composables/constants')['TOAST_ID__UPLOAD_IMG__ERROR']
   const TOAST_ID__UPLOAD_IMG__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__UPLOAD_IMG__SUCCESS']
   const TOAST_MSG__CLEAR_CACHE__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__CLEAR_CACHE__SUCCESS']
+  const TOAST_MSG__DELETE_ALL_IMGS__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__DELETE_ALL_IMGS__SUCCESS']
   const TOAST_MSG__DELETE_ALL__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__DELETE_ALL__SUCCESS']
   const TOAST_MSG__GENERATE_IMGS__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__GENERATE_IMGS__SUCCESS']
+  const TOAST_MSG__GET_ALL_IMGS__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__GET_ALL_IMGS__SUCCESS']
   const TOAST_MSG__GET_ALL_KEYS__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__GET_ALL_KEYS__SUCCESS']
   const TOAST_MSG__GET_CACHE_CONFIGS__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__GET_CACHE_CONFIGS__SUCCESS']
   const TOAST_MSG__GET_CACHE_KEYS__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__GET_CACHE_KEYS__SUCCESS']
@@ -414,12 +423,15 @@ declare module 'vue' {
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly MODAL_DESCRIPTION__CLEAR_CACHE: UnwrapRef<typeof import('./src/composables/constants')['MODAL_DESCRIPTION__CLEAR_CACHE']>
     readonly MODAL_DESCRIPTION__DELETE_ALL: UnwrapRef<typeof import('./src/composables/constants')['MODAL_DESCRIPTION__DELETE_ALL']>
+    readonly MODAL_DESCRIPTION__DELETE_ALL_IMGS: UnwrapRef<typeof import('./src/composables/constants')['MODAL_DESCRIPTION__DELETE_ALL_IMGS']>
     readonly MODAL_DESCRIPTION__PUT_CACHE_CONFIGS: UnwrapRef<typeof import('./src/composables/constants')['MODAL_DESCRIPTION__PUT_CACHE_CONFIGS']>
     readonly MODAL_ID__CLEAR_CACHE: UnwrapRef<typeof import('./src/composables/constants')['MODAL_ID__CLEAR_CACHE']>
     readonly MODAL_ID__DELETE_ALL: UnwrapRef<typeof import('./src/composables/constants')['MODAL_ID__DELETE_ALL']>
+    readonly MODAL_ID__DELETE_ALL_IMGS: UnwrapRef<typeof import('./src/composables/constants')['MODAL_ID__DELETE_ALL_IMGS']>
     readonly MODAL_ID__PUT_CACHE_CONFIGS: UnwrapRef<typeof import('./src/composables/constants')['MODAL_ID__PUT_CACHE_CONFIGS']>
     readonly MODAL_TITLE__CLEAR_CACHE: UnwrapRef<typeof import('./src/composables/constants')['MODAL_TITLE__CLEAR_CACHE']>
     readonly MODAL_TITLE__DELETE_ALL: UnwrapRef<typeof import('./src/composables/constants')['MODAL_TITLE__DELETE_ALL']>
+    readonly MODAL_TITLE__DELETE_ALL_IMGS: UnwrapRef<typeof import('./src/composables/constants')['MODAL_TITLE__DELETE_ALL_IMGS']>
     readonly MODAL_TITLE__PUT_CACHE_CONFIGS: UnwrapRef<typeof import('./src/composables/constants')['MODAL_TITLE__PUT_CACHE_CONFIGS']>
     readonly STATS_LABEL__HIT_RATES: UnwrapRef<typeof import('./src/composables/constants')['STATS_LABEL__HIT_RATES']>
     readonly STATS_LABEL__MISS_RATES: UnwrapRef<typeof import('./src/composables/constants')['STATS_LABEL__MISS_RATES']>
@@ -435,10 +447,14 @@ declare module 'vue' {
     readonly TABLE_TITLE__CACHE_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TABLE_TITLE__CACHE_KEYS']>
     readonly TOAST_ID__CLEAR_CACHE__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__CLEAR_CACHE__ERROR']>
     readonly TOAST_ID__CLEAR_CACHE__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__CLEAR_CACHE__SUCCESS']>
+    readonly TOAST_ID__DELETE_ALL_IMGS__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__DELETE_ALL_IMGS__ERROR']>
+    readonly TOAST_ID__DELETE_ALL_IMGS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__DELETE_ALL_IMGS__SUCCESS']>
     readonly TOAST_ID__DELETE_ALL__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__DELETE_ALL__ERROR']>
     readonly TOAST_ID__DELETE_ALL__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__DELETE_ALL__SUCCESS']>
     readonly TOAST_ID__GENERATE_IMGS__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GENERATE_IMGS__ERROR']>
     readonly TOAST_ID__GENERATE_IMGS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GENERATE_IMGS__SUCCESS']>
+    readonly TOAST_ID__GET_ALL_IMGS__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GET_ALL_IMGS__ERROR']>
+    readonly TOAST_ID__GET_ALL_IMGS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GET_ALL_IMGS__SUCCESS']>
     readonly TOAST_ID__GET_ALL_KEYS__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GET_ALL_KEYS__ERROR']>
     readonly TOAST_ID__GET_ALL_KEYS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GET_ALL_KEYS__SUCCESS']>
     readonly TOAST_ID__GET_CACHE_CONFIGS__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GET_CACHE_CONFIGS__ERROR']>
@@ -463,8 +479,10 @@ declare module 'vue' {
     readonly TOAST_ID__UPLOAD_IMG__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__UPLOAD_IMG__ERROR']>
     readonly TOAST_ID__UPLOAD_IMG__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__UPLOAD_IMG__SUCCESS']>
     readonly TOAST_MSG__CLEAR_CACHE__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__CLEAR_CACHE__SUCCESS']>
+    readonly TOAST_MSG__DELETE_ALL_IMGS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__DELETE_ALL_IMGS__SUCCESS']>
     readonly TOAST_MSG__DELETE_ALL__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__DELETE_ALL__SUCCESS']>
     readonly TOAST_MSG__GENERATE_IMGS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__GENERATE_IMGS__SUCCESS']>
+    readonly TOAST_MSG__GET_ALL_IMGS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__GET_ALL_IMGS__SUCCESS']>
     readonly TOAST_MSG__GET_ALL_KEYS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__GET_ALL_KEYS__SUCCESS']>
     readonly TOAST_MSG__GET_CACHE_CONFIGS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__GET_CACHE_CONFIGS__SUCCESS']>
     readonly TOAST_MSG__GET_CACHE_KEYS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__GET_CACHE_KEYS__SUCCESS']>

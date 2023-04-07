@@ -10,6 +10,7 @@ const { toastsArray, blinkToast } = useToasts()
 
 const generatePrompt = ref<string>('')
 const imgsGenerated = ref<(Image & Selectable)[]>([])
+const numImgsResult = ref<number>(0)
 const imgsSelected = computed<(Image & Selectable)[]>(() => imgsGenerated.value.filter(img => img.selected))
 
 const isGenerating = ref<boolean>(false)
@@ -39,6 +40,7 @@ const handleGenerate = async () => {
       srcSaved: rawData.src,
       selected: false,
     } as Image & Selectable))
+    numImgsResult.value = imgsGenerated.value.length
     // finish loading and start display
     await utils.sleep(50)
     isGenerating.value = false
@@ -152,12 +154,11 @@ const handleSave = async () => {
 
     <!-- Select and Submission: -->
     <div
-      w-full h-full
       mt-8
       grid gap-4
       :class="{
-        'grid-cols-1': imgsGenerated.length === 1,
-        'grid-cols-2': imgsGenerated.length >= 2 || imgsGenerated.length === 0,
+        'grid-cols-1': numImgsResult === 1,
+        'grid-cols-2': numImgsResult >= 2,
       }"
     >
       <TheImagePreview

@@ -35,6 +35,12 @@
     />
 
     <a
+      icon-btn i-carbon:list
+      href="/list"
+      title="List"
+    />
+
+    <a
       icon-btn i-carbon:data-vis-1
       href="/tree"
       title="Tree"

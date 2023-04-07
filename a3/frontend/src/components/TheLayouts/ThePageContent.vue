@@ -1,6 +1,6 @@
 <template>
   <div
-    w-lg
+    w-xl
     flex flex-col items-center
   >
     <slot />

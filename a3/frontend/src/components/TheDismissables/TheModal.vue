@@ -59,7 +59,7 @@ const { isShown } = defineModel<{
             >
               <div
                 px-4 pt-5 pb-4 sm:p-6 sm:pb-4
-                bg-white dark:bg-gray-800 dark:bg-op-90
+                bg-white dark:bg-gray-800 dark:bg-op-95
               >
                 <div sm:flex sm:items-start>
                   <div
@@ -121,7 +121,7 @@ const { isShown } = defineModel<{
               <!-- modal actions -->
               <div
                 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6
-                bg-gray-50 dark:bg-gray-800 dark:bg-op-90
+                bg-gray-50 dark:bg-gray-800 dark:bg-op-95
               >
                 <!-- confirm button -->
                 <button
