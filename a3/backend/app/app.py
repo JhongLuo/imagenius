@@ -113,7 +113,29 @@ def search_by_tags():
         'success': 'true',
         'images': images
     })
-    
+
+@app.route('/api/search/prompt', methods = ['POST'])
+def search_by_prompt():
+    prompt = request.form.get('prompt', None)
+    image_paths = dynamo.prompt_retrive(prompt)
+    print(prompt)
+    return jsonify({
+        'success': 'true',
+        'images': [{
+            'src': s3.path2url(image_path),
+        } for image_path in image_paths]
+    })
+
+@app.route('/api/list_all', methods = ['GET'])
+def list_all():
+    images = dynamo.list_images()
+    return jsonify({
+        'success': 'true',
+        'images': [{
+            'src': s3.path2url(image_path),
+        } for image_path in images]
+    })
+
 @app.route('/api/tags', methods = ['GET'])
 def list_tags():
     tags = dynamo.list_labels()
