@@ -29,23 +29,28 @@ def hello():
 def create_images():        
     prompt = request.form.get('prompt', None)
     if not prompt:
-        return jsonify({
-            'success': 'false',
-            'error': {
-                'message': 'prompt is required',
-            }
-        })
+        if request.form.get('random', None):
+            prompt = generate_random_words()
+        else:   
+            return jsonify({
+                'success': 'false',
+                'error': {
+                    'message': 'prompt is required',
+                }
+            })
     return_images = []
     for _ in range(image_num):
         raw_image = prompt2image(prompt)
         image_path = s3_cache.store_image(raw_image)
         tags = rekognition.detect_labels(raw_image)
+        joke = prompt2joke(prompt)
         with temp_cache_lock:
             key = len(temp_cache)
             temp_cache[key] = {
                 'tags': tags,
                 'image_path': image_path,
                 'prompt': prompt,
+                'joke': joke,
             }
         return_images.append({
             'key': key,
@@ -54,9 +59,9 @@ def create_images():
     return jsonify({
         'success': 'true',
         'images' : return_images,
-        'prompt': prompt
+        'prompt': prompt,
+        'joke': joke
     })
-
 
 @app.route('/api/save', methods = ['POST'])
 def post_image():
