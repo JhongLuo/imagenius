@@ -11,8 +11,8 @@ class Rekognition:
             Image={
                 'Bytes': image
             },
-            MaxLabels=10,
-            MinConfidence=70,
+            MaxLabels=4,
+            MinConfidence=80,
         )
         labels = []
         for label in response['Labels']:

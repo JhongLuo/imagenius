@@ -5,6 +5,7 @@ from service.dalle import prompt2image
 from service.s3 import S3
 from service.dynamo import Dynamo
 from service.rekognition import Rekognition
+from service.opensearch import OSearch
 from flask_cors import CORS
 import json
 import threading
@@ -18,6 +19,7 @@ rekognition = Rekognition()
 image_num = 1
 temp_cache = dict()
 temp_cache_lock = threading.Lock()
+search_engine = OSearch()
 @app.route('/')
 def hello():
     return 'Hello, Flask on AWS Lambda using Zappa!'
@@ -82,6 +84,7 @@ def post_image():
             cache_image_path = temp_cache[key]['image_path']
             tags = temp_cache[key]['tags']
             prompt = temp_cache[key]['prompt']
+        search_engine.add_prompt(prompt)
         image_path = s3.store_image(url2image(s3_cache.path2url(cache_image_path)))
         dynamo.put_image(image_path, tags, prompt)
     
@@ -116,9 +119,11 @@ def search_by_tags():
 
 @app.route('/api/search/prompt', methods = ['POST'])
 def search_by_prompt():
-    prompt = request.form.get('prompt', None)
-    image_paths = dynamo.prompt_retrive(prompt)
-    print(prompt)
+    prompts = search_engine.search(request.form.get('prompt', None))
+    image_paths = []
+    for prompt in prompts:
+        image_paths += dynamo.prompt_retrive(prompt)
+    print(prompts)
     return jsonify({
         'success': 'true',
         'images': [{
