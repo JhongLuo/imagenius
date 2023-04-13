@@ -1,11 +1,11 @@
 import boto3
+from io import BytesIO
 
 class S3:
-    def __init__(self):
+    def __init__(self, bucketName = "ece1779t18a3"):
         self.client = boto3.client('s3')
-        self.bucketName = "ece1779t18a3"
         self.s3_resource = boto3.resource('s3')   
-        
+        self.bucketName = bucketName
         self.createBucket()
         self.file_counter = self.get_largest_filename() + 1
     
@@ -56,13 +56,14 @@ class S3:
         self.file_counter += 1
         return new_filename
             
-    def store_image(self, bytes):
+    def store_image(self, raw_image):
         new_filename = self.get_new_filename()
-        self.client.put_object(Bucket=self.bucketName, Key=new_filename, Body=bytes)
+        image_data = BytesIO(raw_image)
+        self.client.upload_fileobj(image_data, Bucket=self.bucketName, Key=new_filename, ExtraArgs={'ACL': 'public-read', 'ContentType': 'image/png'})
         return new_filename
-
-    def read_image(self, filename):
-        return self.client.get_object(Bucket=self.bucketName, Key=filename)['Body'].read().decode('utf-8')
-         
+    
+    def path2url(self, path):
+        return "https://s3.amazonaws.com/" + self.bucketName + "/" + path
+    
     def delete_image(self, filename):
         self.client.delete_object(Bucket=self.bucketName, Key=filename)

@@ -39,3 +39,6 @@
 **/dist-ssr
 
 *.png
+
+*.env
+*zappa_settings.json
