@@ -164,7 +164,10 @@ def list_prompts():
 @app.route('/api/delete_cache', methods = ['POST'])
 def delete_cache():
     try:
-        selection_pool.clean_expired()      
+        force = request.form.get('force', None)
+        if force != None:
+            force = bool(force)
+        selection_pool.clean_expired(force)      
         return jsonify({
             'success': 'true',
             'message': 'Cache deleted'
