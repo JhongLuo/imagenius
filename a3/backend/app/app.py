@@ -31,15 +31,12 @@ def hello():
 def create_images():        
     prompt = request.form.get('prompt', None)
     if not prompt:
-        if request.form.get('random', None):
-            prompt = generate_random_words()
-        else:   
-            return jsonify({
-                'success': 'false',
-                'error': {
-                    'message': 'prompt is required',
-                }
-            })
+        return jsonify({
+            'success': 'false',
+            'error': {
+                'message': 'prompt is required',
+            }
+        })
     return_images = []
     for _ in range(image_num):
         raw_image = prompt2image(prompt)
@@ -65,6 +62,12 @@ def create_images():
         'prompt': prompt,
         'joke': joke
     })
+
+@app.route('/api/generate-random', methods=['POST'])
+def generate_random():
+    word = generate_random_words()
+    return jsonify({'word': word})
+
 
 @app.route('/api/save', methods = ['POST'])
 def post_image():
