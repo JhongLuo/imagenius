@@ -7,6 +7,7 @@ from service.dynamo import Dynamo
 from service.rekognition import Rekognition
 from service.opensearch import OSearch
 from flask_cors import CORS
+import time
 import json
 import threading
 app = Flask(__name__)
@@ -18,6 +19,7 @@ dynamo = Dynamo()
 rekognition = Rekognition()
 image_num = 1
 temp_cache = dict()
+largest_cache_key = 0
 temp_cache_lock = threading.Lock()
 search_engine = OSearch()
 @app.route('/')
@@ -45,13 +47,14 @@ def create_images():
         tags = rekognition.detect_labels(raw_image)
         joke = prompt2joke(prompt)
         with temp_cache_lock:
-            key = len(temp_cache)
-            temp_cache[key] = {
-                'tags': tags,
-                'image_path': image_path,
-                'prompt': prompt,
-                'joke': joke,
-            }
+            key = largest_cache_key + 1
+            largest_cache_key = key
+        temp_cache[key] = {
+            'tags': tags,
+            'image_path': image_path,
+            'prompt': prompt,
+            'timestamp': time.time()
+        }
         return_images.append({
             'key': key,
             'src': s3_cache.path2url(image_path),
@@ -73,10 +76,7 @@ def post_image():
                 'message': 'selected_keys is required',
             }
         })
-    print(key_selections)
-    print(temp_cache.keys())
     for key in key_selections:
-        print(key)
         if key not in temp_cache:
             return jsonify({
                 'success': 'false',
@@ -85,10 +85,9 @@ def post_image():
                 }
             })
         cache_image_path, tags, prompt = None, None, None
-        with temp_cache_lock:
-            cache_image_path = temp_cache[key]['image_path']
-            tags = temp_cache[key]['tags']
-            prompt = temp_cache[key]['prompt']
+        cache_image_path = temp_cache[key]['image_path']
+        tags = temp_cache[key]['tags']
+        prompt = temp_cache[key]['prompt']
         search_engine.add_prompt(prompt)
         image_path = s3.store_image(url2image(s3_cache.path2url(cache_image_path)))
         dynamo.put_image(image_path, tags, prompt)
@@ -100,6 +99,8 @@ def post_image():
 
 @app.route('/api/images', methods = ['DELETE'])
 def delete_images():
+    s3_cache.clear_images()
+    search_engine.clear()
     dynamo.clear()
     s3.clear_images()
     return jsonify({
@@ -110,10 +111,7 @@ def delete_images():
 @app.route('/api/search/tags', methods = ['POST'])
 def search_by_tags():
     tags = json.loads(request.form.get('selected_tags', None))
-    print(tags)
     image_paths = dynamo.labels_retrive(tags)
-    all = dynamo.list_images()
-    print(image_paths, all)
     images = [{
         "src": s3.path2url(image_path),
     } for image_path in image_paths]
@@ -128,7 +126,6 @@ def search_by_prompt():
     image_paths = []
     for prompt in prompts:
         image_paths += dynamo.prompt_retrive(prompt)
-    print(prompts)
     return jsonify({
         'success': 'true',
         'images': [{
@@ -161,3 +158,29 @@ def list_prompts():
         'success': 'true',
         'prompts': prompts
     })
+
+@app.route('/api/delete_cache', methods = ['POST'])
+def delete_cache():
+    try:
+        keys_for_delete = []
+        for key in temp_cache:
+            timestamp = temp_cache[key]['timestamp']
+            # if user don't save the image in 10 minutes, images will lost
+            if time.time() - timestamp > 600:
+                s3_cache.delete_image(temp_cache[key]['image_path'])
+            keys_for_delete.append(key)
+        
+        for key in keys_for_delete:
+            del temp_cache[key]
+                    
+        return jsonify({
+            'success': 'true',
+            'message': 'Cache deleted'
+        })
+    except Exception as e:
+        return jsonify({
+            'success': 'false',
+            'error': {
+                'message': str(e),
+            }
+        })
