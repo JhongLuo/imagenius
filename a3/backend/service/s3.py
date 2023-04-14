@@ -1,5 +1,5 @@
 import boto3
-from io import BytesIO
+from service.utils import image2fileobj
 
 class S3:
     def __init__(self, bucketName = "ece1779t18a3"):
@@ -58,8 +58,7 @@ class S3:
             
     def store_image(self, raw_image):
         new_filename = self.get_new_filename()
-        image_data = BytesIO(raw_image)
-        self.client.upload_fileobj(image_data, Bucket=self.bucketName, Key=new_filename, ExtraArgs={'ACL': 'public-read', 'ContentType': 'image/png'})
+        self.client.upload_fileobj(image2fileobj(raw_image), Bucket=self.bucketName, Key=new_filename, ExtraArgs={'ACL': 'public-read', 'ContentType': 'image/png'})
         return new_filename
     
     def path2url(self, path):

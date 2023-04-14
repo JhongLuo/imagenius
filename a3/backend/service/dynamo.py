@@ -28,64 +28,105 @@ class Dynamo:
 
     def create_image_table(self):
         primary_key = {
-            'AttributeName': 'label',
+            'AttributeName': 'tag',
             'KeyType': 'HASH'
         }
         sort_key = {
             'AttributeName': 'image_path',
             'KeyType': 'RANGE'
         }
-        gsi_partition_key = {
-            'AttributeName': 'prompt',
-            'KeyType': 'HASH'
-        }
-        gsi_sort_key = {
-            'AttributeName': 'image_path',
-            'KeyType': 'RANGE'
-        }
         attribute_definitions = [
             {'AttributeName': 'image_path', 'AttributeType': 'S'},
             {'AttributeName': 'prompt', 'AttributeType': 'S'},
-            {'AttributeName': 'label', 'AttributeType': 'S'},
+            {'AttributeName': 'tag', 'AttributeType': 'S'},
+            {'AttributeName': 'root', 'AttributeType': 'S'},
+            {'AttributeName': 'father', 'AttributeType': 'S'},
         ]
-        gsi = {
-            'IndexName': 'DesIndex',
-            'KeySchema': [gsi_partition_key, gsi_sort_key],
+        
+        prompt_gsi = {
+            'IndexName': 'prompt_index',
+            'KeySchema': [
+                {
+                'AttributeName': 'prompt',
+                'KeyType': 'HASH'
+                }, 
+                {
+                'AttributeName': 'image_path',
+                'KeyType': 'RANGE'
+                }
+            ],
             'Projection': {
-                'ProjectionType': 'ALL'
+                'ProjectionType': 'KEYS_ONLY'
             },
             'ProvisionedThroughput': self.provisioned_throughput
         }
-        response = self.dy.create_table(
+        
+        root_gsi = {
+            'IndexName': 'root_index',
+            'KeySchema': [
+                {
+                'AttributeName': 'root',
+                'KeyType': 'HASH'
+                }, 
+                {
+                'AttributeName': 'image_path',
+                'KeyType': 'RANGE'
+                }
+            ],
+            'Projection': {
+                'ProjectionType': 'KEYS_ONLY'
+            },
+            'ProvisionedThroughput': self.provisioned_throughput
+        }
+        
+        father_gsi = {
+            'IndexName': 'father_index',
+            'KeySchema': [
+                {
+                'AttributeName': 'father',
+                'KeyType': 'HASH'
+                }, 
+                {
+                'AttributeName': 'image_path',
+                'KeyType': 'RANGE'
+                }
+            ],
+            'Projection': {
+                'ProjectionType': 'KEYS_ONLY'
+            },
+            'ProvisionedThroughput': self.provisioned_throughput
+        }
+        
+        self.dy.create_table(
             TableName=self.image_table_name,
             AttributeDefinitions=attribute_definitions,
             KeySchema=[primary_key, sort_key],
             ProvisionedThroughput=self.provisioned_throughput,
-            GlobalSecondaryIndexes=[gsi]
+            GlobalSecondaryIndexes=[prompt_gsi, root_gsi, father_gsi]
         )
         self.dy = boto3.client('dynamodb')
 
-    # retrieve all images with the same label
-    def labels_retrive(self, labels):
+    # retrieve all images with the same tag
+    def tags_retrive(self, tags):
         images = set()
         is_first = True
-        for label in labels:
-            images_per_label = set()
+        for tag in tags:
+            images_per_tag = set()
             response = self.dy.query(
                 TableName=self.image_table_name,
-                KeyConditionExpression='label = :label',
+                KeyConditionExpression='tag = :tag',
                 ExpressionAttributeValues={
-                    ":label": {'S': label}
+                    ":tag": {'S': tag}
                 },
             )
             
             for item in response['Items']:
-                images_per_label.add(item['image_path']['S'])
+                images_per_tag.add(item['image_path']['S'])
             if is_first:
-                images = images_per_label
+                images = images_per_tag
                 is_first = False
             else:
-                images.intersection_update(images_per_label)
+                images.intersection_update(images_per_tag)
         images = list(images)
         images.sort()
         return images
@@ -93,7 +134,7 @@ class Dynamo:
     def prompt_retrive(self, prompt):
         response = self.dy.query(
             TableName=self.image_table_name,
-            IndexName='DesIndex',
+            IndexName='prompt_index',
             KeyConditionExpression='prompt = :prompt',
             ExpressionAttributeValues={
                 ":prompt": {'S': prompt}
@@ -106,16 +147,70 @@ class Dynamo:
         images.sort()
         return images
     
-    def put_image(self, image_path, labels, prompt):
-        labels.append('all')
+    def root_retrive(self, root):
+        response = self.dy.query(
+            TableName=self.image_table_name,
+            IndexName='root_index',
+            KeyConditionExpression='root = :root',
+            ExpressionAttributeValues={
+                ':root': {'S': root}
+            },
+        )
+        images = set()
+        for item in response['Items']:
+            images.add(item['image_path']['S'])
+        images = list(images)
+        print(images)
+        return images
+        
+    def get_image_root(self, image_path):
+        response = self.dy.get_item(
+            TableName=self.image_table_name,
+            Key={
+                'tag': {'S': 'All'},
+                'image_path': {'S': image_path}
+            },
+            ProjectionExpression='root'
+        )
+        print(response)
+        return response['Item']['root']['S']
+
+    def get_image_descendants(self, image_path):
+        response = self.dy.query(
+            TableName=self.image_table_name,
+            indexName = 'father_index',
+            KeyConditionExpression='father = :father',
+            ExpressionAttributeValues={
+                ':father': {'S': image_path}
+            },
+        )
+        images = set()
+        for item in response['Items']:
+            images.add(item['image_path']['S'])
+        images = list(images)
+        images.sort()
+        print(images)
+        return images
+
+    def put_image(self, image_path, tags, prompt, father_image_path=None):
+        if father_image_path is None:
+            root = image_path
+            father = 'None'
+        else:
+            root = self.get_image_root(father_image_path)
+            father = father_image_path
+        
+        tags.append('All')
         item_list = []
-        for label in labels:
+        for tag in tags:
             item = {
                 'PutRequest': {
                     'Item': {
-                        'label': {'S': label},
+                        'tag': {'S': tag},
                         'image_path': {'S': image_path},
                         'prompt': {'S': prompt},
+                        'root': {'S': root},
+                        'father': {'S': father},
                     }
                 }
             }
@@ -129,7 +224,7 @@ class Dynamo:
             print("Some items were not processed:")
             print(response['UnprocessedItems'])
         else:
-            print(f"Successfully inserted image_path {image_path} with labels {', '.join(labels)} for prompt {prompt}")
+            print(f"Successfully inserted image_path {image_path} with tags {', '.join(tags)} for prompt {prompt}")
 
     def list_images(self):
         response = self.dy.scan(
@@ -143,17 +238,17 @@ class Dynamo:
         images.sort()
         return images
     
-    def list_labels(self):
+    def list_tags(self):
         response = self.dy.scan(
             TableName=self.image_table_name,
-            ProjectionExpression='label',
+            ProjectionExpression='tag',
         )
-        labels = set()
+        tags = set()
         for item in response['Items']:
-            labels.add(item['label']['S'])
-        labels = list(labels)
-        labels.sort()
-        return labels
+            tags.add(item['tag']['S'])
+        tags = list(tags)
+        tags.sort()
+        return tags
     
     def list_prompts(self):
         response = self.dy.scan(
