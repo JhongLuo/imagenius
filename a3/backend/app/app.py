@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, make_response
 
 from service.utils import url2image
-from service.dalle import prompt2image
+from service.openai import prompt2image, prompt2joke, generate_random_words
 from service.s3 import S3
 from service.dynamo import Dynamo
 from service.rekognition import Rekognition
