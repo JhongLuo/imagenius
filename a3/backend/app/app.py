@@ -1,6 +1,7 @@
-from flask import Flask, jsonify, request, make_response
+from flask import Flask, jsonify, request, make_response, session
 from app import selectionpool
 from service import openai, s3, dynamo, rekognition, opensearch, utils
+
 from flask_cors import CORS
 import time
 import json
@@ -23,19 +24,16 @@ def hello():
 
 @app.route('/api/generate', methods = ['POST'])
 def create_images():        
-    prompt = request.form.get('prompt', None)
+    prompt = request.form.get('prompt', None) or session.pop('random_word', None)
     if not prompt:
-        if request.form.get('random', None):
-            prompt = openai.generate_random_words()
-        else:   
-            return jsonify({
-                'success': 'false',
-                'error': {
-                    'message': 'prompt is required',
-                }
-            })
-    return_images = []
-    
+        return jsonify({
+            'success': 'false',
+            'error': {
+                'message': 'prompt is required',
+            }
+        })
+
+    return_images = []    
     raw_images = openai.prompt2images(prompt, n=image_num)
     return_images = []
     for raw_image in raw_images:
@@ -51,6 +49,26 @@ def create_images():
         'prompt': prompt,
         'joke': openai.prompt2joke(prompt)
     })
+
+@app.route('/api/generate-random', methods=['POST'])
+def generate_random():
+    if 'generate' in request.form:
+        word = openai.generate_random_words()
+        session['random_word'] = word
+        return jsonify({'word': word})
+    elif 'regenerate' in request.form:
+        word = openai.generate_random_words()
+        session['random_word'] = word
+        return jsonify({'word': word})
+    elif 'confirm' in request.form:
+        word = session.get('random_word', None)
+        if word:
+            return jsonify({'success': True, 'word': word})
+        else:
+            return jsonify({'success': False, 'message': 'No random word found.'})
+    else:
+        return jsonify({'success': False, 'message': 'Invalid request.'})
+
 
 @app.route('/api/save', methods = ['POST'])
 def post_image():
@@ -158,7 +176,8 @@ def delete_cache():
                 'message': str(e),
             }
         })
-        
+
+
 @app.route('/api/edit_image', methods = ['POST'])
 def edit_image():
     prompt = request.form.get('prompt', None)
