@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, make_response
+from flask import Flask, jsonify, request, make_response, session
 
 from service.utils import url2image
 from service.openai import prompt2image, prompt2joke, generate_random_words
@@ -65,8 +65,22 @@ def create_images():
 
 @app.route('/api/generate-random', methods=['POST'])
 def generate_random():
-    word = generate_random_words()
-    return jsonify({'word': word})
+    if 'generate' in request.form:
+        word = generate_random_words()
+        session['random_word'] = word
+        return jsonify({'word': word})
+    elif 'regenerate' in request.form:
+        word = generate_random_words()
+        session['random_word'] = word
+        return jsonify({'word': word})
+    elif 'confirm' in request.form:
+        word = session.get('random_word', None)
+        if word:
+            return jsonify({'success': True, 'word': word})
+        else:
+            return jsonify({'success': False, 'message': 'No random word found.'})
+    else:
+        return jsonify({'success': False, 'message': 'Invalid request.'})
 
 
 @app.route('/api/save', methods = ['POST'])
