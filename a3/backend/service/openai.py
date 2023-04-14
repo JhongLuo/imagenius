@@ -7,13 +7,23 @@ openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 def prompt2image(prompt, n=1, size="256x256"):
     response = openai.Image.create(
-        prompt= prompt,
+        prompt=prompt,
         n=n,
         size=size
     )
     image_url = response['data'][0]['url']
     return url2image(image_url)
 
+def edit_image(prompt, image, mask, n=1, size="256x256"):
+    response = openai.Image.create_edit(
+        image=image,
+        mask=mask,
+        prompt=prompt,
+        n=n,
+        size=size
+    )
+    image_url = response['data'][0]['url']
+    return url2image(image_url)
 
 def prompt2joke(prompt):
     response = openai.Completion.create(
