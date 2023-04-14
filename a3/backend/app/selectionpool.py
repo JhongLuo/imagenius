@@ -11,7 +11,7 @@ class SelectionPool:
         self.dynamo = dynamo.Dynamo()
         
     def add(self, prompt, raw_image, father = None):
-        key = uuid.uuid4()
+        key = str(uuid.uuid4())
         image_path = self.cache_s3.store_image(raw_image)
         self.pool[key] = {
             'father': father,
@@ -26,12 +26,13 @@ class SelectionPool:
         if key not in self.pool:
             raise Exception("Key not found in pool or expired.")
         
+        father_path = self.pool[key]['father']
         prompt = self.pool[key]['prompt']
         raw_image = self.pool[key]['raw_image']
         cache_path = self.pool[key]['image_path']
         tags = self.rekognition.detect_labels(raw_image)
-        image_path = s3.store_image(utils.url2image(self.cache_s3.path2url(cache_path)))
-        dynamo.put_image(image_path, tags, prompt)
+        image_path = self.s3.store_image(utils.url2image(self.cache_s3.path2url(cache_path)))
+        self.dynamo.put_image(image_path, tags, prompt, father_path)
         self.search_engine.add_prompt(prompt)        
         return True
     

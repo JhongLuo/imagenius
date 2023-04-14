@@ -5,14 +5,15 @@ import random
 
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
-def prompt2image(prompt, n=1, size="256x256"):
+def prompt2images(prompt, n=1, size="256x256"):
     response = openai.Image.create(
         prompt=prompt,
         n=n,
         size=size
     )
-    image_url = response['data'][0]['url']
-    return url2image(image_url)
+    
+    image_urls = [response['data'][i]['url'] for i in range(len(response['data']))]
+    return [url2image(image_url) for image_url in image_urls]
 
 def edit_image(prompt, image, mask, n=1, size="256x256"):
     response = openai.Image.create_edit(
@@ -22,8 +23,8 @@ def edit_image(prompt, image, mask, n=1, size="256x256"):
         n=n,
         size=size
     )
-    image_url = response['data'][0]['url']
-    return url2image(image_url)
+    image_urls = [response['data'][i]['url'] for i in range(len(response['data']))]
+    return [url2image(image_url) for image_url in image_urls]
 
 def prompt2joke(prompt):
     response = openai.Completion.create(

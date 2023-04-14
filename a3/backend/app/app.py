@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request, make_response
-import selectionpool
+from app import selectionpool
 from service import openai, s3, dynamo, rekognition, opensearch, utils
 from flask_cors import CORS
 import time
@@ -8,8 +8,8 @@ import threading
 app = Flask(__name__)
 CORS(app)
 
-s3 = s3.S3()
 s3_cache = s3.S3("ece1779t18a3cache")
+s3 = s3.S3()
 selection_pool = selectionpool.SelectionPool()
 dynamo = dynamo.Dynamo()
 rekognition = rekognition.Rekognition()
@@ -35,9 +35,11 @@ def create_images():
                 }
             })
     return_images = []
-    for _ in range(image_num):
-        raw_image = openai.prompt2image(prompt)
-        image_path = selection_pool.add(prompt, raw_image)
+    
+    raw_images = openai.prompt2images(prompt, n=image_num)
+    return_images = []
+    for raw_image in raw_images:
+        image_path = selection_pool.add(prompt, raw_image)    
         return_images.append({
             'key': image_path,
             'src': s3_cache.path2url(image_path),
@@ -90,7 +92,7 @@ def delete_images():
 @app.route('/api/search/tags', methods = ['POST'])
 def search_by_tags():
     tags = json.loads(request.form.get('selected_tags', None))
-    image_paths = dynamo.labels_retrive(tags)
+    image_paths = dynamo.tags_retrive(tags)
     images = [{
         'key': image_path,
         "src": s3.path2url(image_path),
@@ -116,18 +118,18 @@ def search_by_prompt():
 
 @app.route('/api/list_all', methods = ['GET'])
 def list_all():
-    images = dynamo.list_images()
+    image_paths = dynamo.list_images()
     return jsonify({
         'success': 'true',
         'images': [{
             'key': image_path,
             'src': s3.path2url(image_path),
-        } for image_path in images]
+        } for image_path in image_paths]
     })
 
 @app.route('/api/tags', methods = ['GET'])
 def list_tags():
-    tags = dynamo.list_labels()
+    tags = dynamo.list_tags()
     return jsonify({
         'success': 'true',
         'tags': tags
@@ -163,26 +165,64 @@ def edit_image():
     x_pos = request.form.get('x_pos', None)
     y_pos = request.form.get('y_pos', None)
     radius = request.form.get('radius', None)
-    image_path = request.form.get('key', None)
-    if not x_pos or not y_pos or not radius or not image_path or not prompt:
+    father_image_path = request.form.get('father_key', None)
+    if not x_pos or not y_pos or not radius or not father_image_path or not prompt:
         return jsonify({
             "success": "false",
             "error": {
-                "message": "x_pos, y_pos, radius, key, prompt are all required",
+                "message": "x_pos, y_pos, radius, father_key, prompt are all required",
             }
         })
     
-        
-    new_image = openai.edit_image(
+    new_images = openai.edit_image(
         prompt=str(prompt),
-        image=utils.url2fileobj(s3.path2url(image_path)),
+        image=utils.url2fileobj(s3.path2url(father_image_path)),
         mask=utils.create_mask(
-            x=x_pos,
-            y=y_pos,
-            r=radius,
-        )
+            x=int(x_pos),
+            y=int(y_pos),
+            r=int(radius),
+        ),
+        n=image_num,
     )
-    selection_pool.add(prompt, new_image)
+    image_paths = list()
+    for new_image in new_images:
+        image_path = selection_pool.add(prompt, new_image, father_image_path)
+        image_paths.append(image_path)
+        
+    return jsonify({
+        'success': 'true',
+        'images': [{
+            'key': image_path,
+            'src': s3_cache.path2url(image_path),
+        } for image_path in image_paths],
+    })
     
-    
-    
+@app.route('/api/images_tree', methods = ['GET'])
+def get_images_tree():
+    image_path = request.form.get('key', None)
+    if not image_path:
+        return jsonify({
+            "success": "false",
+            "error": {
+                "message": "key is required",
+            }
+        })
+    tree = dict()
+    def dfs_tree(node):
+        tree[node] = list()
+        descendants = dynamo.get_image_descendants(node)
+        for descendant in descendants:
+            tree[node].append({
+                'key': descendant,
+                'src': s3.path2url(descendant),
+            })
+
+        for descendant in descendants:
+            dfs_tree(descendant)
+    root = dynamo.get_image_root(image_path)
+    dfs_tree(root)
+    return jsonify({
+        'success': 'true',
+        'tree': tree,
+        'root_key': dynamo.get_image_root(image_path)
+    })
