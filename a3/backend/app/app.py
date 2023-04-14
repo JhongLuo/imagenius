@@ -29,7 +29,7 @@ def hello():
 
 @app.route('/api/generate', methods = ['POST'])
 def create_images():        
-    prompt = request.form.get('prompt', None)
+    prompt = request.form.get('prompt', None) or session.pop('random_word', None)
     if not prompt:
         return jsonify({
             'success': 'false',
