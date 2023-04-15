@@ -68,7 +68,7 @@ const initCanvasImg = async () => {
       srcSaved: rawData.src,
     } as Image
     // finish loading and start display
-    await utils.sleep(200)
+    await utils.sleep(50)
     isIniting.value = false
     canvasImg.value.src = canvasImg.value.srcSaved
     const testerImg = dimensionTesterImg.value!
