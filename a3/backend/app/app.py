@@ -53,8 +53,7 @@ def create_images():
 @app.route('/api/random_word', methods=['POST'])
 def generate_random():
     letter = openai.random_letter();
-    generate = openai.generate_random_words(letter);
-    word = generate[0]
+    word = openai.generate_random_words(letter);
     return jsonify({'success': 'true', 
                     'word': word})
 
