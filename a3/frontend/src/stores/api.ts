@@ -46,10 +46,24 @@ export const useAPIStore = defineStore('api', () => {
   // ################
   //
   // Image obj format:
-  //   {
-  //     "key": String,
-  //     "src": String
-  //   }
+  //  {
+  //    "key": String,
+  //    "src": String
+  //  }
+  //
+  // ################
+
+  // ################
+  //
+  // Error format:
+  //
+  //  {
+  //    "success": "false",
+  //    "error": {
+  //      "code": Int,
+  //      "message": String
+  //    }
+  //  }
   //
   // ################
 
@@ -212,6 +226,27 @@ export const useAPIStore = defineStore('api', () => {
   //
   const deleteAllImages = () => baseAxios.value.post('/api/delete_all')
 
+  // - Edit Image:
+  //
+  // request format:
+  // (POST)
+  //   {
+  //      "parent_key": String
+  //      "prompt": String
+  //      "x_pos": Int
+  //      "y_pos": Int
+  //      "radius": Int
+  //   }
+  //
+  // response format:
+  //   {
+  //     "success": "true",
+  //     "image" : Image
+  //   }
+  //
+  //
+  const editImage = (data: FormData) => baseAxios.value.post('/api/edit', data)
+
   return {
     ipAddr,
     apiKey,
@@ -225,6 +260,7 @@ export const useAPIStore = defineStore('api', () => {
     searchImagesByKey,
     getAllImages,
     deleteAllImages,
+    editImage,
   }
 })
 

@@ -61,6 +61,8 @@ declare global {
   const TOAST_ID__DELETE_ALL_IMGS__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__DELETE_ALL_IMGS__SUCCESS']
   const TOAST_ID__DELETE_ALL__ERROR: typeof import('./src/composables/constants')['TOAST_ID__DELETE_ALL__ERROR']
   const TOAST_ID__DELETE_ALL__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__DELETE_ALL__SUCCESS']
+  const TOAST_ID__EDIT_IMG__ERROR: typeof import('./src/composables/constants')['TOAST_ID__EDIT_IMG__ERROR']
+  const TOAST_ID__EDIT_IMG__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__EDIT_IMG__SUCCESS']
   const TOAST_ID__GENERATE_HINT__ERROR: typeof import('./src/composables/constants')['TOAST_ID__GENERATE_HINT__ERROR']
   const TOAST_ID__GENERATE_HINT__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__GENERATE_HINT__SUCCESS']
   const TOAST_ID__GENERATE_IMGS__ERROR: typeof import('./src/composables/constants')['TOAST_ID__GENERATE_IMGS__ERROR']
@@ -78,6 +80,8 @@ declare global {
   const TOAST_ID__GET_STATS__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__GET_STATS__SUCCESS']
   const TOAST_ID__GET_TAGS__ERROR: typeof import('./src/composables/constants')['TOAST_ID__GET_TAGS__ERROR']
   const TOAST_ID__GET_TAGS__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__GET_TAGS__SUCCESS']
+  const TOAST_ID__INIT_IMG__ERROR: typeof import('./src/composables/constants')['TOAST_ID__INIT_IMG__ERROR']
+  const TOAST_ID__INIT_IMG__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__INIT_IMG__SUCCESS']
   const TOAST_ID__NEW_NUM_NODES: typeof import('./src/composables/constants')['TOAST_ID__NEW_NUM_NODES']
   const TOAST_ID__PUT_CACHE_CONFIGS__ERROR: typeof import('./src/composables/constants')['TOAST_ID__PUT_CACHE_CONFIGS__ERROR']
   const TOAST_ID__PUT_CACHE_CONFIGS__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__PUT_CACHE_CONFIGS__SUCCESS']
@@ -93,6 +97,7 @@ declare global {
   const TOAST_MSG__CLEAR_CACHE__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__CLEAR_CACHE__SUCCESS']
   const TOAST_MSG__DELETE_ALL_IMGS__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__DELETE_ALL_IMGS__SUCCESS']
   const TOAST_MSG__DELETE_ALL__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__DELETE_ALL__SUCCESS']
+  const TOAST_MSG__EDIT_IMG__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__EDIT_IMG__SUCCESS']
   const TOAST_MSG__GENERATE_IMGS__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__GENERATE_IMGS__SUCCESS']
   const TOAST_MSG__GET_ALL_IMGS__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__GET_ALL_IMGS__SUCCESS']
   const TOAST_MSG__GET_ALL_KEYS__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__GET_ALL_KEYS__SUCCESS']
@@ -100,6 +105,7 @@ declare global {
   const TOAST_MSG__GET_CACHE_KEYS__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__GET_CACHE_KEYS__SUCCESS']
   const TOAST_MSG__GET_STATS__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__GET_STATS__SUCCESS']
   const TOAST_MSG__GET_TAGS__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__GET_TAGS__SUCCESS']
+  const TOAST_MSG__INIT_IMG__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__INIT_IMG__SUCCESS']
   const TOAST_MSG__NEW_NUM_NODES: typeof import('./src/composables/constants')['TOAST_MSG__NEW_NUM_NODES']
   const TOAST_MSG__PUT_CACHE_CONFIGS__SUCCESS: typeof import('./src/composables/constants')['TOAST_MSG__PUT_CACHE_CONFIGS__SUCCESS']
   const TOAST_MSG__REFRESH_STATS__INFO: typeof import('./src/composables/constants')['TOAST_MSG__REFRESH_STATS__INFO']
@@ -453,6 +459,8 @@ declare module 'vue' {
     readonly TOAST_ID__DELETE_ALL_IMGS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__DELETE_ALL_IMGS__SUCCESS']>
     readonly TOAST_ID__DELETE_ALL__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__DELETE_ALL__ERROR']>
     readonly TOAST_ID__DELETE_ALL__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__DELETE_ALL__SUCCESS']>
+    readonly TOAST_ID__EDIT_IMG__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__EDIT_IMG__ERROR']>
+    readonly TOAST_ID__EDIT_IMG__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__EDIT_IMG__SUCCESS']>
     readonly TOAST_ID__GENERATE_HINT__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GENERATE_HINT__ERROR']>
     readonly TOAST_ID__GENERATE_HINT__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GENERATE_HINT__SUCCESS']>
     readonly TOAST_ID__GENERATE_IMGS__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GENERATE_IMGS__ERROR']>
@@ -470,6 +478,8 @@ declare module 'vue' {
     readonly TOAST_ID__GET_STATS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GET_STATS__SUCCESS']>
     readonly TOAST_ID__GET_TAGS__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GET_TAGS__ERROR']>
     readonly TOAST_ID__GET_TAGS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GET_TAGS__SUCCESS']>
+    readonly TOAST_ID__INIT_IMG__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__INIT_IMG__ERROR']>
+    readonly TOAST_ID__INIT_IMG__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__INIT_IMG__SUCCESS']>
     readonly TOAST_ID__NEW_NUM_NODES: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__NEW_NUM_NODES']>
     readonly TOAST_ID__PUT_CACHE_CONFIGS__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__PUT_CACHE_CONFIGS__ERROR']>
     readonly TOAST_ID__PUT_CACHE_CONFIGS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__PUT_CACHE_CONFIGS__SUCCESS']>
@@ -485,6 +495,7 @@ declare module 'vue' {
     readonly TOAST_MSG__CLEAR_CACHE__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__CLEAR_CACHE__SUCCESS']>
     readonly TOAST_MSG__DELETE_ALL_IMGS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__DELETE_ALL_IMGS__SUCCESS']>
     readonly TOAST_MSG__DELETE_ALL__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__DELETE_ALL__SUCCESS']>
+    readonly TOAST_MSG__EDIT_IMG__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__EDIT_IMG__SUCCESS']>
     readonly TOAST_MSG__GENERATE_IMGS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__GENERATE_IMGS__SUCCESS']>
     readonly TOAST_MSG__GET_ALL_IMGS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__GET_ALL_IMGS__SUCCESS']>
     readonly TOAST_MSG__GET_ALL_KEYS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__GET_ALL_KEYS__SUCCESS']>
@@ -492,6 +503,7 @@ declare module 'vue' {
     readonly TOAST_MSG__GET_CACHE_KEYS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__GET_CACHE_KEYS__SUCCESS']>
     readonly TOAST_MSG__GET_STATS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__GET_STATS__SUCCESS']>
     readonly TOAST_MSG__GET_TAGS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__GET_TAGS__SUCCESS']>
+    readonly TOAST_MSG__INIT_IMG__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__INIT_IMG__SUCCESS']>
     readonly TOAST_MSG__NEW_NUM_NODES: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__NEW_NUM_NODES']>
     readonly TOAST_MSG__PUT_CACHE_CONFIGS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__PUT_CACHE_CONFIGS__SUCCESS']>
     readonly TOAST_MSG__REFRESH_STATS__INFO: UnwrapRef<typeof import('./src/composables/constants')['TOAST_MSG__REFRESH_STATS__INFO']>

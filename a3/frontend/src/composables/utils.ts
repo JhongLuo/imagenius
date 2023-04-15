@@ -17,6 +17,13 @@ export type Selectable = { selected: boolean } & unknown
 
 export type Labeled = { label: string } & unknown
 
+export interface EditConfigOptions {
+  xPos: number
+  yPos: number
+  radius: number
+  prompt: string
+}
+
 export interface RawStatsData {
   timestamp: number[]
   miss_rate: number[]
