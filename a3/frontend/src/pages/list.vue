@@ -128,6 +128,37 @@ onMounted(() => {
             v-else
             flex flex-col justify-center items-center
           >
+            <!-- Delete Button Section -->
+            <div
+              mb-8
+              flex items-center space-x-3
+            >
+              <!-- spinner -->
+              <TheSpinner
+                v-if="isDeleting"
+                alt-text="Saving..."
+              />
+
+              <!-- button: delete all -->
+              <button
+                my-btn-danger text-sm
+                @click="isModalShown = true"
+              >
+                Delete All
+              </button>
+
+              <!-- Delete Modal Content -->
+              <TheModal
+                v-model:is-shown="isModalShown"
+                modal-type="delete"
+                :modal-id="MODAL_ID__DELETE_ALL_IMGS"
+                :modal-title="MODAL_TITLE__DELETE_ALL_IMGS"
+                :modal-description="MODAL_DESCRIPTION__DELETE_ALL_IMGS"
+                :action="handleDeleteAllImages"
+              />
+            </div>
+
+            <!-- Images Section -->
             <div
               w-full h-full
               grid gap-4
@@ -146,35 +177,6 @@ onMounted(() => {
                 :class="{ 'blur-sm grayscale': isLoading }"
                 transition-all duration-300
                 @click="utils.navigateToEdit(img.key)"
-              />
-            </div>
-
-            <div
-              mt-8
-              flex items-center space-x-3
-            >
-              <!-- spinner -->
-              <TheSpinner
-                v-if="isDeleting"
-                alt-text="Saving..."
-              />
-
-              <!-- button: delete all -->
-              <button
-                my-btn-danger mt-8 text-sm
-                @click="isModalShown = true"
-              >
-                Delete All
-              </button>
-
-              <!-- Delete Modal Content -->
-              <TheModal
-                v-model:is-shown="isModalShown"
-                modal-type="delete"
-                :modal-id="MODAL_ID__DELETE_ALL_IMGS"
-                :modal-title="MODAL_TITLE__DELETE_ALL_IMGS"
-                :modal-description="MODAL_DESCRIPTION__DELETE_ALL_IMGS"
-                :action="handleDeleteAllImages"
               />
             </div>
           </div>

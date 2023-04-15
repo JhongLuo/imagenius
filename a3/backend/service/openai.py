@@ -44,10 +44,17 @@ def random_letter():
 def generate_random_words(letter):
     response = openai.Completion.create(
         engine="text-davinci-002",
+<<<<<<< HEAD
         prompt=f"Generate one random noun word start with {letter}.",
         max_tokens=16,
         n=1,
         temperature=0.6
+=======
+        prompt="Give me a random word",
+        max_tokens=16,
+        n=1,
+        temperature=0.7
+>>>>>>> main
     )
     words = response.choices[0].text.strip().split("\n")
     return [word.capitalize() for word in words]
