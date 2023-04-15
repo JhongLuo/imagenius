@@ -10,7 +10,7 @@ app = Flask(__name__)
 CORS(app)
 
 s3_cache = s3.S3("ece1779t18a3cache")
-s3 = s3.S3()
+s3_persistent = s3.S3()
 selection_pool = selectionpool.SelectionPool()
 dynamo = dynamo.Dynamo()
 rekognition = rekognition.Rekognition()
@@ -50,13 +50,31 @@ def create_images():
         'joke': openai.prompt2joke(prompt)
     })
 
-@app.route('/api/random_word', methods=['POST'])
+@app.route('/api/random_word', methods=['GET'])
 def generate_random():
     word = openai.generate_random_words()
     return jsonify({'success': 'true', 
                     'word': word})
 
 
+@app.route('/api/search/key', methods = ['POST'])
+def get_image_by_key():
+    image_path = request.form.get('key', None)
+    if not image_path:
+        return jsonify({
+            'success': 'false',
+            'error': {
+                'message': 'key is required',
+            }
+        })
+    return jsonify({
+        'success': 'true',
+        'image': {
+            'key': image_path,
+            'src': s3_persistent.path2url(image_path),
+        }
+    })
+    
 
 @app.route('/api/save', methods = ['POST'])
 def post_image():
@@ -89,7 +107,7 @@ def delete_images():
     s3_cache.clear_images()
     search_engine.clear()
     dynamo.clear()
-    s3.clear_images()
+    s3_persistent.clear_images()
     return jsonify({
         'success': 'true',
         'message': 'All images deleted'
@@ -101,7 +119,7 @@ def search_by_tags():
     image_paths = dynamo.tags_retrive(tags)
     images = [{
         'key': image_path,
-        "src": s3.path2url(image_path),
+        "src": s3_persistent.path2url(image_path),
     } for image_path in image_paths]
     return jsonify({
         'success': 'true',
@@ -118,7 +136,7 @@ def search_by_prompt():
         'success': 'true',
         'images': [{
             'key': image_path,
-            'src': s3.path2url(image_path),
+            'src': s3_persistent.path2url(image_path),
         } for image_path in image_paths]
     })
 
@@ -129,7 +147,7 @@ def list_all():
         'success': 'true',
         'images': [{
             'key': image_path,
-            'src': s3.path2url(image_path),
+            'src': s3_persistent.path2url(image_path),
         } for image_path in image_paths]
     })
 
@@ -169,7 +187,7 @@ def delete_cache():
         })
 
 
-@app.route('/api/edit_image', methods = ['POST'])
+@app.route('/api/edit', methods = ['POST'])
 def edit_image():
     prompt = request.form.get('prompt', None)
     x_pos = request.form.get('x_pos', None)
@@ -186,7 +204,7 @@ def edit_image():
     
     new_images = openai.edit_image(
         prompt=str(prompt),
-        image=utils.url2fileobj(s3.path2url(parent_image_path)),
+        image=utils.url2fileobj(s3_persistent.path2url(parent_image_path)),
         mask=utils.create_mask(
             x=int(x_pos),
             y=int(y_pos),
@@ -224,7 +242,7 @@ def get_images_tree():
         for descendant in descendants:
             tree[node].append({
                 'key': descendant,
-                'src': s3.path2url(descendant),
+                'src': s3_persistent.path2url(descendant),
             })
 
         for descendant in descendants:

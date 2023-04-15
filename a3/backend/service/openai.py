@@ -41,10 +41,10 @@ def prompt2joke(prompt):
 def generate_random_words():
     response = openai.Completion.create(
         engine="text-davinci-002",
-        prompt="Generate one random words.",
+        prompt="Give me a random word",
         max_tokens=16,
         n=1,
-        temperature=0.5
+        temperature=0.7
     )
     words = response.choices[0].text.strip().split("\n")
     return [word.capitalize() for word in words]
