@@ -175,18 +175,18 @@ def edit_image():
     x_pos = request.form.get('x_pos', None)
     y_pos = request.form.get('y_pos', None)
     radius = request.form.get('radius', None)
-    father_image_path = request.form.get('father_key', None)
-    if not x_pos or not y_pos or not radius or not father_image_path or not prompt:
+    parent_image_path = request.form.get('parent_key', None)
+    if not x_pos or not y_pos or not radius or not parent_image_path or not prompt:
         return jsonify({
             "success": "false",
             "error": {
-                "message": "x_pos, y_pos, radius, father_key, prompt are all required",
+                "message": "x_pos, y_pos, radius, parent_key, prompt are all required",
             }
         })
     
     new_images = openai.edit_image(
         prompt=str(prompt),
-        image=utils.url2fileobj(s3.path2url(father_image_path)),
+        image=utils.url2fileobj(s3.path2url(parent_image_path)),
         mask=utils.create_mask(
             x=int(x_pos),
             y=int(y_pos),
@@ -196,7 +196,7 @@ def edit_image():
     )
     image_paths = list()
     for new_image in new_images:
-        image_path = selection_pool.add(prompt, new_image, father_image_path)
+        image_path = selection_pool.add(prompt, new_image, parent_image_path)
         image_paths.append(image_path)
         
     return jsonify({

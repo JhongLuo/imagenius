@@ -16,6 +16,7 @@ defineOptions({
     <div
       v-if="$attrs.src"
       w-full flex justify-center items-start
+      cursor-pointer
     >
       <figure relative>
         <!-- img -->

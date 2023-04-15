@@ -241,7 +241,7 @@ export const useAPIStore = defineStore('api', () => {
   // response format:
   //   {
   //     "success": "true",
-  //     "image" : Image
+  //     "images" : [Image]
   //   }
   //
   //
