@@ -9,6 +9,7 @@ const api = useAPIStore()
 const { toastsArray, blinkToast } = useToasts()
 
 const canvasImg = ref<Image | undefined>()
+const imgDimensions = ref<{ width: number; height: number }>({ width: 0, height: 0 })
 const imgKey = computed<string>(() => useRoute().query.key as string)
 const editConfigs = reactive<EditConfigOptions>({
   xPos: 0,
@@ -18,14 +19,14 @@ const editConfigs = reactive<EditConfigOptions>({
 })
 const ifFlipMaskColor = ref<boolean>(false)
 watch(editConfigs, (newVal: any) => {
-  newVal.xPos = newVal.xPos < 0 ? 0 : newVal.xPos > 255 ? 255 : Math.floor(newVal.xPos)
-  newVal.yPos = newVal.yPos < 0 ? 0 : newVal.yPos > 255 ? 255 : Math.floor(newVal.yPos)
-  newVal.radius = newVal.radius < 0 ? 0 : newVal.radius > 256 ? 256 : Math.floor(newVal.radius)
+  newVal.xPos = newVal.xPos < 0 ? 0 : newVal.xPos > imgDimensions.value.width - 1 ? imgDimensions.value.width - 1 : Math.floor(newVal.xPos)
+  newVal.yPos = newVal.yPos < 0 ? 0 : newVal.yPos > imgDimensions.value.height - 1 ? imgDimensions.value.height - 1 : Math.floor(newVal.yPos)
+  newVal.radius = newVal.radius < 0 ? 0 : newVal.radius > imgDimensions.value.width ? imgDimensions.value.width : Math.floor(newVal.radius)
 })
 const overlayStyle = computed(() => {
-  const cappedX = Math.min(editConfigs.xPos, 255)
-  const cappedY = Math.min(editConfigs.yPos, 255)
-  const cappedR = Math.min(editConfigs.radius, 256)
+  const cappedX = Math.min(editConfigs.xPos, imgDimensions.value.width - 1)
+  const cappedY = Math.min(editConfigs.yPos, imgDimensions.value.height - 1)
+  const cappedR = Math.min(editConfigs.radius, imgDimensions.value.width)
   const left = cappedX - cappedR
   const top = cappedY - cappedR
   const width = cappedR * 2
@@ -35,7 +36,7 @@ const overlayStyle = computed(() => {
     top: `${top}px`,
     width: `${width}px`,
     height: `${height}px`,
-    clipPath: `polygon(${-left}px ${-top}px, ${-left + 256}px ${-top}px, ${-left + 256}px ${-top + 256}px, ${-left}px ${-top + 256}px)`,
+    clipPath: `polygon(${-left}px ${-top}px, ${-left + imgDimensions.value.width}px ${-top}px, ${-left + imgDimensions.value.width}px ${-top + imgDimensions.value.height}px, ${-left}px ${-top + imgDimensions.value.height}px)`,
   }
 })
 const isFormValid = computed<boolean>(() => editConfigs.radius > 0 && editConfigs.prompt.length > 0)
@@ -69,6 +70,13 @@ const initCanvasImg = async () => {
     await utils.sleep(50)
     isIniting.value = false
     canvasImg.value.src = canvasImg.value.srcSaved
+    fetch(canvasImg.value.src)
+      .then(response => response.blob())
+      .then(blob => createImageBitmap(blob))
+      .then((bitmap) => {
+        imgDimensions.value.width = bitmap.width
+        imgDimensions.value.height = bitmap.height
+      })
   }
   catch (err) {
     // handle error
@@ -200,7 +208,7 @@ onMounted(() => {
       my-4
       text-xs font-mono
     >
-      Image is &lt;256 x 256>
+      Image is &lt;{{ imgDimensions.width }} x {{ imgDimensions.height }}>
     </div>
 
     <!-- Panel -->
@@ -399,7 +407,7 @@ onMounted(() => {
   <div
     v-if="imgsGenerated.length"
     mt-8
-    flex items-center space-x-3
+    flex items-center justify-center space-x-3
   >
     <!-- spinner -->
     <TheSpinner
