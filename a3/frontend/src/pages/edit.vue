@@ -206,7 +206,7 @@ onMounted(() => {
       <!-- Mask -->
       <div
         class="absolute opacity-50 rounded-full pointer-events-none"
-        :class="!ifFlipMaskColor ? 'bg-yellow-200' : 'bg-blue-500'"
+        :class="!ifFlipMaskColor ? 'bg-teal-300' : 'bg-red-500'"
         :style="overlayStyle"
       />
     </div>
