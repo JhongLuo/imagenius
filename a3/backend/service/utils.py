@@ -8,6 +8,10 @@ def url2image(url):
 def image2fileobj(raw_image):
     return BytesIO(raw_image)
 
+def url2size(url):
+    obj = url2fileobj(url)
+    return Image.open(obj).size[0]
+
 def url2fileobj(url):
     return image2fileobj(url2image(url))
     
