@@ -44,7 +44,7 @@ def generate_random_words():
         prompt="Generate one random words.",
         max_tokens=16,
         n=1,
-        temperature=0.5
+        temperature=0.6
     )
     words = response.choices[0].text.strip().split("\n")
     return [word.capitalize() for word in words]
