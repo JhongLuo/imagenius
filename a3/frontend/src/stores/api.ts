@@ -2,7 +2,7 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 
 export const useAPIStore = defineStore('api', () => {
   // set up ipAddr
-  const defaultAddr = 'localhost:5000'
+  const defaultAddr = 'http://localhost:5000'
 
   const ipAddr = reactive({
     addr: defaultAddr,
@@ -36,20 +36,54 @@ export const useAPIStore = defineStore('api', () => {
   )
 
   // other variables
-  const baseURL = computed(() => `http://${ipAddr.addr}/`)
-  const baseURLShort = computed(() => `${ipAddr.addr}`)
+  // const baseURL = computed(() => `http://${ipAddr.addr}/`)
+  // const baseURLShort = computed(() => `${ipAddr.addr}`)
 
-  const baseAxios = computed(() => axios.create({ baseURL: baseURL.value }))
+  const baseAxios = computed(() => axios.create({ baseURL: ipAddr.addr }))
 
   // API CALLS:
 
+  // ################
+  //
+  // Image obj format:
+  //   {
+  //     "key": String,
+  //     "src": String
+  //   }
+  //
+  // ################
+
   // - Update API Key:
+  //
+  // request format:
+  // (POST)
+  //    No Payload
+  //
+  // response format:
+  //   {
+  //     "success": "true",
+  //   }
+  //
   //
   const updateApiKey = () => baseAxios.value.post('/api/set_api_key', apiKey.value)
 
   // ADD PAGE
   // ----------------------------------------------------------------
   //
+
+  // - Generate Images:
+  //
+  // request format:
+  // (GET)
+  //
+  // response format:
+  //   {
+  //     "success": "true",
+  //     "word" : String
+  //   }
+  //
+  //
+  const generateRandomWord = () => baseAxios.value.get('/api/random_word')
 
   // - Generate Images:
   //
@@ -63,12 +97,6 @@ export const useAPIStore = defineStore('api', () => {
   //   {
   //     "success": "true",
   //     "images" : [Image]
-  //   }
-  //
-  // image obj format:
-  //   {
-  //     "key": String,
-  //     "src": String
   //   }
   //
   //
@@ -104,12 +132,6 @@ export const useAPIStore = defineStore('api', () => {
   //     "images" : [Image]
   //   }
   //
-  // image obj format:
-  //   {
-  //     "key": String,
-  //     "src": String
-  //   }
-  //
   //
   const searchImagesByPrompt = (data: FormData) => baseAxios.value.post('/api/search/prompt', data)
 
@@ -123,7 +145,6 @@ export const useAPIStore = defineStore('api', () => {
   //     "success": "true",
   //     "tags" : [String]
   //   }
-  //
   //
   //
   const getTags = () => baseAxios.value.get('/api/tags')
@@ -142,14 +163,25 @@ export const useAPIStore = defineStore('api', () => {
   //     "images" : [Image]
   //   }
   //
-  // image obj format:
+  //
+  const searchImagesByTags = (data: FormData) => baseAxios.value.post('/api/search/tags', data)
+
+  // - Search Images By Key:
+  //
+  // request format:
+  // (POST)
   //   {
-  //     "key": String,
-  //     "src": String
+  //     "key": String
+  //   }
+  //
+  // response format:
+  //   {
+  //     "success": "true",
+  //     "image" : Image
   //   }
   //
   //
-  const searchImagesByTags = (data: FormData) => baseAxios.value.post('/api/search/tags', data)
+  const searchImagesByKey = (data: FormData) => baseAxios.value.post('/api/search/key', data)
 
   // - Get All Images:
   //
@@ -160,12 +192,6 @@ export const useAPIStore = defineStore('api', () => {
   //   {
   //     "success": "true",
   //     "images" : [Image]
-  //   }
-  //
-  // image obj format:
-  //   {
-  //     "key": String,
-  //     "src": String
   //   }
   //
   //
@@ -183,25 +209,20 @@ export const useAPIStore = defineStore('api', () => {
   //     "images" : [Image] # should be empty
   //   }
   //
-  // image obj format:
-  //   {
-  //     "key": String,
-  //     "src": String
-  //   }
-  //
   //
   const deleteAllImages = () => baseAxios.value.post('/api/delete_all')
 
   return {
     ipAddr,
     apiKey,
-    baseURLShort,
     updateApiKey,
+    generateRandomWord,
     generateImages,
     saveImages,
     searchImagesByPrompt,
     getTags,
     searchImagesByTags,
+    searchImagesByKey,
     getAllImages,
     deleteAllImages,
   }

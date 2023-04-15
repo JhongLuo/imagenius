@@ -48,6 +48,10 @@ export interface CacheConfigOptions {
 }
 
 export default {
+  navigateToEdit(key: string) {
+    window.location.href = `/edit?key=${key}`
+  },
+
   sleep(ms = 500) {
     return new Promise(resolve => setTimeout(resolve, ms))
   },

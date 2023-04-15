@@ -1,6 +1,8 @@
 import type { CacheConfigOptions } from './utils'
 
 // toast: ids + messages
+export const TOAST_ID__GENERATE_HINT__SUCCESS = 'toast-id-generate-hint-success'
+export const TOAST_ID__GENERATE_HINT__ERROR = 'toast-id-generate-hint-error'
 export const TOAST_ID__GENERATE_IMGS__SUCCESS = 'toast-id-generate-images-success'
 export const TOAST_ID__GENERATE_IMGS__ERROR = 'toast-id-generate-images-error'
 export const TOAST_ID__SAVE_IMGS__SUCCESS = 'toast-id-save-images-success'

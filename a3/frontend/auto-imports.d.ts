@@ -61,6 +61,8 @@ declare global {
   const TOAST_ID__DELETE_ALL_IMGS__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__DELETE_ALL_IMGS__SUCCESS']
   const TOAST_ID__DELETE_ALL__ERROR: typeof import('./src/composables/constants')['TOAST_ID__DELETE_ALL__ERROR']
   const TOAST_ID__DELETE_ALL__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__DELETE_ALL__SUCCESS']
+  const TOAST_ID__GENERATE_HINT__ERROR: typeof import('./src/composables/constants')['TOAST_ID__GENERATE_HINT__ERROR']
+  const TOAST_ID__GENERATE_HINT__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__GENERATE_HINT__SUCCESS']
   const TOAST_ID__GENERATE_IMGS__ERROR: typeof import('./src/composables/constants')['TOAST_ID__GENERATE_IMGS__ERROR']
   const TOAST_ID__GENERATE_IMGS__SUCCESS: typeof import('./src/composables/constants')['TOAST_ID__GENERATE_IMGS__SUCCESS']
   const TOAST_ID__GET_ALL_IMGS__ERROR: typeof import('./src/composables/constants')['TOAST_ID__GET_ALL_IMGS__ERROR']
@@ -451,6 +453,8 @@ declare module 'vue' {
     readonly TOAST_ID__DELETE_ALL_IMGS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__DELETE_ALL_IMGS__SUCCESS']>
     readonly TOAST_ID__DELETE_ALL__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__DELETE_ALL__ERROR']>
     readonly TOAST_ID__DELETE_ALL__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__DELETE_ALL__SUCCESS']>
+    readonly TOAST_ID__GENERATE_HINT__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GENERATE_HINT__ERROR']>
+    readonly TOAST_ID__GENERATE_HINT__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GENERATE_HINT__SUCCESS']>
     readonly TOAST_ID__GENERATE_IMGS__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GENERATE_IMGS__ERROR']>
     readonly TOAST_ID__GENERATE_IMGS__SUCCESS: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GENERATE_IMGS__SUCCESS']>
     readonly TOAST_ID__GET_ALL_IMGS__ERROR: UnwrapRef<typeof import('./src/composables/constants')['TOAST_ID__GET_ALL_IMGS__ERROR']>

@@ -128,7 +128,7 @@ onMounted(() => {
             <span
               class="text-center text-gray-500"
             >
-              Please selected a tag to search for.
+              Please select a tag to search for.
             </span>
           </div>
 
@@ -170,6 +170,7 @@ onMounted(() => {
               :alt="img.key"
               :class="{ 'blur-sm grayscale': isSearching }"
               transition-all duration-300
+              @click="utils.navigateToEdit(img.key)"
             />
           </div>
         </Transition>

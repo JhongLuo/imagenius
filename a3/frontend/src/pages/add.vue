@@ -10,14 +10,42 @@ const { toastsArray, blinkToast } = useToasts()
 
 const generatePrompt = ref<string>('')
 const imgsGenerated = ref<(Image & Selectable)[]>([])
+const jokeGenerated = ref<string>('')
 const numImgsResult = ref<number>(0)
 const imgsSelected = computed<(Image & Selectable)[]>(() => imgsGenerated.value.filter(img => img.selected))
 
 const isGenerating = ref<boolean>(false)
 const isSaving = ref<boolean>(false)
+const numOfTimesTitleClicked = ref<number>(0)
 
 const isPromptValid = computed<boolean>(() => generatePrompt.value.length > 0)
 const isSelectionValid = computed<boolean>(() => imgsSelected.value.length > 0)
+
+let wasPromptFromHint = false
+const isShownHint = ref<boolean>(true)
+
+watch(generatePrompt, (newVal: string) => {
+  isShownHint.value = !(newVal.length > 0 && !wasPromptFromHint)
+  wasPromptFromHint = false
+})
+
+const handleGenerateHint = async () => {
+  try {
+    const response = await api.generateRandomWord()
+    utilsJS.validateResponse(response)
+    // handle success
+    const randomWord = response.data.word
+    wasPromptFromHint = true
+    generatePrompt.value = randomWord
+  }
+  catch (err) {
+    // handle error
+    blinkToast(
+      TOAST_ID__GENERATE_HINT__ERROR,
+      'error',
+      err as string)
+  }
+}
 
 const handleGenerate = async () => {
   // input validation
@@ -47,6 +75,7 @@ const handleGenerate = async () => {
     imgsGenerated.value.forEach((img: (Image & Selectable)) => {
       img.src = img.srcSaved
     })
+    jokeGenerated.value = response.data.joke
     blinkToast(
       TOAST_ID__GENERATE_IMGS__SUCCESS,
       'success',
@@ -83,8 +112,10 @@ const handleSave = async () => {
     imgsGenerated.value.forEach((img: (Image & Selectable)) => {
       img.src = ''
     })
+    // clear displayed results
     await utils.sleep(50)
     imgsGenerated.value = []
+    jokeGenerated.value = ''
     isSaving.value = false
     blinkToast(
       TOAST_ID__SAVE_IMGS__SUCCESS,
@@ -104,7 +135,10 @@ const handleSave = async () => {
 
 <template>
   <!-- Page Title -->
-  <h1 my-title>
+  <h1
+    my-title
+    @click="numOfTimesTitleClicked++"
+  >
     Add
   </h1>
 
@@ -152,6 +186,21 @@ const handleSave = async () => {
       </div>
     </div>
 
+    <!-- Random prompt word -->
+    <div
+      w-full
+      ms-1 mb-4
+      text-start
+    >
+      <a
+        v-if="isShownHint"
+        text-xs text-teal-600 hover:text-teal-500 hover:underline cursor-pointer
+        @click="handleGenerateHint"
+      >
+        No ideas? Click here for something to begin with.
+      </a>
+    </div>
+
     <!-- Select and Submission: -->
     <div
       mt-8
@@ -192,6 +241,18 @@ const handleSave = async () => {
         :disabled="!isSelectionValid"
         @click="handleSave"
       />
+    </div>
+
+    <div
+      v-if="jokeGenerated.length > 0 && numOfTimesTitleClicked >= 3"
+      border
+      mt-8 p-4
+      w-md rounded-lg
+    >
+      🤣 A bonus joke: 🤣
+      <br>
+      <br>
+      {{ jokeGenerated }}
     </div>
   </ThePageContent>
 

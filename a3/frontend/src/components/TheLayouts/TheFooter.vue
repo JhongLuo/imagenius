@@ -14,7 +14,7 @@ const api = useAPIStore()
         px-1.5 py-1 rounded bg-gray-4 bg-op-15
         my-helper-text font-mono my-text-color-primary
       >
-        {{ api.baseURLShort }}
+        {{ api.ipAddr.addr }}
       </span>
     </div>
 

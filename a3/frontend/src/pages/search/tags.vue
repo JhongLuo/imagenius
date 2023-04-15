@@ -64,10 +64,10 @@ const handleSearchByTags = async () => {
     imgsSearchResult.value.forEach((img: Image) => {
       img.src = img.srcSaved
     })
-    blinkToast(
-      TOAST_ID__SEARCH_IMGS__SUCCESS,
-      'success',
-      TOAST_MSG__SEARCH_IMGS__SUCCESS)
+    // blinkToast(
+    //   TOAST_ID__SEARCH_IMGS__SUCCESS,
+    //   'success',
+    //   TOAST_MSG__SEARCH_IMGS__SUCCESS)
   }
   catch (err) {
     // handle error
@@ -139,7 +139,7 @@ onMounted(() => {
             <span
               class="text-center text-gray-500"
             >
-              Please selected tags to search for.
+              Please select some tags to search for.
             </span>
           </div>
 
@@ -181,6 +181,7 @@ onMounted(() => {
               :alt="img.key"
               :class="{ 'blur-sm grayscale': isSearching }"
               transition-all duration-300
+              @click="utils.navigateToEdit(img.key)"
             />
           </div>
         </Transition>
