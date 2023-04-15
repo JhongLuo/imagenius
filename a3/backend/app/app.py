@@ -52,15 +52,12 @@ def create_images():
         'joke': openai.prompt2joke(prompt)
     })
 
-@app.route('/api/random_word', methods=['GET'])
+@app.route('/api/random_word', methods=['POST'])
 def generate_random():
-    letter = openai.random_letter()
-    generate = openai.generate_random_words(letter)
-    word = generate[0]
-    return jsonify({
-        'success': 'true', 
-        'word': word
-    })
+    letter = openai.random_letter();
+    word = openai.generate_random_words(letter);
+    return jsonify({'success': 'true', 
+                    'word': word})
 
 
 @app.route('/api/search/key', methods = ['POST'])
