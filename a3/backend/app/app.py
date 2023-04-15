@@ -52,7 +52,7 @@ def create_images():
         'joke': openai.prompt2joke(prompt)
     })
 
-@app.route('/api/random_word', methods=['POST'])
+@app.route('/api/random_word', methods=['GET'])
 def generate_random():
     letter = openai.random_letter();
     word = openai.generate_random_words(letter);
