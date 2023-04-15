@@ -9,7 +9,8 @@ const api = useAPIStore()
 const { toastsArray, blinkToast } = useToasts()
 
 const canvasImg = ref<Image | undefined>()
-const imgDimensions = ref<{ width: number; height: number }>({ width: 0, height: 0 })
+const dimensionTesterImg = ref<HTMLImageElement | undefined>()
+const imgDimensions = reactive<{ width: number; height: number }>({ width: 0, height: 0 })
 const imgKey = computed<string>(() => useRoute().query.key as string)
 const editConfigs = reactive<EditConfigOptions>({
   xPos: 0,
@@ -19,14 +20,14 @@ const editConfigs = reactive<EditConfigOptions>({
 })
 const ifFlipMaskColor = ref<boolean>(false)
 watch(editConfigs, (newVal: any) => {
-  newVal.xPos = newVal.xPos < 0 ? 0 : newVal.xPos > imgDimensions.value.width - 1 ? imgDimensions.value.width - 1 : Math.floor(newVal.xPos)
-  newVal.yPos = newVal.yPos < 0 ? 0 : newVal.yPos > imgDimensions.value.height - 1 ? imgDimensions.value.height - 1 : Math.floor(newVal.yPos)
-  newVal.radius = newVal.radius < 0 ? 0 : newVal.radius > imgDimensions.value.width ? imgDimensions.value.width : Math.floor(newVal.radius)
+  newVal.xPos = newVal.xPos < 0 ? 0 : newVal.xPos > imgDimensions.width - 1 ? imgDimensions.width - 1 : Math.floor(newVal.xPos)
+  newVal.yPos = newVal.yPos < 0 ? 0 : newVal.yPos > imgDimensions.height - 1 ? imgDimensions.height - 1 : Math.floor(newVal.yPos)
+  newVal.radius = newVal.radius < 0 ? 0 : newVal.radius > imgDimensions.width ? imgDimensions.width : Math.floor(newVal.radius)
 })
 const overlayStyle = computed(() => {
-  const cappedX = Math.min(editConfigs.xPos, imgDimensions.value.width - 1)
-  const cappedY = Math.min(editConfigs.yPos, imgDimensions.value.height - 1)
-  const cappedR = Math.min(editConfigs.radius, imgDimensions.value.width)
+  const cappedX = Math.min(editConfigs.xPos, imgDimensions.width - 1)
+  const cappedY = Math.min(editConfigs.yPos, imgDimensions.height - 1)
+  const cappedR = Math.min(editConfigs.radius, imgDimensions.width)
   const left = cappedX - cappedR
   const top = cappedY - cappedR
   const width = cappedR * 2
@@ -36,7 +37,7 @@ const overlayStyle = computed(() => {
     top: `${top}px`,
     width: `${width}px`,
     height: `${height}px`,
-    clipPath: `polygon(${-left}px ${-top}px, ${-left + imgDimensions.value.width}px ${-top}px, ${-left + imgDimensions.value.width}px ${-top + imgDimensions.value.height}px, ${-left}px ${-top + imgDimensions.value.height}px)`,
+    clipPath: `polygon(${-left}px ${-top}px, ${-left + imgDimensions.width}px ${-top}px, ${-left + imgDimensions.width}px ${-top + imgDimensions.height}px, ${-left}px ${-top + imgDimensions.height}px)`,
   }
 })
 const isFormValid = computed<boolean>(() => editConfigs.radius > 0 && editConfigs.prompt.length > 0)
@@ -70,13 +71,13 @@ const initCanvasImg = async () => {
     await utils.sleep(50)
     isIniting.value = false
     canvasImg.value.src = canvasImg.value.srcSaved
-    fetch(canvasImg.value.src)
-      .then(response => response.blob())
-      .then(blob => createImageBitmap(blob))
-      .then((bitmap) => {
-        imgDimensions.value.width = bitmap.width
-        imgDimensions.value.height = bitmap.height
-      })
+    const testerImg = dimensionTesterImg.value!
+    testerImg.onload = () => {
+      imgDimensions.width = testerImg.naturalWidth
+      imgDimensions.height = testerImg.naturalHeight
+      editConfigs.xPos = imgDimensions.width / 2
+      editConfigs.yPos = imgDimensions.height / 2
+    }
   }
   catch (err) {
     // handle error
@@ -147,8 +148,8 @@ const handleSave = async () => {
     // handle success
     // start displaying results
     await utils.sleep(50)
-    editConfigs.xPos = 0
-    editConfigs.yPos = 0
+    editConfigs.xPos = imgDimensions.width / 2
+    editConfigs.yPos = imgDimensions.height / 2
     editConfigs.radius = 0
     editConfigs.prompt = ''
     imgsGenerated.value.forEach((img: (Image & Selectable)) => {
@@ -188,23 +189,36 @@ onMounted(() => {
 
   <!-- Page Content -->
   <ThePageContent>
-    <div class="relative">
+    <div
+      v-if="canvasImg !== undefined"
+      class="relative"
+    >
+      <!-- Canvas -->
       <TheImagePreview
-        v-if="canvasImg !== undefined"
         :src="canvasImg.src"
         :alt="canvasImg.key"
         :class="{ 'blur-sm grayscale': isGenerating }"
         transition-all duration-300
         @click="ifFlipMaskColor = !ifFlipMaskColor"
       />
+
+      <img
+        v-if="canvasImg !== undefined"
+        ref="dimensionTesterImg"
+        :src="canvasImg.src"
+        display-none
+      >
+
+      <!-- Mask -->
       <div
         class="absolute opacity-50 rounded-full pointer-events-none"
-        :class="ifFlipMaskColor ? 'bg-yellow-200' : 'bg-blue-500'"
+        :class="!ifFlipMaskColor ? 'bg-teal-300' : 'bg-red-500'"
         :style="overlayStyle"
       />
     </div>
 
     <div
+      v-if="canvasImg !== undefined"
       my-4
       text-xs font-mono
     >
@@ -372,12 +386,24 @@ onMounted(() => {
       </TheLabeledInput>
 
       <!-- Button: Submit Edit -->
-      <TheButton
-        text-sm
-        label="Submit"
-        :disabled="!isFormValid"
-        @click="handleSubmitEdit"
-      />
+      <!-- Group <submit button + spinner> -->
+      <div
+        flex items-center space-x-3
+      >
+        <!-- submit button -->
+        <TheButton
+          text-sm
+          label="Submit"
+          :disabled="!isFormValid || isGenerating"
+          @click="handleSubmitEdit"
+        />
+
+        <!-- spinner -->
+        <TheSpinner
+          v-if="isGenerating"
+          alt-text="Generating..."
+        />
+      </div>
     </TheInputGroup>
   </ThePageContent>
 

@@ -14,7 +14,9 @@ s3_persistent = s3.S3()
 selection_pool = selectionpool.SelectionPool()
 dynamo = dynamo.Dynamo()
 rekognition = rekognition.Rekognition()
-image_num = 1
+generate_image_num = 1
+generate_image_size = "256x256"
+edit_image_num = 1
 search_engine = opensearch.OSearch()
 
 @app.route('/')
@@ -34,7 +36,7 @@ def create_images():
         })
 
     return_images = []    
-    raw_images = openai.prompt2images(prompt, n=image_num)
+    raw_images = openai.prompt2images(prompt, n=generate_image_num)
     return_images = []
     for raw_image in raw_images:
         image_path = selection_pool.add(prompt, raw_image)    
@@ -203,15 +205,20 @@ def edit_image():
             }
         })
     
+    image = utils.url2fileobj(s3_persistent.path2url(parent_image_path))
+    size = utils.url2size(s3_persistent.path2url(parent_image_path))
+    
     new_images = openai.edit_image(
         prompt=str(prompt),
-        image=utils.url2fileobj(s3_persistent.path2url(parent_image_path)),
+        image=image,
         mask=utils.create_mask(
             x=int(x_pos),
             y=int(y_pos),
             r=int(radius),
+            size=size
         ),
-        n=image_num,
+        n=edit_image_num,
+        size=f'{size}x{size}'
     )
     image_paths = list()
     for new_image in new_images:
@@ -226,7 +233,7 @@ def edit_image():
         } for image_path in image_paths],
     })
     
-@app.route('/api/images_tree', methods = ['GET'])
+@app.route('/api/search/tree', methods = ['POST'])
 def get_images_tree():
     image_path = request.form.get('key', None)
     if not image_path:
