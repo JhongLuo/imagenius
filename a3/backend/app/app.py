@@ -52,13 +52,15 @@ def create_images():
         'joke': openai.prompt2joke(prompt)
     })
 
-@app.route('/api/random_word', methods=['POST'])
+@app.route('/api/random_word', methods=['GET'])
 def generate_random():
-    letter = openai.random_letter();
-    generate = openai.generate_random_words(letter);
+    letter = openai.random_letter()
+    generate = openai.generate_random_words(letter)
     word = generate[0]
-    return jsonify({'success': 'true', 
-                    'word': word})
+    return jsonify({
+        'success': 'true', 
+        'word': word
+    })
 
 
 @app.route('/api/search/key', methods = ['POST'])
@@ -234,7 +236,7 @@ def edit_image():
         } for image_path in image_paths],
     })
     
-@app.route('/api/images_tree', methods = ['GET'])
+@app.route('/api/search/tree', methods = ['POST'])
 def get_images_tree():
     image_path = request.form.get('key', None)
     if not image_path:
