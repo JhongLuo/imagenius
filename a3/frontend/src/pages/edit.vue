@@ -9,6 +9,7 @@ const api = useAPIStore()
 const { toastsArray, blinkToast } = useToasts()
 
 const canvasImg = ref<Image | undefined>()
+const dimensionTesterImg = ref<HTMLImageElement | undefined>()
 const imgDimensions = reactive<{ width: number; height: number }>({ width: 0, height: 0 })
 const imgKey = computed<string>(() => useRoute().query.key as string)
 const editConfigs = reactive<EditConfigOptions>({
@@ -70,15 +71,13 @@ const initCanvasImg = async () => {
     await utils.sleep(200)
     isIniting.value = false
     canvasImg.value.src = canvasImg.value.srcSaved
-    fetch(canvasImg.value.src)
-      .then(response => response.blob())
-      .then(blob => createImageBitmap(blob))
-      .then((bitmap) => {
-        imgDimensions.width = bitmap.width
-        imgDimensions.height = bitmap.height
-        editConfigs.xPos = imgDimensions.width / 2
-        editConfigs.yPos = imgDimensions.height / 2
-      })
+    const testerImg = dimensionTesterImg.value!
+    testerImg.onload = () => {
+      imgDimensions.width = testerImg.naturalWidth
+      imgDimensions.height = testerImg.naturalHeight
+      editConfigs.xPos = imgDimensions.width / 2
+      editConfigs.yPos = imgDimensions.height / 2
+    }
   }
   catch (err) {
     // handle error
@@ -202,6 +201,13 @@ onMounted(() => {
         transition-all duration-300
         @click="ifFlipMaskColor = !ifFlipMaskColor"
       />
+
+      <img
+        v-if="canvasImg !== undefined"
+        ref="dimensionTesterImg"
+        :src="canvasImg.src"
+        display-none
+      >
 
       <!-- Mask -->
       <div
