@@ -148,8 +148,8 @@ const handleSave = async () => {
     // handle success
     // start displaying results
     await utils.sleep(50)
-    editConfigs.xPos = 0
-    editConfigs.yPos = 0
+    editConfigs.xPos = imgDimensions.width / 2
+    editConfigs.yPos = imgDimensions.height / 2
     editConfigs.radius = 0
     editConfigs.prompt = ''
     imgsGenerated.value.forEach((img: (Image & Selectable)) => {
@@ -386,12 +386,24 @@ onMounted(() => {
       </TheLabeledInput>
 
       <!-- Button: Submit Edit -->
-      <TheButton
-        text-sm
-        label="Submit"
-        :disabled="!isFormValid"
-        @click="handleSubmitEdit"
-      />
+      <!-- Group <submit button + spinner> -->
+      <div
+        flex items-center space-x-3
+      >
+        <!-- submit button -->
+        <TheButton
+          text-sm
+          label="Submit"
+          :disabled="!isFormValid || isGenerating"
+          @click="handleSubmitEdit"
+        />
+
+        <!-- spinner -->
+        <TheSpinner
+          v-if="isGenerating"
+          alt-text="Generating..."
+        />
+      </div>
     </TheInputGroup>
   </ThePageContent>
 
