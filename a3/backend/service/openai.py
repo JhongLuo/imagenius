@@ -38,10 +38,13 @@ def prompt2joke(prompt):
     return joke
 
 
-def generate_random_words():
+def random_letter():
+    return random.choice('abcdefghijklmnopqrstuvwxyz')
+
+def generate_random_words(letter):
     response = openai.Completion.create(
         engine="text-davinci-002",
-        prompt="Generate one random words.",
+        prompt=f"Generate one random noun word start with {letter}.",
         max_tokens=16,
         n=1,
         temperature=0.6
