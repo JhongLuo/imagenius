@@ -49,5 +49,5 @@ def generate_random_words(letter):
         n=1,
         temperature=0.6
     )
-    words = response.choices[0].text.strip().split("\n")
-    return [word.capitalize() for word in words]
+    word = response.choices[0].text.strip()
+    return word.capitalize()
