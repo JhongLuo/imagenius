@@ -92,4 +92,3 @@ def generate_joke(tag):
 
 
 
-print(generate_joke('Donald'))

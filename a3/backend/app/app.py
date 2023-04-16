@@ -15,7 +15,7 @@ selection_pool = selectionpool.SelectionPool()
 dynamo = dynamo.Dynamo()
 rekognition = rekognition.Rekognition()
 generate_image_num = 1
-generate_image_size = "256x256"
+generate_image_size = "512x512"
 edit_image_num = 1
 search_engine = opensearch.OSearch()
 records = deque(maxlen=30)
@@ -37,7 +37,7 @@ def create_images():
         })
 
     return_images = []    
-    raw_images = openai.prompt2images(prompt, n=generate_image_num)
+    raw_images = openai.prompt2images(prompt, n=generate_image_num, size=generate_image_size)
     return_images = []
     for raw_image in raw_images:
         image_path = selection_pool.add(prompt, raw_image)    
@@ -106,20 +106,43 @@ def post_image():
         'message': 'Images stored'
     })
 
-@app.route('/api/images', methods = ['DELETE'])
-def delete_images():
-    s3_cache.clear_images()
-    search_engine.clear()
-    dynamo.clear()
-    s3_persistent.clear_images()
+# @app.route('/api/images', methods = ['DELETE'])
+# def delete_images():
+#     s3_cache.clear_images()
+#     search_engine.clear()
+#     dynamo.clear()
+#     s3_persistent.clear_images()
+#     return jsonify({
+#         'success': 'true',
+#         'message': 'All images deleted'
+#     })
+
+
+@app.route('/api/delete_image', methods = ['POST'])
+def delete_image():
+    image_path = request.form.get('key', None)
+    if not image_path:
+        return jsonify({
+            'success': 'false',
+            'error': {
+                'message': 'key is required',
+            }
+        })
+    s3_persistent.delete_image(image_path)
+    dynamo.delete_image(image_path)
     return jsonify({
         'success': 'true',
-        'message': 'All images deleted'
+        'message': 'Image deleted'
     })
 
 @app.route('/api/search/tags', methods = ['POST'])
 def search_by_tags():
-    tags = json.loads(request.form.get('selected_tags', None))
+    tags = request.form.get('selected_tags', None)
+    if not tags:
+        # read from json
+        tags = request.get_json()['selected_tags']
+    else:
+        tags = json.loads(tags)
     image_paths = dynamo.tags_retrive(tags)
     images = [{
         'key': image_path,

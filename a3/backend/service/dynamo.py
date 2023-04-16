@@ -160,7 +160,6 @@ class Dynamo:
         for item in response['Items']:
             images.add(item['image_path']['S'])
         images = list(images)
-        print(images)
         return images
         
     def get_image_root(self, image_path):
@@ -172,7 +171,6 @@ class Dynamo:
             },
             ProjectionExpression='root'
         )
-        print(response)
         return response['Item']['root']['S']
 
     def get_image_descendants(self, image_path):
@@ -189,7 +187,6 @@ class Dynamo:
             images.add(item['image_path']['S'])
         images = list(images)
         images.sort()
-        print(images)
         return images
 
     def get_image_prompt(self, image_path):
@@ -229,7 +226,6 @@ class Dynamo:
 
         request_items = {}
         request_items[self.image_table_name] = item_list
-        print(item_list)
         response = self.dy.batch_write_item(RequestItems=request_items)
         if 'UnprocessedItems' in response and response['UnprocessedItems']:
             print("Some items were not processed:")
@@ -272,6 +268,37 @@ class Dynamo:
         prompts = list(prompts)
         prompts.sort()
         return prompts
-            
+
+    def get_image_tags(self, image_path):
+        response = self.dy.scan(
+            TableName=self.image_table_name,
+            FilterExpression='image_path = :image_path',
+            ExpressionAttributeValues={
+                ':image_path': {'S': image_path}
+            }
+        )
+        tags = set()
+        for item in response['Items']:
+            tags.add(item['tag']['S'])
+        return list(tags)
 
         
+    def delete_image(self, image_path):        
+        descendants = self.get_image_descendants(image_path)
+        print('descendants', type(image_path))
+        print(descendants, image_path)
+        for descendant in descendants:
+            self.delete_image(descendant)
+        tags = self.get_image_tags(image_path)
+        print('tags')
+        print(tags)
+        for tag in self.get_image_tags(image_path):
+            self.dy.delete_item(
+                TableName=self.image_table_name,
+                Key={
+                    'tag': {'S': tag},
+                    'image_path': {'S': image_path}
+                },
+            )
+    
+            

@@ -39,7 +39,6 @@ def prompt2joke(prompt):
     )
     jokes = [choice.text.strip() for choice in response.choices]
     joke = random.choice(jokes)
-    #print(joke)
     return joke
 
 

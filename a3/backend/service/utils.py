@@ -25,7 +25,6 @@ def create_mask(x, y, r, size=256):
     return img_bytes
 
 def url2imagepath(url):
-    print(url.split("/")[-1])
     return url.split("/")[-1]
 
 if __name__ == '__main__':
