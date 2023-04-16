@@ -16,13 +16,13 @@ defineOptions({
     <div
       v-if="$attrs.src"
       w-full flex justify-center items-start
-      cursor-pointer
     >
       <figure relative>
         <!-- img -->
         <img
           my-card my-shadow-heavy object-contain
           v-bind="$attrs"
+          cursor-pointer
         >
 
         <!-- img caption -->
