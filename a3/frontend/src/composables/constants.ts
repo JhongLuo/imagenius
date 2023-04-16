@@ -124,8 +124,8 @@ export const CHART_ID__NUMS_IMGS_SAVED = 'chart-nums-items'
 export const CHART_ID__NUMS_TAGS = 'chart-nums-tags'
 export const CHART_ID__NUMS_API_CALLS = 'chart-nums-api-calls'
 
-export const CHART_TITLE__NUMS_IMGS_DISCARDED = '# of Imgs in Cache'
-export const CHART_TITLE__NUMS_IMGS_SAVED = '# of Imgs in Library'
+export const CHART_TITLE__NUMS_IMGS_DISCARDED = '# of Images in Cache'
+export const CHART_TITLE__NUMS_IMGS_SAVED = '# of Images in Library'
 export const CHART_TITLE__NUMS_TAGS = '# of Tags'
 export const CHART_TITLE__NUMS_API_CALLS = '# of API Calls'
 

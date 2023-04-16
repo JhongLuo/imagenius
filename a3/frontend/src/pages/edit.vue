@@ -222,8 +222,10 @@ onMounted(() => {
   </div>
 
   <!-- Page Content -->
-  <ThePageContent
+  <div
     v-if="imgKey !== undefined"
+    w-full
+    flex flex-col items-center
   >
     <div
       v-if="canvasImg !== undefined"
@@ -441,7 +443,7 @@ onMounted(() => {
         />
       </div>
     </TheInputGroup>
-  </ThePageContent>
+  </div>
 
   <!-- New Images -->
   <div
