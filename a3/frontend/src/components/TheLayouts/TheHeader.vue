@@ -15,7 +15,7 @@
         select-none
       >
         <p text-xl>
-          AI Image Library
+          ImageGenius
         </p>
         <p text-sm op75>
           <em>
