@@ -109,9 +109,9 @@ const chartOptions = computed(() => {
     },
 
     yaxis: {
-      min: 0,
-      max: undefined,
-      forceNiceScale: true,
+      min: utils.computeYAxisMin(props.series[0].data as number[]), // Forces ideal scale, but results in losing
+      max: utils.computeYAxisMax(props.series[0].data as number[]), // update animation for some reason :(
+      forceNiceScale: false,
       tickAmount: 5,
       decimalsInFloat: 0,
       labels: {

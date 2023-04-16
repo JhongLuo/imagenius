@@ -27,7 +27,7 @@ const handleSearchByPrompt = async () => {
   try {
     // construct request form data
     const fd = new FormData()
-    fd.append('prompt', searchPrompt.value)
+    fd.append('prompt', searchPrompt.value.trim())
     const response = await api.searchImagesByPrompt(fd)
     utilsJS.validateResponse(response)
     // handle success
@@ -62,7 +62,7 @@ const handleSearchByPrompt = async () => {
 <template>
   <!-- Page Title -->
   <h1 my-title>
-    Search By Prompt
+    Search
   </h1>
 
   <!-- Page Content -->
@@ -81,7 +81,7 @@ const handleSearchByPrompt = async () => {
           label-text="Image Search Prompt"
         >
           <TheIconedTextInput
-            v-model.trim="searchPrompt"
+            v-model="searchPrompt"
             icon="i-carbon:ibm-watson-speech-to-text"
             input-id="input-image-prompt"
             placeholder="Prompt for image search..."

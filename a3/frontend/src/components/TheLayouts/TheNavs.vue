@@ -13,31 +13,31 @@
     <a
       icon-btn i-carbon:document-add
       href="/add"
-      title="Add"
+      title="Add New"
     />
 
     <a
       icon-btn i-carbon:image-search
       href="/search/prompt"
-      title="Search By Prompt"
+      title="Search"
     />
 
     <a
       icon-btn i-carbon:tag
       href="/search/tag"
-      title="Search By Tag"
+      title="Browse By Tag"
     />
 
     <a
       icon-btn i-carbon:tag-group
       href="/search/tags"
-      title="Search By Tags"
+      title="Browse By Tags"
     />
 
     <a
       icon-btn i-carbon:list
       href="/list"
-      title="List"
+      title="Library"
     />
 
     <a

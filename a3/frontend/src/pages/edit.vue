@@ -96,7 +96,7 @@ const handleSubmitEdit = async () => {
   try {
     const fd = new FormData()
     fd.append('parent_key', imgKey.value)
-    fd.append('prompt', editConfigs.prompt)
+    fd.append('prompt', editConfigs.prompt.trim())
     fd.append('x_pos', editConfigs.xPos.toString())
     fd.append('y_pos', editConfigs.yPos.toString())
     fd.append('radius', editConfigs.radius.toString())

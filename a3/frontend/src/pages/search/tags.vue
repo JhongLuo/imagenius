@@ -92,7 +92,7 @@ onMounted(() => {
 <template>
   <!-- Page Title -->
   <h1 my-title>
-    Search By Tags
+    Browse By Tags
   </h1>
 
   <!-- Page Content -->

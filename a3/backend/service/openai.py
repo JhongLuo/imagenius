@@ -46,7 +46,7 @@ def prompt2joke(prompt):
 def random_letter():
     return random.choice('abcdefghijklmnopqrstuvwxyz')
 
-def generate_random_words(letter):
+def generate_random_word(letter):
     response = openai.Completion.create(
         engine="text-davinci-002",
         prompt=f"Generate one random noun word start with {letter}.",
@@ -55,4 +55,4 @@ def generate_random_words(letter):
         temperature=0.6
     )
     word = response.choices[0].text.strip()
-    return word.capitalize()
+    return word

@@ -57,7 +57,7 @@ const handleGenerate = async () => {
   try {
     // construct request form data
     const fd = new FormData()
-    fd.append('prompt', generatePrompt.value)
+    fd.append('prompt', generatePrompt.value.trim())
     const response = await api.generateImages(fd)
     utilsJS.validateResponse(response)
     // handle success
@@ -139,7 +139,7 @@ const handleSave = async () => {
     my-title
     @click="numOfTimesTitleClicked++"
   >
-    Add
+    Add New
   </h1>
 
   <!-- Page Content -->
@@ -158,7 +158,7 @@ const handleSave = async () => {
           label-text="Image Generation Prompt"
         >
           <TheIconedTextInput
-            v-model.trim="generatePrompt"
+            v-model="generatePrompt"
             icon="i-carbon:ibm-watson-speech-to-text"
             input-id="input-image-prompt"
             placeholder="Prompt for generating images..."
@@ -180,7 +180,7 @@ const handleSave = async () => {
         <!-- button: retrieve -->
         <TheButton
           :label="imgsGenerated.length ? 'Regenerate' : 'Generate'"
-          :disabled="!isPromptValid"
+          :disabled="!isPromptValid || isGenerating"
           @click="handleGenerate"
         />
       </div>
@@ -238,7 +238,7 @@ const handleSave = async () => {
       <!-- button: retrieve -->
       <TheButton
         label="Save"
-        :disabled="!isSelectionValid"
+        :disabled="!isSelectionValid || isSaving"
         @click="handleSave"
       />
     </div>
