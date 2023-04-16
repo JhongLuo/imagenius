@@ -3,9 +3,9 @@ from app import selectionpool
 from service import openai, s3, dynamo, rekognition, opensearch, utils
 
 from flask_cors import CORS
-import time
+import datetime
 import json
-import threading
+from collections import deque
 app = Flask(__name__)
 CORS(app)
 
@@ -18,6 +18,7 @@ generate_image_num = 1
 generate_image_size = "256x256"
 edit_image_num = 1
 search_engine = opensearch.OSearch()
+records = deque(maxlen=30)
 
 @app.route('/')
 def hello():
@@ -292,4 +293,26 @@ def get_images_tree():
         'success': 'true',
         'nodes': nodes,
         'edges': edges,
+    })
+
+@app.route('/api/record', methods = ['POST'])
+def record():
+    records.append({
+        'timestamp': datetime.datetime.utcnow(),
+        'cache_size': s3_cache.get_size(),
+        'total_images': len(dynamo.list_images()),
+        'total_tags': len(dynamo.list_tags()),
+        'total_prompts': len(dynamo.list_prompts()),
+        'total_usage': openai.openai_usage,
+    })
+    return jsonify({
+        'success': 'true',
+        'message': 'Recorded',
+    })
+    
+@app.route('/api/stats', methods = ['GET'])
+def get_status():
+    return jsonify({
+        'success': 'true',
+        'stats': list(records),
     })

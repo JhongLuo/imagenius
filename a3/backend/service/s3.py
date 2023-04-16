@@ -66,3 +66,10 @@ class S3:
     
     def delete_image(self, filename):
         self.client.delete_object(Bucket=self.bucketName, Key=filename)
+        
+    def get_size(self):
+        paginator = self.client.get_paginator('list_objects_v2')
+        total_items = 0
+        for page in paginator.paginate(Bucket=self.bucketName):
+            total_items += len(page.get('Contents', []))
+        return total_items

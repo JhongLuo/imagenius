@@ -1,3 +1,6 @@
 import api
 
-print(api.get_tree(2))
+print(api.make_a_record())
+print(api.make_a_record())
+print(api.make_a_record())
+print(api.get_stats())
