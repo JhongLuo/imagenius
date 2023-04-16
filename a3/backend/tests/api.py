@@ -13,3 +13,4 @@ def make_a_record():
 
 def get_stats():
     return requests.get(url + '/stats').json()
+
