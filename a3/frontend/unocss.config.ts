@@ -29,7 +29,7 @@ export default defineConfig({
     // components
     ['my-input', 'text-sm font-medium rounded-md my-text-color-primary my-bg-primary my-border disabled:text-op-15 disabled:placeholder-op-15'],
     ['my-text-input', 'w-full px-4 py-2 my-input'],
-    ['my-title', 'mb-5 text-xl font-extrabold my-text-color-primary select-none'],
+    ['my-title', 'mb-6 text-2xl font-extrabold my-text-color-primary select-none font-serif'],
     ['my-label', 'mb-2 text-sm font-medium my-text-color-primary'],
     ['my-helper-text', 'mt-1 text-xs font-medium my-text-color-secondary'],
     ['my-btn', 'px-3 py-1 rounded inline-block text-white cursor-pointer disabled:cursor-default disabled:bg-gray-6 disabled:opacity-50 my-border'],

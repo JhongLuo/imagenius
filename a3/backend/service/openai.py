@@ -35,23 +35,24 @@ def prompt2joke(prompt):
     response = openai.Completion.create(
         engine="text-davinci-002",
         prompt=f"Tell me a funny joke about {prompt}",
-        max_tokens=60
+        max_tokens=100,
+        temperature=1
     )
     jokes = [choice.text.strip() for choice in response.choices]
     joke = random.choice(jokes)
     return joke
 
-
-def random_letter():
-    return random.choice('abcdefghijklmnopqrstuvwxyz')
-
-def generate_random_words(letter):
+def generate_random_word():
+    prompt = """
+    Think of something as the subject of an intriguing picture. The response should only contain one word in lowercase, without any punctuations.
+    """
     response = openai.Completion.create(
-        engine="text-davinci-002",
-        prompt=f"Generate one random noun word start with {letter}.",
-        max_tokens=16,
-        n=1,
-        temperature=0.6
-    )
+            engine="text-davinci-003",
+            prompt=prompt,
+            max_tokens=8,
+            n=1,
+            stop=None,
+            temperature=1,
+        )
     word = response.choices[0].text.strip()
-    return word.capitalize()
+    return word

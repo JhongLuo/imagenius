@@ -92,11 +92,14 @@ onMounted(() => {
 <template>
   <!-- Page Title -->
   <h1 my-title>
-    List All Images
+    Library
   </h1>
 
   <!-- Page Content -->
-  <ThePageContent>
+  <div
+    w-5xl
+    flex flex-col items-center
+  >
     <!-- Search Results: -->
     <Transition>
       <div
@@ -183,7 +186,7 @@ onMounted(() => {
         </Transition>
       </div>
     </Transition>
-  </ThePageContent>
+  </div>
 
   <!-- Toasts, Alerts & Modals -->
   <TheToasts

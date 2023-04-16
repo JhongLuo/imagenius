@@ -76,8 +76,6 @@ const initCanvasImg = async () => {
     testerImg.onload = () => {
       imgDimensions.width = testerImg.naturalWidth
       imgDimensions.height = testerImg.naturalHeight
-      editConfigs.xPos = imgDimensions.width / 2
-      editConfigs.yPos = imgDimensions.height / 2
     }
   }
   catch (err) {
@@ -96,7 +94,7 @@ const handleSubmitEdit = async () => {
   try {
     const fd = new FormData()
     fd.append('parent_key', imgKey.value)
-    fd.append('prompt', editConfigs.prompt)
+    fd.append('prompt', editConfigs.prompt.trim())
     fd.append('x_pos', editConfigs.xPos.toString())
     fd.append('y_pos', editConfigs.yPos.toString())
     fd.append('radius', editConfigs.radius.toString())
@@ -292,7 +290,7 @@ onMounted(() => {
             class="w-45%"
             flex flex-col items-center
           >
-            <div
+            <!-- <div
               flex w-full
             >
               <input
@@ -311,10 +309,21 @@ onMounted(() => {
               >
                 px
               </span>
-            </div>
+            </div> -->
+            <input
+              id="minmax-range"
+              v-model="editConfigs.xPos"
+              type="range"
+              min="0"
+              :max="imgDimensions.width - 1"
+              w-full h-2 rounded-lg appearance-none cursor-pointer
+              bg-gray-200 dark:bg-gray-700 my-outline-none
+              my-4
+            >
 
             <TheInputHelperText
-              helper-text="X Coordinate"
+              font-mono
+              :helper-text="`X Coord: ${editConfigs.xPos}px`"
             />
           </div>
 
@@ -323,7 +332,7 @@ onMounted(() => {
             class="w-45%"
             flex flex-col items-center
           >
-            <div
+            <!-- <div
               flex w-full
             >
               <input
@@ -342,10 +351,21 @@ onMounted(() => {
               >
                 px
               </span>
-            </div>
+            </div> -->
+            <input
+              id="minmax-range"
+              v-model="editConfigs.yPos"
+              type="range"
+              min="0"
+              :max="imgDimensions.height - 1"
+              w-full h-2 rounded-lg appearance-none cursor-pointer
+              bg-gray-200 dark:bg-gray-700 my-outline-none
+              my-4
+            >
 
             <TheInputHelperText
-              helper-text="Y Coordinate"
+              font-mono
+              :helper-text="`Y Coord: ${editConfigs.yPos}px`"
             />
           </div>
         </div>
@@ -365,7 +385,7 @@ onMounted(() => {
             class="w-45%"
             flex flex-col items-center
           >
-            <div
+            <!-- <div
               flex w-full
             >
               <input
@@ -384,10 +404,21 @@ onMounted(() => {
               >
                 px
               </span>
-            </div>
+            </div> -->
+            <input
+              id="minmax-range"
+              v-model="editConfigs.radius"
+              type="range"
+              min="0"
+              :max="imgDimensions.width / 2"
+              w-full h-2 rounded-lg appearance-none cursor-pointer
+              bg-gray-200 dark:bg-gray-700 my-outline-none
+              my-4
+            >
 
             <TheInputHelperText
-              helper-text="Radius Size"
+              font-mono
+              :helper-text="`Radius: ${editConfigs.radius}px`"
             />
           </div>
         </div>

@@ -2,7 +2,7 @@
   <div
     flex flex-col items-center
   >
-    <div flex flex-row justify-center>
+    <div flex flex-row justify-center mb-2>
       <!-- icon -->
       <div i-carbon:scan-alt text-4xl inline-block />
 
@@ -14,12 +14,12 @@
         flex flex-col
         select-none
       >
-        <p text-lg>
-          AI Image Library
+        <p text-xl>
+          ImaGenius
         </p>
         <p text-sm op75>
           <em>
-            smart image management
+            Smart Image Management
           </em>
         </p>
       </div>

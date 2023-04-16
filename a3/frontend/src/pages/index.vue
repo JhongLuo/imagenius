@@ -6,7 +6,7 @@ defineOptions({
 const api = useAPIStore()
 
 const start = () => {
-  api.updateApiKey()
+  // api.updateApiKey()
   window.location.href = '/add'
 }
 </script>
@@ -14,7 +14,7 @@ const start = () => {
 <template>
   <!-- Page Title -->
   <h1 my-title>
-    Connect
+    Home
   </h1>
 
   <!-- Page Content -->
@@ -25,7 +25,7 @@ const start = () => {
     <div>
       <TheIconedTextInput
         v-model.trim="api.ipAddr.addr"
-        w-64
+        w-lg
         icon="i-carbon-connection-signal"
         input-id="input-api-ip-addr"
         placeholder="Where to connect?"
@@ -34,7 +34,7 @@ const start = () => {
     </div>
 
     <!-- input: api key -->
-    <div
+    <!-- <div
       mt-4
     >
       <TheIconedTextInput
@@ -45,7 +45,7 @@ const start = () => {
         placeholder="Your api key"
         @keydown.enter="start"
       />
-    </div>
+    </div> -->
 
     <!-- button: go -->
     <button
@@ -53,7 +53,7 @@ const start = () => {
       :disabled="!api.ipAddr.addr || !api.apiKey"
       @click="start"
     >
-      Go
+      Connect
     </button>
   </ThePageContent>
 </template>

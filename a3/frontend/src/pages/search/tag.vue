@@ -94,7 +94,7 @@ onMounted(() => {
 <template>
   <!-- Page Title -->
   <h1 my-title>
-    Search By Tag
+    Browse By Tag
   </h1>
 
   <!-- Page Content -->

@@ -1,16 +1,18 @@
-# A3 AI Image Library
+# ImaGenius
 
-Web frontend for the A3 AI Image Library.
+Web frontend for ImaGenius.
 
-Supports the following functionalities:
+ImaGenius supports the following functionalities:
 
-- Generate images from a given prompt
+- Generating images from a given prompt
 
-- Save selected generated images to the library
+- Saving selected generated images to the library
 
-- Manage and edit the library
+- Retouching the images with new prompts
 
-- Show aggregate statistics for the memcache pool
+- Visualizing the edit history of the image
+
+- Showing aggregate statistics about the library
 
 Built on top of Vue 3 Composition API with Vite and UnoCSS.
 
@@ -39,7 +41,7 @@ ni
 and
 
 ```bash
-nr dev
+nr dev --open
 ```
 
 ### Default Port
@@ -74,7 +76,7 @@ nr dev --port 2333
 ### Plugins
 
 - [Vue Router](https://github.com/vuejs/vue-router)
-  - [`vite-plugin-pages`](https://github.com/hannoeru/vite-plugin-pages) - file system based routing
+- [`vite-plugin-pages`](https://github.com/hannoeru/vite-plugin-pages) - file system based routing
 - [`unplugin-auto-import`](https://github.com/antfu/unplugin-auto-import) - Directly use Vue Composition API and others without importing
 - [`unplugin-vue-components`](https://github.com/antfu/unplugin-vue-components) - components auto import
 - [`unplugin-vue-macros`](https://github.com/sxzz/unplugin-vue-macros) - Explore and extend more macros and syntax sugar to Vue.
@@ -82,4 +84,4 @@ nr dev --port 2333
 
 ## Acknowledgements
 
-Inspired by [Vitesse Lite](https://github.com/antfu/vitesse-lite) from [@antfu](https://github.com/antfu/).
+Style and plug-in integrations inspired by [Vitesse Lite](https://github.com/antfu/vitesse-lite) from [@antfu](https://github.com/antfu/).
