@@ -7,7 +7,6 @@ class S3:
         self.s3_resource = boto3.resource('s3')   
         self.bucketName = bucketName
         self.createBucket()
-        self.file_counter = self.get_largest_filename() + 1
     
     def get_largest_filename(self):
         all = self.s3_resource.Bucket(self.bucketName).objects.all()
@@ -50,16 +49,8 @@ class S3:
     def clear_images(self):
         self.deleteAllFiles()
 
-    # generate a new filename for the image
-    def get_new_filename(self):
-        new_filename = str(self.file_counter)
-        self.file_counter += 1
-        return new_filename
-            
-    def store_image(self, raw_image):
-        new_filename = self.get_new_filename()
-        self.client.upload_fileobj(image2fileobj(raw_image), Bucket=self.bucketName, Key=new_filename, ExtraArgs={'ACL': 'public-read', 'ContentType': 'image/png'})
-        return new_filename
+    def store_image(self, key, raw_image):
+        self.client.upload_fileobj(image2fileobj(raw_image), Bucket=self.bucketName, Key=key, ExtraArgs={'ACL': 'public-read', 'ContentType': 'image/png'})
     
     def path2url(self, path):
         return "https://s3.amazonaws.com/" + self.bucketName + "/" + path
