@@ -105,16 +105,16 @@ def post_image():
         'message': 'Images stored'
     })
 
-# @app.route('/api/images', methods = ['DELETE'])
-# def delete_images():
-#     s3_cache.clear_images()
-#     search_engine.clear()
-#     dynamo.clear()
-#     s3_persistent.clear_images()
-#     return jsonify({
-#         'success': 'true',
-#         'message': 'All images deleted'
-#     })
+@app.route('/api/images', methods = ['DELETE'])
+def delete_images():
+    s3_cache.clear_images()
+    search_engine.clear()
+    dynamo.clear()
+    s3_persistent.clear_images()
+    return jsonify({
+        'success': 'true',
+        'message': 'All images deleted'
+    })
 
 
 @app.route('/api/delete_image', methods = ['POST'])
