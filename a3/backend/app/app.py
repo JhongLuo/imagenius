@@ -232,7 +232,25 @@ def edit_image():
             'src': s3_cache.path2url(image_path),
         } for image_path in image_paths],
     })
-    
+
+'''
+I think the return type below could be assigned to nodes and edges in the frontend
+
+nodes = {
+    'nodename': {
+        'src': 'url',
+        'prompt': 'prompt',
+        'name': 'name',
+        'key': 'key',
+    }
+}
+edges = {
+    'edgename': {
+        'source': 'nodename',
+        'target': 'nodename',
+    }
+}
+'''
 @app.route('/api/search/tree', methods = ['POST'])
 def get_images_tree():
     image_path = request.form.get('key', None)
@@ -243,22 +261,35 @@ def get_images_tree():
                 "message": "key is required",
             }
         })
-    tree = dict()
+    nodes = dict()
+    edges = dict()
     def dfs_tree(node):
-        tree[node] = list()
+        node_value = dict()
+        prompt = dynamo.get_image_prompt(node)
+        node_value['src'] = s3_persistent.path2url(node)
+        node_value['prompt'] = prompt
+        node_value['name'] = prompt[:min(5, len(prompt))]
+        node_value['key'] = node
+        if len(prompt) > 5:
+            node_value['name'] += '...'
+        
+        nodes[node] = node_value
+        
         descendants = dynamo.get_image_descendants(node)
         for descendant in descendants:
-            tree[node].append({
-                'key': descendant,
-                'src': s3_persistent.path2url(descendant),
-            })
+            edge_name = f'{node}-{descendant}'
+            edges[edge_name] = {
+                'source': node,
+                'target': descendant,
+            }
 
         for descendant in descendants:
             dfs_tree(descendant)
+            
     root = dynamo.get_image_root(image_path)
     dfs_tree(root)
     return jsonify({
         'success': 'true',
-        'tree': tree,
-        'root_key': dynamo.get_image_root(image_path)
+        'nodes': nodes,
+        'edges': edges,
     })

@@ -192,6 +192,17 @@ class Dynamo:
         print(images)
         return images
 
+    def get_image_prompt(self, image_path):
+        response = self.dy.get_item(
+            TableName=self.image_table_name,
+            Key={
+                'tag': {'S': 'All'},
+                'image_path': {'S': image_path}
+            },
+            ProjectionExpression='prompt'
+        )
+        return response['Item']['prompt']['S']
+    
     def put_image(self, image_path, tags, prompt, father_image_path=None):
         if father_image_path is None:
             root = image_path
