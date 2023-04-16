@@ -176,7 +176,7 @@ onMounted(() => {
                 :alt="img.key"
                 :class="{ 'blur-sm grayscale': isLoading }"
                 transition-all duration-300
-                @click="utils.navigateToEdit(img.key)"
+                @click="utils.navigateToTree(img.key)"
               />
             </div>
           </div>

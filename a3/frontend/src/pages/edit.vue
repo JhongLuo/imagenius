@@ -12,6 +12,7 @@ const canvasImg = ref<Image | undefined>()
 const dimensionTesterImg = ref<HTMLImageElement | undefined>()
 const imgDimensions = reactive<{ width: number; height: number }>({ width: 0, height: 0 })
 const imgKey = computed<string>(() => useRoute().query.key as string)
+const imgKeyUserInput = ref<string>('')
 const editConfigs = reactive<EditConfigOptions>({
   xPos: 0,
   yPos: 0,
@@ -163,6 +164,8 @@ const handleSave = async () => {
       TOAST_ID__SAVE_IMGS__SUCCESS,
       'success',
       TOAST_MSG__SAVE_IMGS__SUCCESS)
+    await utils.sleep(500)
+    utils.navigateToTree(selectedKeys[0])
   }
   catch (err) {
     // handle error
@@ -175,7 +178,8 @@ const handleSave = async () => {
 }
 
 onMounted(() => {
-  initCanvasImg()
+  if (imgKey.value !== undefined)
+    initCanvasImg()
 })
 </script>
 
@@ -187,8 +191,40 @@ onMounted(() => {
     Edit
   </h1>
 
+  <div
+    v-if="imgKey === undefined"
+    w-md
+    flex flex-row justify-between items-end
+  >
+    <div
+      class="w-70%"
+    >
+      <TheLabeledInput
+        input-id="input-edit-key"
+        label-text="Image Key"
+      >
+        <TheIconedTextInput
+          v-model.trim="imgKeyUserInput"
+          icon="i-carbon:password"
+          input-id="input-edit-key-str"
+          placeholder="Key of img to search for..."
+          @keydown.enter="utils.navigateToEdit(imgKeyUserInput)"
+        />
+      </TheLabeledInput>
+    </div>
+
+    <!-- button: retrieve -->
+    <TheButton
+      label="Go"
+      :disabled="imgKeyUserInput.length === 0"
+      @click="utils.navigateToEdit(imgKeyUserInput)"
+    />
+  </div>
+
   <!-- Page Content -->
-  <ThePageContent>
+  <ThePageContent
+    v-if="imgKey !== undefined"
+  >
     <div
       v-if="canvasImg !== undefined"
       class="relative"

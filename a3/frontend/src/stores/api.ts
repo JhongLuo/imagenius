@@ -247,6 +247,43 @@ export const useAPIStore = defineStore('api', () => {
   //
   const editImage = (data: FormData) => baseAxios.value.post('/api/edit', data)
 
+  // - Get Tree:
+  //
+  // request format:
+  // (POST)
+  //   {
+  //      "key": String
+  //   }
+  //
+  // response format:
+  //   {
+  //     "success": "true",
+  //     "root_key" : String,
+  //     "tree": {
+  //       "nodes": {
+  //         "nodename_1": {
+  //           "name": String,
+  //           "key": String,
+  //           "src": String,
+  //           "prompt": String
+  //         },
+  //         "nodename_2": {...},
+  //         ...
+  //       },
+  //       "edges": {
+  //         "edgename_1": {
+  //           "source": String
+  //           "target": String
+  //         },
+  //         "edgename_2": {...},
+  //         ...
+  //       }
+  //     }
+  //   }
+  //
+  //
+  const getTree = (data: FormData) => baseAxios.value.post('/api/search/tree', data)
+
   return {
     ipAddr,
     apiKey,
@@ -261,6 +298,7 @@ export const useAPIStore = defineStore('api', () => {
     getAllImages,
     deleteAllImages,
     editImage,
+    getTree,
   }
 })
 
