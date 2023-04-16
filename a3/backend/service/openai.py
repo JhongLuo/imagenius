@@ -4,8 +4,11 @@ from service.utils import url2image
 import random
 
 openai.api_key = os.environ.get("OPENAI_API_KEY")
+openai_usage = 0
 
 def prompt2images(prompt, n=1, size="256x256"):
+    global openai_usage
+    openai_usage += n
     response = openai.Image.create(
         prompt=prompt,
         n=n,
@@ -16,6 +19,8 @@ def prompt2images(prompt, n=1, size="256x256"):
     return [url2image(image_url) for image_url in image_urls]
 
 def edit_image(prompt, image, mask, n=1, size="256x256"):
+    global openai_usage
+    openai_usage += n
     response = openai.Image.create_edit(
         image=image,
         mask=mask,

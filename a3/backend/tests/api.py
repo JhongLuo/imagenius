@@ -7,3 +7,10 @@ url = f"http://{host}:{port}/api"
 
 def get_tree(key):
     return requests.post(url + '/search/tree', data={"key": key}).json()
+
+def make_a_record():
+    return requests.post(url + '/record').json()
+
+def get_stats():
+    return requests.get(url + '/stats').json()
+
