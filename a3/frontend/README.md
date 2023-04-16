@@ -1,8 +1,8 @@
-# ImageGenius
+# ImaGenius
 
-Web frontend for ImageGenius.
+Web frontend for ImaGenius.
 
-ImageGenius supports the following functionalities:
+ImaGenius supports the following functionalities:
 
 - Generating images from a given prompt
 

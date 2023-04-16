@@ -15,7 +15,7 @@
         select-none
       >
         <p text-xl>
-          ImageGenius
+          ImaGenius
         </p>
         <p text-sm op75>
           <em>
