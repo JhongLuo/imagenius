@@ -154,7 +154,7 @@ const handleSearchByPrompt = async () => {
               :alt="img.key"
               :class="{ 'blur-sm grayscale': isSearching }"
               transition-all duration-300
-              @click="utils.navigateToEdit(img.key)"
+              @click="utils.navigateToTree(img.key)"
             />
           </div>
         </Transition>

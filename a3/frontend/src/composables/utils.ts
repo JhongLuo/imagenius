@@ -4,6 +4,19 @@
 // throughout the application.
 //
 //
+
+export interface Node {
+  name: string
+  key: string
+  src: string
+  prompt: string
+}
+
+export interface Edge {
+  source: string
+  target: string
+}
+
 export interface RawImageData {
   key: string
   src: string
@@ -55,6 +68,10 @@ export interface CacheConfigOptions {
 }
 
 export default {
+  navigateToTree(key: string) {
+    window.location.href = `/tree?key=${key}`
+  },
+
   navigateToEdit(key: string) {
     window.location.href = `/edit?key=${key}`
   },
