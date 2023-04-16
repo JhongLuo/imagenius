@@ -50,7 +50,7 @@ const start = () => {
     <!-- button: go -->
     <button
       my-btn-primary mt-8 text-sm
-      :disabled="!api.ipAddr.addr || !api.apiKey"
+      :disabled="!api.ipAddr.addr"
       @click="start"
     >
       Connect

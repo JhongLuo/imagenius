@@ -13,6 +13,12 @@ const hasLoaded = ref<boolean>(false)
 const isModalShown = ref<boolean>(false)
 const isDeleting = ref<boolean>(false)
 
+const titleClickedCounter = ref<number>(0)
+watch(titleClickedCounter, (newVal: number) => {
+  if (newVal % 10 === 0)
+    isModalShown.value = true
+})
+
 const imgsLoadResult = ref<Image[]>([])
 
 const handleGetAllImages = async () => {
@@ -91,7 +97,10 @@ onMounted(() => {
 
 <template>
   <!-- Page Title -->
-  <h1 my-title>
+  <h1
+    my-title
+    @click="titleClickedCounter++"
+  >
     Library
   </h1>
 
@@ -143,12 +152,12 @@ onMounted(() => {
               />
 
               <!-- button: delete all -->
-              <button
+              <!-- <button
                 my-btn-danger text-sm
                 @click="isModalShown = true"
               >
                 Delete All
-              </button>
+              </button> -->
 
               <!-- Delete Modal Content -->
               <TheModal
