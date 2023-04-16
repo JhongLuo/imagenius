@@ -2,7 +2,7 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 
 export const useAPIStore = defineStore('api', () => {
   // set up ipAddr
-  const defaultAddr = 'http://localhost:5000'
+  const defaultAddr = ''
 
   const ipAddr = reactive({
     addr: defaultAddr,

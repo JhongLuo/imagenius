@@ -42,10 +42,11 @@ def prompt2joke(prompt):
     joke = random.choice(jokes)
     return joke
 
+def random_letter():
+    return random.choice('abcdefghijklmnopqrstuvwxyz')
+
 def generate_random_word():
-    prompt = """
-    Think of something as the subject of an intriguing picture. The response should only contain one word in lowercase, without any punctuations.
-    """
+    prompt = f'Think of something as the subject of an intriguing picture. The response should only contain one word starting with letter {random_letter()}, in lowercase and without any punctuations.'
     response = openai.Completion.create(
             engine="text-davinci-003",
             prompt=prompt,
