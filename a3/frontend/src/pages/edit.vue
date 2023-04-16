@@ -317,7 +317,7 @@ onMounted(() => {
               min="0"
               :max="imgDimensions.width - 1"
               w-full h-2 rounded-lg appearance-none cursor-pointer
-              bg-gray-200 dark:bg-gray-700
+              bg-gray-200 dark:bg-gray-700 my-outline-none
               my-4
             >
 
@@ -359,7 +359,7 @@ onMounted(() => {
               min="0"
               :max="imgDimensions.height - 1"
               w-full h-2 rounded-lg appearance-none cursor-pointer
-              bg-gray-200 dark:bg-gray-700
+              bg-gray-200 dark:bg-gray-700 my-outline-none
               my-4
             >
 
@@ -412,7 +412,7 @@ onMounted(() => {
               min="0"
               :max="imgDimensions.width / 2"
               w-full h-2 rounded-lg appearance-none cursor-pointer
-              bg-gray-200 dark:bg-gray-700
+              bg-gray-200 dark:bg-gray-700 my-outline-none
               my-4
             >
 
