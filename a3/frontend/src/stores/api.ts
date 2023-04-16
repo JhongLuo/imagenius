@@ -284,6 +284,31 @@ export const useAPIStore = defineStore('api', () => {
   //
   const getTree = (data: FormData) => baseAxios.value.post('/api/search/tree', data)
 
+  // - Get Stats:
+  //
+  // request format:
+  // (GET)
+  //   No Payload
+  //
+  // response format:
+  //   {
+  //     "success": "true",
+  //     "stats" : [Snapshot]
+  //   }
+  //
+  // Snapshot format:
+  //   {
+  //     "timestamp": Number,
+  //     "cache_size": Number,
+  //     "total_images" : Number,
+  //     "total_tags" : Number,
+  //     "total_prompt" : Number
+  //     "total_usage" : Number
+  //   }
+  //
+  //
+  const getStats = () => baseAxios.value.get('/api/stats')
+
   return {
     ipAddr,
     apiKey,
@@ -299,6 +324,7 @@ export const useAPIStore = defineStore('api', () => {
     deleteAllImages,
     editImage,
     getTree,
+    getStats,
   }
 })
 

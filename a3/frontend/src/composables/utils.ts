@@ -39,21 +39,18 @@ export interface EditConfigOptions {
 
 export interface RawStatsData {
   timestamp: number[]
-  miss_rate: number[]
-  hit_rate: number[]
-  nodes_num: number[]
-  items_len: number[]
-  items_bytes: number[]
-  requests_count: number[]
+  cache_size: number[]
+  total_images: number[]
+  total_tags: number[]
+  total_prompt: number[]
+  total_usage: number[]
 }
 
 export interface StatsData {
-  nums_nodes: number[]
-  hit_rates: number[]
-  miss_rates: number[]
-  nums_items: number[]
-  usages_size: number[]
-  nums_requests: number[]
+  nums_imgs_discarded: number[]
+  nums_imgs_saved: number[]
+  nums_tags: number[]
+  nums_api_calls: number[]
 }
 
 export interface CacheConfigOptions {

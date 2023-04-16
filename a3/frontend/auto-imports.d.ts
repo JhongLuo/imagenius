@@ -11,22 +11,14 @@ declare global {
   const $ref: typeof import('vue/macros')['$ref']
   const $shallowRef: typeof import('vue/macros')['$shallowRef']
   const $toRef: typeof import('vue/macros')['$toRef']
-  const CHART_ID__HIT_RATES: typeof import('./src/composables/constants')['CHART_ID__HIT_RATES']
-  const CHART_ID__H_M_RATES: typeof import('./src/composables/constants')['CHART_ID__H_M_RATES']
-  const CHART_ID__MISS_RATES: typeof import('./src/composables/constants')['CHART_ID__MISS_RATES']
-  const CHART_ID__NUMS_ITEMS: typeof import('./src/composables/constants')['CHART_ID__NUMS_ITEMS']
-  const CHART_ID__NUMS_NODES: typeof import('./src/composables/constants')['CHART_ID__NUMS_NODES']
-  const CHART_ID__NUMS_REQUESTS: typeof import('./src/composables/constants')['CHART_ID__NUMS_REQUESTS']
-  const CHART_ID__USAGES_PERCENT: typeof import('./src/composables/constants')['CHART_ID__USAGES_PERCENT']
-  const CHART_ID__USAGES_SIZE: typeof import('./src/composables/constants')['CHART_ID__USAGES_SIZE']
-  const CHART_TITLE__HIT_RATES: typeof import('./src/composables/constants')['CHART_TITLE__HIT_RATES']
-  const CHART_TITLE__H_M_RATES: typeof import('./src/composables/constants')['CHART_TITLE__H_M_RATES']
-  const CHART_TITLE__MISS_RATES: typeof import('./src/composables/constants')['CHART_TITLE__MISS_RATES']
-  const CHART_TITLE__NUMS_ITEMS: typeof import('./src/composables/constants')['CHART_TITLE__NUMS_ITEMS']
-  const CHART_TITLE__NUMS_NODES: typeof import('./src/composables/constants')['CHART_TITLE__NUMS_NODES']
-  const CHART_TITLE__NUMS_REQUESTS: typeof import('./src/composables/constants')['CHART_TITLE__NUMS_REQUESTS']
-  const CHART_TITLE__USAGES_PERCENT: typeof import('./src/composables/constants')['CHART_TITLE__USAGES_PERCENT']
-  const CHART_TITLE__USAGES_SIZE: typeof import('./src/composables/constants')['CHART_TITLE__USAGES_SIZE']
+  const CHART_ID__NUMS_API_CALLS: typeof import('./src/composables/constants')['CHART_ID__NUMS_API_CALLS']
+  const CHART_ID__NUMS_IMGS_DISCARDED: typeof import('./src/composables/constants')['CHART_ID__NUMS_IMGS_DISCARDED']
+  const CHART_ID__NUMS_IMGS_SAVED: typeof import('./src/composables/constants')['CHART_ID__NUMS_IMGS_SAVED']
+  const CHART_ID__NUMS_TAGS: typeof import('./src/composables/constants')['CHART_ID__NUMS_TAGS']
+  const CHART_TITLE__NUMS_API_CALLS: typeof import('./src/composables/constants')['CHART_TITLE__NUMS_API_CALLS']
+  const CHART_TITLE__NUMS_IMGS_DISCARDED: typeof import('./src/composables/constants')['CHART_TITLE__NUMS_IMGS_DISCARDED']
+  const CHART_TITLE__NUMS_IMGS_SAVED: typeof import('./src/composables/constants')['CHART_TITLE__NUMS_IMGS_SAVED']
+  const CHART_TITLE__NUMS_TAGS: typeof import('./src/composables/constants')['CHART_TITLE__NUMS_TAGS']
   const ERROR_MSG__INCORRECT_FORMAT: typeof import('./src/composables/constants')['ERROR_MSG__INCORRECT_FORMAT']
   const ERROR_MSG__KEYS_TABLE_EMPTY: typeof import('./src/composables/constants')['ERROR_MSG__KEYS_TABLE_EMPTY']
   const ERROR_MSG__UNKNOWN_ERR: typeof import('./src/composables/constants')['ERROR_MSG__UNKNOWN_ERR']
@@ -43,12 +35,10 @@ declare global {
   const MODAL_TITLE__DELETE_ALL: typeof import('./src/composables/constants')['MODAL_TITLE__DELETE_ALL']
   const MODAL_TITLE__DELETE_ALL_IMGS: typeof import('./src/composables/constants')['MODAL_TITLE__DELETE_ALL_IMGS']
   const MODAL_TITLE__PUT_CACHE_CONFIGS: typeof import('./src/composables/constants')['MODAL_TITLE__PUT_CACHE_CONFIGS']
-  const STATS_LABEL__HIT_RATES: typeof import('./src/composables/constants')['STATS_LABEL__HIT_RATES']
-  const STATS_LABEL__MISS_RATES: typeof import('./src/composables/constants')['STATS_LABEL__MISS_RATES']
-  const STATS_LABEL__NUMS_ITEMS: typeof import('./src/composables/constants')['STATS_LABEL__NUMS_ITEMS']
-  const STATS_LABEL__NUMS_REQUESTS: typeof import('./src/composables/constants')['STATS_LABEL__NUMS_REQUESTS']
-  const STATS_LABEL__USAGES_PERCENT: typeof import('./src/composables/constants')['STATS_LABEL__USAGES_PERCENT']
-  const STATS_LABEL__USAGES_SIZE: typeof import('./src/composables/constants')['STATS_LABEL__USAGES_SIZE']
+  const STATS_LABEL__NUMS_API_CALLS: typeof import('./src/composables/constants')['STATS_LABEL__NUMS_API_CALLS']
+  const STATS_LABEL__NUMS_IMGS_DISCARDED: typeof import('./src/composables/constants')['STATS_LABEL__NUMS_IMGS_DISCARDED']
+  const STATS_LABEL__NUMS_IMGS_SAVED: typeof import('./src/composables/constants')['STATS_LABEL__NUMS_IMGS_SAVED']
+  const STATS_LABEL__NUMS_TAGS: typeof import('./src/composables/constants')['STATS_LABEL__NUMS_TAGS']
   const TABLE_DELETE_BUTTON_TEXT__ALL_KEYS: typeof import('./src/composables/constants')['TABLE_DELETE_BUTTON_TEXT__ALL_KEYS']
   const TABLE_DELETE_BUTTON_TEXT__CACHE_KEYS: typeof import('./src/composables/constants')['TABLE_DELETE_BUTTON_TEXT__CACHE_KEYS']
   const TABLE_DESCRIPTION__ALL_KEYS: typeof import('./src/composables/constants')['TABLE_DESCRIPTION__ALL_KEYS']
@@ -412,22 +402,14 @@ declare module 'vue' {
     readonly $ref: UnwrapRef<typeof import('vue/macros')['$ref']>
     readonly $shallowRef: UnwrapRef<typeof import('vue/macros')['$shallowRef']>
     readonly $toRef: UnwrapRef<typeof import('vue/macros')['$toRef']>
-    readonly CHART_ID__HIT_RATES: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__HIT_RATES']>
-    readonly CHART_ID__H_M_RATES: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__H_M_RATES']>
-    readonly CHART_ID__MISS_RATES: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__MISS_RATES']>
-    readonly CHART_ID__NUMS_ITEMS: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__NUMS_ITEMS']>
-    readonly CHART_ID__NUMS_NODES: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__NUMS_NODES']>
-    readonly CHART_ID__NUMS_REQUESTS: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__NUMS_REQUESTS']>
-    readonly CHART_ID__USAGES_PERCENT: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__USAGES_PERCENT']>
-    readonly CHART_ID__USAGES_SIZE: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__USAGES_SIZE']>
-    readonly CHART_TITLE__HIT_RATES: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__HIT_RATES']>
-    readonly CHART_TITLE__H_M_RATES: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__H_M_RATES']>
-    readonly CHART_TITLE__MISS_RATES: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__MISS_RATES']>
-    readonly CHART_TITLE__NUMS_ITEMS: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__NUMS_ITEMS']>
-    readonly CHART_TITLE__NUMS_NODES: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__NUMS_NODES']>
-    readonly CHART_TITLE__NUMS_REQUESTS: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__NUMS_REQUESTS']>
-    readonly CHART_TITLE__USAGES_PERCENT: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__USAGES_PERCENT']>
-    readonly CHART_TITLE__USAGES_SIZE: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__USAGES_SIZE']>
+    readonly CHART_ID__NUMS_API_CALLS: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__NUMS_API_CALLS']>
+    readonly CHART_ID__NUMS_IMGS_DISCARDED: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__NUMS_IMGS_DISCARDED']>
+    readonly CHART_ID__NUMS_IMGS_SAVED: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__NUMS_IMGS_SAVED']>
+    readonly CHART_ID__NUMS_TAGS: UnwrapRef<typeof import('./src/composables/constants')['CHART_ID__NUMS_TAGS']>
+    readonly CHART_TITLE__NUMS_API_CALLS: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__NUMS_API_CALLS']>
+    readonly CHART_TITLE__NUMS_IMGS_DISCARDED: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__NUMS_IMGS_DISCARDED']>
+    readonly CHART_TITLE__NUMS_IMGS_SAVED: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__NUMS_IMGS_SAVED']>
+    readonly CHART_TITLE__NUMS_TAGS: UnwrapRef<typeof import('./src/composables/constants')['CHART_TITLE__NUMS_TAGS']>
     readonly ERROR_MSG__INCORRECT_FORMAT: UnwrapRef<typeof import('./src/composables/constants')['ERROR_MSG__INCORRECT_FORMAT']>
     readonly ERROR_MSG__KEYS_TABLE_EMPTY: UnwrapRef<typeof import('./src/composables/constants')['ERROR_MSG__KEYS_TABLE_EMPTY']>
     readonly ERROR_MSG__UNKNOWN_ERR: UnwrapRef<typeof import('./src/composables/constants')['ERROR_MSG__UNKNOWN_ERR']>
@@ -444,12 +426,10 @@ declare module 'vue' {
     readonly MODAL_TITLE__DELETE_ALL: UnwrapRef<typeof import('./src/composables/constants')['MODAL_TITLE__DELETE_ALL']>
     readonly MODAL_TITLE__DELETE_ALL_IMGS: UnwrapRef<typeof import('./src/composables/constants')['MODAL_TITLE__DELETE_ALL_IMGS']>
     readonly MODAL_TITLE__PUT_CACHE_CONFIGS: UnwrapRef<typeof import('./src/composables/constants')['MODAL_TITLE__PUT_CACHE_CONFIGS']>
-    readonly STATS_LABEL__HIT_RATES: UnwrapRef<typeof import('./src/composables/constants')['STATS_LABEL__HIT_RATES']>
-    readonly STATS_LABEL__MISS_RATES: UnwrapRef<typeof import('./src/composables/constants')['STATS_LABEL__MISS_RATES']>
-    readonly STATS_LABEL__NUMS_ITEMS: UnwrapRef<typeof import('./src/composables/constants')['STATS_LABEL__NUMS_ITEMS']>
-    readonly STATS_LABEL__NUMS_REQUESTS: UnwrapRef<typeof import('./src/composables/constants')['STATS_LABEL__NUMS_REQUESTS']>
-    readonly STATS_LABEL__USAGES_PERCENT: UnwrapRef<typeof import('./src/composables/constants')['STATS_LABEL__USAGES_PERCENT']>
-    readonly STATS_LABEL__USAGES_SIZE: UnwrapRef<typeof import('./src/composables/constants')['STATS_LABEL__USAGES_SIZE']>
+    readonly STATS_LABEL__NUMS_API_CALLS: UnwrapRef<typeof import('./src/composables/constants')['STATS_LABEL__NUMS_API_CALLS']>
+    readonly STATS_LABEL__NUMS_IMGS_DISCARDED: UnwrapRef<typeof import('./src/composables/constants')['STATS_LABEL__NUMS_IMGS_DISCARDED']>
+    readonly STATS_LABEL__NUMS_IMGS_SAVED: UnwrapRef<typeof import('./src/composables/constants')['STATS_LABEL__NUMS_IMGS_SAVED']>
+    readonly STATS_LABEL__NUMS_TAGS: UnwrapRef<typeof import('./src/composables/constants')['STATS_LABEL__NUMS_TAGS']>
     readonly TABLE_DELETE_BUTTON_TEXT__ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TABLE_DELETE_BUTTON_TEXT__ALL_KEYS']>
     readonly TABLE_DELETE_BUTTON_TEXT__CACHE_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TABLE_DELETE_BUTTON_TEXT__CACHE_KEYS']>
     readonly TABLE_DESCRIPTION__ALL_KEYS: UnwrapRef<typeof import('./src/composables/constants')['TABLE_DESCRIPTION__ALL_KEYS']>

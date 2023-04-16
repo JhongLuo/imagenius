@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { RawStatsData, StatsData } from '~/composables/utils'
+
 defineOptions({
   name: 'StatsPage',
 })
@@ -7,39 +9,31 @@ const api = useAPIStore()
 const { toastsArray, blinkToast } = useToasts()
 
 const stats = reactive<StatsData>({
-  nums_nodes: [] as number[],
-  hit_rates: [] as number[],
-  miss_rates: [] as number[],
-  nums_items: [] as number[],
-  usages_size: [] as number[],
-  nums_requests: [] as number[],
+  nums_imgs_discarded: [] as number[],
+  nums_imgs_saved: [] as number[],
+  nums_tags: [] as number[],
+  nums_api_calls: [] as number[],
 })
 
 const populateStats = (rawData: RawStatsData) => {
   const newStatsData = {
-    nums_nodes: [] as number[],
-    hit_rates: [] as number[],
-    miss_rates: [] as number[],
-    nums_items: [] as number[],
-    usages_size: [] as number[],
-    nums_requests: [] as number[],
+    nums_imgs_discarded: [] as number[],
+    nums_imgs_saved: [] as number[],
+    nums_tags: [] as number[],
+    nums_api_calls: [] as number[],
   } as StatsData
 
   for (let i = 0; i < rawData.timestamp.length; i++) {
-    newStatsData.nums_nodes.push(rawData.nodes_num[i])
-    newStatsData.hit_rates.push(rawData.hit_rate[i])
-    newStatsData.miss_rates.push(rawData.miss_rate[i])
-    newStatsData.nums_items.push(rawData.items_len[i])
-    newStatsData.usages_size.push(rawData.items_bytes[i]) // raw data already in MB
-    newStatsData.nums_requests.push(rawData.requests_count[i])
+    newStatsData.nums_imgs_discarded.push(rawData.cache_size[i])
+    newStatsData.nums_imgs_saved.push(rawData.total_images[i])
+    newStatsData.nums_tags.push(rawData.total_tags[i])
+    newStatsData.nums_api_calls.push(rawData.total_usage[i])
   }
 
-  stats.nums_nodes = newStatsData.nums_nodes
-  stats.hit_rates = newStatsData.hit_rates
-  stats.miss_rates = newStatsData.miss_rates
-  stats.nums_items = newStatsData.nums_items
-  stats.usages_size = newStatsData.usages_size
-  stats.nums_requests = newStatsData.nums_requests
+  stats.nums_imgs_discarded = newStatsData.nums_imgs_discarded
+  stats.nums_imgs_saved = newStatsData.nums_imgs_saved
+  stats.nums_tags = newStatsData.nums_tags
+  stats.nums_api_calls = newStatsData.nums_api_calls
 }
 
 const handleGetStats = async (ifReload = false) => {
@@ -48,7 +42,7 @@ const handleGetStats = async (ifReload = false) => {
     const response = await api.getStats()
     utilsJS.validateResponse(response)
     // handle success
-    const rawStatsData = utilsJS.arrayOfObjsToObjOfArrays(response.data.stats)
+    const rawStatsData = utilsJS.arrayOfObjsToObjOfArrays(response.data.stats) as RawStatsData
     populateStats(rawStatsData as RawStatsData)
     if (!ifReload) {
       blinkToast(
@@ -86,7 +80,7 @@ const handleRefreshStats = async () => {
       const response = await api.getStats()
       utilsJS.validateResponse(response)
       // handle success
-      const rawStatsData: RawStatsData = utilsJS.arrayOfObjsToObjOfArrays(response.data.stats)
+      const rawStatsData = utilsJS.arrayOfObjsToObjOfArrays(response.data.stats) as RawStatsData
       populateStats(rawStatsData as RawStatsData)
     }
     catch (errMsg) {
@@ -101,38 +95,28 @@ const handleRefreshStats = async () => {
 
 const statsSeries = computed(() => {
   return {
-    s_nums_nodes: [
+    s_nums_imgs_discarded: [
       {
-        name: STATS_LABEL__NUMS_ITEMS,
-        data: stats.nums_nodes,
+        name: STATS_LABEL__NUMS_IMGS_DISCARDED,
+        data: stats.nums_imgs_discarded,
       }],
 
-    s_h_m_rates: [
+    s_nums_imgs_saved: [
       {
-        name: STATS_LABEL__HIT_RATES,
-        data: stats.hit_rates,
-      },
-      {
-        name: STATS_LABEL__MISS_RATES,
-        data: stats.miss_rates,
+        name: STATS_LABEL__NUMS_IMGS_SAVED,
+        data: stats.nums_imgs_saved,
       }],
 
-    s_nums_items: [
+    s_nums_tags: [
       {
-        name: STATS_LABEL__NUMS_ITEMS,
-        data: stats.nums_items,
+        name: STATS_LABEL__NUMS_TAGS,
+        data: stats.nums_tags,
       }],
 
-    s_usages_size: [
+    s_nums_api_calls: [
       {
-        name: STATS_LABEL__USAGES_SIZE,
-        data: stats.usages_size,
-      }],
-
-    s_nums_requests: [
-      {
-        name: STATS_LABEL__NUMS_REQUESTS,
-        data: stats.nums_requests,
+        name: STATS_LABEL__NUMS_API_CALLS,
+        data: stats.nums_api_calls,
       }],
   }
 })
@@ -151,39 +135,32 @@ onMounted(() => {
 
   <!-- Page Content：Grid -->
   <TheStatsGrid>
-    <TheChartNumsNodes
-      v-if="stats.nums_nodes.length"
-      :id="CHART_ID__NUMS_NODES"
-      :title="CHART_TITLE__NUMS_NODES"
-      :series="statsSeries.s_nums_nodes"
+    <TheChartNumsImgsDiscarded
+      v-if="stats.nums_imgs_discarded.length"
+      :id="CHART_ID__NUMS_IMGS_DISCARDED"
+      :title="CHART_TITLE__NUMS_IMGS_DISCARDED"
+      :series="statsSeries.s_nums_imgs_discarded"
     />
 
-    <TheChartHMRates
-      v-if="stats.hit_rates.length"
-      :id="CHART_ID__H_M_RATES"
-      :title="CHART_TITLE__H_M_RATES"
-      :series="statsSeries.s_h_m_rates"
+    <TheChartNumsImgsSaved
+      v-if="stats.nums_imgs_saved.length"
+      :id="CHART_ID__NUMS_IMGS_SAVED"
+      :title="CHART_TITLE__NUMS_IMGS_SAVED"
+      :series="statsSeries.s_nums_imgs_saved"
     />
 
-    <TheChartNumsItems
-      v-if="stats.nums_items.length"
-      :id="CHART_ID__NUMS_ITEMS"
-      :title="CHART_TITLE__NUMS_ITEMS"
-      :series="statsSeries.s_nums_items"
+    <TheChartNumsTags
+      v-if="stats.nums_tags.length"
+      :id="CHART_ID__NUMS_TAGS"
+      :title="CHART_TITLE__NUMS_TAGS"
+      :series="statsSeries.s_nums_tags"
     />
 
-    <TheChartUsagesSize
-      v-if="stats.usages_size.length"
-      :id="CHART_ID__USAGES_SIZE"
-      :title="CHART_TITLE__USAGES_SIZE"
-      :series="statsSeries.s_usages_size"
-    />
-
-    <TheChartNumsRequests
-      v-if="stats.nums_requests.length"
-      :id="CHART_ID__NUMS_REQUESTS"
-      :title="CHART_TITLE__NUMS_REQUESTS"
-      :series="statsSeries.s_nums_requests"
+    <TheChartNumsApiCalls
+      v-if="stats.nums_api_calls.length"
+      :id="CHART_ID__NUMS_API_CALLS"
+      :title="CHART_TITLE__NUMS_API_CALLS"
+      :series="statsSeries.s_nums_api_calls"
     />
   </TheStatsGrid>
 
