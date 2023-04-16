@@ -24,6 +24,7 @@ kappa==0.6.0
 MarkupSafe==2.1.2
 multidict==6.0.4
 openai==0.27.2
+opensearch-py==2.2.0
 Pillow==9.5.0
 placebo==0.9.0
 protobuf==3.20.3
@@ -36,6 +37,7 @@ pytz==2022.7.1
 pytz-deprecation-shim==0.1.0.post0
 PyYAML==6.0
 requests==2.28.2
+requests-aws4auth==1.2.2
 s3transfer==0.6.0
 six==1.16.0
 sortedcontainers==2.4.0

@@ -178,7 +178,7 @@ class Dynamo:
     def get_image_descendants(self, image_path):
         response = self.dy.query(
             TableName=self.image_table_name,
-            indexName = 'father_index',
+            IndexName = 'father_index',
             KeyConditionExpression='father = :father',
             ExpressionAttributeValues={
                 ':father': {'S': image_path}
