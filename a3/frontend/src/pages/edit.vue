@@ -45,6 +45,11 @@ const isFormValid = computed<boolean>(() => editConfigs.radius > 0 && editConfig
 
 const isIniting = ref<boolean>(false)
 
+// delete modal
+const isShowingDeleteModal = ref<boolean>(false)
+const isDeleting = ref<boolean>(false)
+const isDeleted = ref<boolean>(false)
+
 // new images
 const numImgsResult = ref<number>(0)
 const imgsGenerated = ref<(Image & Selectable)[]>([])
@@ -127,6 +132,35 @@ const handleSubmitEdit = async () => {
       'error',
       err as string)
     isGenerating.value = false
+  }
+}
+
+const handleDeleteImage = async () => {
+  // start delete
+  isDeleting.value = true
+  try {
+    const fd = new FormData()
+    fd.append('key', imgKey.value)
+    const response = await api.deleteImage(fd)
+    utilsJS.validateResponse(response)
+    // handle success
+    await utils.sleep(50)
+    isDeleted.value = true
+    isDeleting.value = false
+    blinkToast(
+      TOAST_ID__DELETE_IMG__SUCCESS,
+      'success',
+      TOAST_MSG__DELETE_IMG__SUCCESS)
+    await utils.sleep(1000)
+    utils.navigateToListAll()
+  }
+  catch (err) {
+    // handle error
+    blinkToast(
+      TOAST_ID__DELETE_IMG__ERROR,
+      'error',
+      err as string)
+    isDeleting.value = false
   }
 }
 
@@ -226,7 +260,7 @@ onMounted(() => {
     flex flex-col items-center
   >
     <div
-      v-if="canvasImg !== undefined"
+      v-if="canvasImg !== undefined && !isDeleted"
       class="relative"
     >
       <!-- Canvas -->
@@ -275,6 +309,59 @@ onMounted(() => {
       >
         Edit Panel
       </div>
+
+      <!-- Patch Radius -->
+      <TheLabeledInput
+        input-id="input-radius"
+        label-text="Patch Radius"
+      >
+        <!-- row -->
+        <div
+          flex justify-between w-full
+        >
+          <!-- col: radius -->
+          <div
+            class="w-45%"
+            flex flex-col items-center
+          >
+            <!-- <div
+              flex w-full
+            >
+              <input
+                id="input-patch-radius"
+                v-model="editConfigs.radius"
+                type="number"
+                w-full h-full
+                my-border rounded-r-none
+                my-input text-center
+                placeholder="<empty>"
+              >
+              <span
+                inline-flex items-center px-3
+                my-border rounded-l-none border-l-0
+                my-input select-none
+              >
+                px
+              </span>
+            </div> -->
+            <input
+              id="minmax-range"
+              v-model="editConfigs.radius"
+              type="range"
+              min="0"
+              :max="imgDimensions.width / 2"
+              w-full h-2 rounded-lg appearance-none cursor-pointer
+              bg-gray-200 dark:bg-gray-700 my-outline-none
+              my-4
+            >
+
+            <TheInputHelperText
+              font-mono
+              :helper-text="`Radius: ${editConfigs.radius}px`"
+            />
+          </div>
+        </div>
+      </TheLabeledInput>
 
       <!-- Patch Pos -->
       <TheLabeledInput
@@ -371,59 +458,6 @@ onMounted(() => {
         </div>
       </TheLabeledInput>
 
-      <!-- Patch Radius -->
-      <TheLabeledInput
-        input-id="input-radius"
-        label-text="Patch Radius"
-      >
-        <!-- row -->
-        <div
-          flex justify-between w-full
-        >
-          <!-- col: radius -->
-          <div
-            class="w-45%"
-            flex flex-col items-center
-          >
-            <!-- <div
-              flex w-full
-            >
-              <input
-                id="input-patch-radius"
-                v-model="editConfigs.radius"
-                type="number"
-                w-full h-full
-                my-border rounded-r-none
-                my-input text-center
-                placeholder="<empty>"
-              >
-              <span
-                inline-flex items-center px-3
-                my-border rounded-l-none border-l-0
-                my-input select-none
-              >
-                px
-              </span>
-            </div> -->
-            <input
-              id="minmax-range"
-              v-model="editConfigs.radius"
-              type="range"
-              min="0"
-              :max="imgDimensions.width / 2"
-              w-full h-2 rounded-lg appearance-none cursor-pointer
-              bg-gray-200 dark:bg-gray-700 my-outline-none
-              my-4
-            >
-
-            <TheInputHelperText
-              font-mono
-              :helper-text="`Radius: ${editConfigs.radius}px`"
-            />
-          </div>
-        </div>
-      </TheLabeledInput>
-
       <!-- Patch Prompt -->
       <TheLabeledInput
         input-id="input-prompt"
@@ -462,14 +496,33 @@ onMounted(() => {
         <!-- submit button -->
         <TheButton
           text-sm
-          label="Submit"
-          :disabled="!isFormValid || isGenerating"
+          label="Generate with Edit"
+          :disabled="!isFormValid || isGenerating || isShowingDeleteModal || isDeleting || isDeleted || isSaving"
           @click="handleSubmitEdit"
+        />
+
+        <!-- delete button -->
+        <button
+          text-sm my-btn-danger
+          :disabled="isGenerating || isShowingDeleteModal || isDeleting || isDeleted || isSaving"
+          @click="isShowingDeleteModal = true || isDeleting || isSaving"
+        >
+          Delete Image
+        </button>
+
+        <!-- Delete Modal Content -->
+        <TheModal
+          v-model:is-shown="isShowingDeleteModal"
+          modal-type="delete"
+          :modal-id="MODAL_ID__DELETE_IMG"
+          :modal-title="MODAL_TITLE__DELETE_IMG"
+          :modal-description="MODAL_DESCRIPTION__DELETE_IMG"
+          :action="handleDeleteImage"
         />
 
         <!-- spinner -->
         <TheSpinner
-          v-if="isGenerating"
+          v-if="isGenerating || isDeleting || isDeleted"
           alt-text="Generating..."
         />
       </div>
@@ -510,10 +563,10 @@ onMounted(() => {
       alt-text="Saving..."
     />
 
-    <!-- button: retrieve -->
+    <!-- button: save -->
     <TheButton
       label="Save"
-      :disabled="!isSelectionValid"
+      :disabled="!isSelectionValid || isSaving || isGenerating || isShowingDeleteModal || isDeleting || isDeleted"
       @click="handleSave"
     />
   </div>

@@ -247,6 +247,23 @@ export const useAPIStore = defineStore('api', () => {
   //
   const editImage = (data: FormData) => baseAxios.value.post('/api/edit', data)
 
+  // - Delete Image:
+  //
+  // request format:
+  // (POST)
+  //   {
+  //      "key": String
+  //   }
+  //
+  // response format:
+  //   {
+  //     "success": "true" | "false",
+  //     "message" : String
+  //   }
+  //
+  //
+  const deleteImage = (data: FormData) => baseAxios.value.post('/api/delete_image', data)
+
   // - Get Tree:
   //
   // request format:
@@ -323,6 +340,7 @@ export const useAPIStore = defineStore('api', () => {
     getAllImages,
     deleteAllImages,
     editImage,
+    deleteImage,
     getTree,
     getStats,
   }

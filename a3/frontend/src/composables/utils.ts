@@ -65,6 +65,10 @@ export interface CacheConfigOptions {
 }
 
 export default {
+  navigateToListAll() {
+    window.location.href = '/list'
+  },
+
   navigateToTree(key: string) {
     window.location.href = `/tree?key=${key}`
   },
